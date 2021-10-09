@@ -392,7 +392,7 @@ $url'''),
                 applicationLegalese: COPYRIGHT,
                 aboutBoxChildren: [
                   ListTile(
-                    title: const Text('Jithware'),
+                    title: const Text('Website'),
                     leading: Icon(Icons.web_asset),
                     onTap: () {
                       _launchURL(JITHWARE_URL);
