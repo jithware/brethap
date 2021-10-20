@@ -1,4 +1,6 @@
-To take screenshots run:
+# Screenshots
+
+To take screenshots, run:
 ```
 flutter screenshot -d <device name> -o <image.png>
 ```

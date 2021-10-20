@@ -1,4 +1,4 @@
-# Fdroid Metadata
+# Metadata
 
 This directory contains the metadata files for the F-Droid app store about page. 
 
