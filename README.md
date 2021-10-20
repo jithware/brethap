@@ -8,6 +8,9 @@ Brethap is yet another meditation app (yama). Including a timer for meditation, 
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
      alt="Get it on Google Play"
      height="80">](https://play.google.com/store/apps/details?id=com.jithware.brethap)
+[<img src="./images/get-it-on.png"
+     alt="Get it on The Web"
+     height="80">](https://jithware.github.io/brethap)
 
 ## Screenshots
 
