@@ -399,7 +399,7 @@ $url'''),
                     },
                   ),
                   ListTile(
-                    title: const Text('Report a Bug'),
+                    title: const Text('Report an Issue'),
                     leading: Icon(Icons.bug_report),
                     onTap: () {
                       _launchURL(BUGS_URL);
