@@ -1,0 +1,2 @@
+* Minor enhancements
+* Set to dark theme when system dark theme is toggled

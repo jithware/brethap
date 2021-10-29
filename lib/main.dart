@@ -81,6 +81,7 @@ class MainWidget extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      darkTheme: ThemeData.dark(),
       home: HomeWidget(
           appName: appName,
           version: version,
