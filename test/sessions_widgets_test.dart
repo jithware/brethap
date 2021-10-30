@@ -146,7 +146,9 @@ Future<void> main() async {
       await tester.pump(WAIT);
 
       // Verify date text
-      expect(find.text(DateFormat(DATE_FORMAT).format(start)), findsOneWidget);
+      expect(
+          find.text(DateFormat(DATE_FORMAT).format(start), skipOffstage: false),
+          findsOneWidget);
 
       // Verify duration text
       expect(find.textContaining("Duration:${getDurationString(diff)}"),

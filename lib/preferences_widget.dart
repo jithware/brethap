@@ -88,18 +88,6 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     debugPrint("set $index preferences in: ${widget.preferences.values}");
   }
 
-  Future<void> _resetPreference(int index) async {
-    if (widget.preferences.length <= index) {
-      await _createSavedPreferences(index);
-      return;
-    }
-    Preference preference = widget.preferences.getAt(index);
-    preference.copy(getDefaultPref());
-    await preference.save();
-    debugPrint(
-        "reset $index in preferences(${widget.preferences.length}): ${widget.preferences.values}");
-  }
-
   ElevatedButton _getPreferenceButton(int position) {
     String name = "Preference $position";
     return ElevatedButton(
@@ -116,21 +104,31 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('Long press button to save preference'),
           ));
+        } else {
+          _setPreference(position);
+          _init();
         }
-        _setPreference(position);
-        _init();
       },
       style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+            if (widget.preferences.length <= position) {
+              return Colors.grey;
+            }
+            return Theme.of(context).primaryColor;
+          }),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ))),
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+          )),
     );
   }
 
-  Future<void> _resetAll() async {
-    for (int index = 0; index < widget.preferences.length; index++) {
-      _resetPreference(index);
+  Future<void> _deleteAll() async {
+    while (widget.preferences.length > 1) {
+      debugPrint("deleting ${widget.preferences.length - 1}");
+      await widget.preferences.deleteAt(widget.preferences.length - 1);
     }
     widget.callback();
     _init();
@@ -231,7 +229,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   case RESET_ALL_TEXT:
                     showAlertDialog(context, RESET_ALL_TEXT,
                         "Are you sure you want to reset all preferences?", () {
-                      _resetAll();
+                      _deleteAll();
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text("Preferences reset"),

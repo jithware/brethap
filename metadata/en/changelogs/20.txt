@@ -1,0 +1,3 @@
+* Update preferences speak toggle text
+* Grey out preference setting button when not set
+* Minor enhancements
