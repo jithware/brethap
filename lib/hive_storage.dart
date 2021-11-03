@@ -9,13 +9,13 @@ class Session extends HiveObject {
   @HiveField(1)
   late final DateTime end;
   @HiveField(2)
-  final int breath;
+  late int breaths;
 
-  Session({required this.start, required this.breath});
+  Session({required this.start});
 
   @override
   String toString() {
-    return "{start: $start, end: $end, breath: $breath}";
+    return "{start: $start, end: $end, breaths: $breaths}";
   }
 }
 
@@ -24,35 +24,39 @@ class Preference extends HiveObject {
   @HiveField(0)
   int duration;
   @HiveField(1)
-  int breath;
+  List<int> inhale;
   @HiveField(2)
-  int vibrateDuration;
+  List<int> exhale;
   @HiveField(3)
-  int vibrateBreath;
+  int vibrateDuration;
   @HiveField(4)
-  bool speakDuration;
+  int vibrateBreath;
   @HiveField(5)
-  bool speakBreath;
+  bool durationTts;
+  @HiveField(6)
+  bool breathTts;
 
   Preference(
       {required this.duration,
-      required this.breath,
+      required this.inhale,
+      required this.exhale,
       required this.vibrateDuration,
       required this.vibrateBreath,
-      required this.speakDuration,
-      required this.speakBreath});
+      required this.durationTts,
+      required this.breathTts});
 
   void copy(Preference preference) {
     this.duration = preference.duration;
-    this.breath = preference.breath;
+    this.inhale = List.from(preference.inhale);
+    this.exhale = List.from(preference.exhale);
     this.vibrateDuration = preference.vibrateDuration;
     this.vibrateBreath = preference.vibrateBreath;
-    this.speakDuration = preference.speakDuration;
-    this.speakBreath = preference.speakBreath;
+    this.durationTts = preference.durationTts;
+    this.breathTts = preference.breathTts;
   }
 
   @override
   String toString() {
-    return "{duration: $duration, breath: $breath, vibrateDuration: $vibrateDuration, vibrateBreath: $vibrateBreath, speakDuration: $speakDuration, speakBreath: $speakBreath}";
+    return "{duration: $duration, inhale: ${inhale.toString()}, exhale: ${exhale.toString()}, vibrateDuration: $vibrateDuration, vibrateBreath: $vibrateBreath, durationTts: $durationTts, breathTts: $breathTts}";
   }
 }

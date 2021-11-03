@@ -31,8 +31,8 @@ Card getSessionCard(Session session, {String dateFormat = DATE_FORMAT}) {
       debugPrint("session: ${session.toString()}");
     },
     title: Text(DateFormat(dateFormat).format(session.start)),
-    subtitle: Text(
-        "Duration:${getDurationString(diff)}  Breaths:${((diff.inMilliseconds / (session.breath)).round().toString())}"),
+    subtitle:
+        Text("Duration:${getDurationString(diff)}  Breaths:${session.breaths}"),
   ));
 }
 
@@ -40,18 +40,17 @@ Card getSessionCard(Session session, {String dateFormat = DATE_FORMAT}) {
 Future<void> createRandomSessions(
     Box sessions, int length, DateTime start, DateTime end) async {
   Random random = Random(DateTime.now().millisecondsSinceEpoch);
-  int breath;
   DateTime mockStart, mockEnd;
   Session session;
   List<Session> list = sessions.values.toList().cast<Session>();
 
   while (list.length < length) {
-    breath = (random.nextInt(19) + 1) * 1000;
     mockStart = _mockDate(start, end);
     mockEnd = _mockDate(
         mockStart, mockStart.add(Duration(seconds: random.nextInt(120 * 60))));
-    session = Session(start: mockStart, breath: breath);
+    session = Session(start: mockStart);
     session.end = mockEnd;
+    session.breaths = (random.nextInt(1000) + 1);
     list.add(session);
   }
   list.sort((a, b) =>
@@ -95,7 +94,7 @@ String getStats(
     if ((item.start.compareTo(start) >= 0 && item.end.compareTo(end) <= 0)) {
       Duration diff = roundDuration(item.end.difference(item.start));
       totalDuration += diff;
-      totalBreaths += ((diff.inMilliseconds / (item.breath)).round());
+      totalBreaths += item.breaths;
       totalSessions += 1;
     }
   });
@@ -141,11 +140,12 @@ String getStreak(
 Preference getDefaultPref() {
   Preference preference = Preference(
     duration: DURATION,
-    breath: BREATH,
+    inhale: [BREATH, 0],
+    exhale: [BREATH, 0],
     vibrateDuration: VIBRATE_DURATION,
     vibrateBreath: VIBRATE_BREATH,
-    speakDuration: SPEAK_DURATION,
-    speakBreath: SPEAK_BREATH,
+    durationTts: DURATION_TTS,
+    breathTts: BREATH_TTS,
   );
   return preference;
 }

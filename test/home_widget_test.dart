@@ -40,7 +40,7 @@ Future<void> main() async {
       const Duration WAIT = Duration(milliseconds: 500);
       Preference preference = preferences.get(0);
       Duration duration = Duration(seconds: preference.duration),
-          cycle = Duration(milliseconds: preference.breath ~/ 2),
+          cycle = Duration(milliseconds: preference.inhale[0] ~/ 2), //TODO
           totalTime = Duration();
 
       // Verify app name in title bar
@@ -122,7 +122,7 @@ Future<void> main() async {
       Session session = sessions.get(0);
       expect(session.start.difference(start).inSeconds, 0);
       expect(session.end.difference(end).inSeconds, 0);
-      expect(session.breath, BREATH);
+      expect(session.breaths, BREATH);
     });
   });
 }

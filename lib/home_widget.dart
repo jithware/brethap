@@ -48,9 +48,9 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
       _hasSpeak = false;
   late Duration _duration;
   late String _status;
-  late AnimationController _controller;
-  late Animation<double> _animation;
   late FlutterTts _tts;
+  double _scale = 0.0;
+
   @override
   initState() {
     debugPrint("${this.widget}.initState");
@@ -64,7 +64,6 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   @override
   void dispose() {
     debugPrint("${this.widget}.dispose");
-    _controller.dispose();
     super.dispose();
   }
 
@@ -127,13 +126,6 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   void _update() {
     Preference preference = widget.preferences.get(0);
     _duration = Duration(seconds: preference.duration);
-    _controller = AnimationController(
-      // divide breath in half for each inhale/exhale cycle
-      duration: Duration(milliseconds: preference.breath ~/ 2),
-      vsync: this,
-    );
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-
     debugPrint("session preference:$preference");
   }
 
@@ -153,10 +145,10 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
 
     _vibrate(preference.vibrateDuration);
 
-    if (preference.speakDuration) {
+    if (preference.durationTts) {
       Duration diff = roundDuration(session.end.difference(session.start));
       String duration = getDurationString(diff);
-      int breaths = ((diff.inMilliseconds / (session.breath)).round());
+      int breaths = session.breaths;
       String text = "Completed a $duration session";
       if (breaths == 1) {
         text += ", with $breaths breath";
@@ -172,7 +164,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
 
     _vibrate(preference.vibrateBreath);
 
-    if (preference.speakBreath) {
+    if (preference.breathTts) {
       await _speak(text);
     }
   }
@@ -192,27 +184,31 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
       Preference preference = widget.preferences.get(0);
       _update();
       _isRunning = true;
-      Session session =
-          Session(start: DateTime.now(), breath: preference.breath);
+      Session session = Session(start: DateTime.now());
       _status = INHALE_TEXT;
-      _controller.repeat(reverse: true);
       _wakeLock(true);
 
       Duration timerSpan = Duration(milliseconds: 100);
       bool state = true;
-      int halfCycle = session.breath ~/ 2;
+      int halfCycle = preference.inhale[0]; //TODO: calculate
       int mod = (_duration.inMilliseconds) % halfCycle;
+      double scaleAdjust = timerSpan.inMilliseconds / halfCycle;
       Timer.periodic(timerSpan, (Timer timer) {
         if (!_isRunning || _duration.inSeconds <= 0) {
           setState(() {
             _status = PRESS_BUTTON_TEXT;
             _isRunning = false;
-            _duration = Duration(seconds: preference.duration);
             session.end = DateTime.now();
-            _controller.reset();
+            session.breaths =
+                (preference.duration * 1000 - _duration.inMilliseconds) ~/
+                    (preference.inhale[0] +
+                        preference.inhale[1] +
+                        preference.exhale[0] +
+                        preference.exhale[1]); //TODO: calculate
             _addSession(session);
             _onDuration(session);
             _wakeLock(false);
+            _duration = Duration(seconds: preference.duration);
             timer.cancel();
           });
         } else {
@@ -221,8 +217,10 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               String text;
               if (state) {
                 text = INHALE_TEXT;
+                _scale = 0;
               } else {
                 text = EXHALE_TEXT;
+                _scale = 1;
               }
               state = !state;
               _onBreath(text);
@@ -231,7 +229,12 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             _duration -= timerSpan;
           });
         }
-        debugPrint("_duration: $_duration");
+        if (state) {
+          _scale -= scaleAdjust; //TODO: adjust to position in breath
+        } else {
+          _scale += scaleAdjust; //TODO: adjust to position in breath
+        }
+        debugPrint("_duration: $_duration _scale: $_scale");
       });
     }
   }
@@ -310,8 +313,8 @@ $url'''),
               semanticsLabel: _status,
             ),
             Center(
-                child: ScaleTransition(
-                    scale: _animation,
+                child: Transform.scale(
+                    scale: _scale,
                     child: Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Container(

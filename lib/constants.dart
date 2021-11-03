@@ -8,12 +8,13 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     PRESS_BUTTON_TEXT = "Press button to begin",
     INHALE_TEXT = "Inhale",
     EXHALE_TEXT = "Exhale",
+    INHALE_HOLD_TEXT = "Inhale Hold",
+    EXHALE_HOLD_TEXT = "Exhale Hold",
     DURATION_TEXT = "Duration",
     DURATION_VIBRATE_TEXT = "Duration Vibrate",
-    DURATION_SPEAK_TEXT = "Duration TTS",
-    BREATH_TEXT = "Breath",
+    DURATION_TTS_TEXT = "Duration TTS",
     BREATH_VIBRATE_TEXT = "Breath Vibrate",
-    BREATH_SPEAK_TEXT = "Breath TTS",
+    BREATH_TTS_TEXT = "Breath TTS",
     CLEAR_ALL_TEXT = "Clear All",
     RESET_ALL_TEXT = "Reset All",
     BACKUP_TEXT = "Backup",
@@ -23,9 +24,9 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     OK_TEXT = "Ok";
 
 const int DURATION = 120, //seconds
-    BREATH = 8000, //milliseconds
+    BREATH = 4000, //milliseconds
     VIBRATE_DURATION = 250, //milliseconds
     VIBRATE_BREATH = 25, //milliseconds
     SAVED_PREFERENCES = 4;
 
-const bool SPEAK_DURATION = true, SPEAK_BREATH = true;
+const bool DURATION_TTS = true, BREATH_TTS = true;

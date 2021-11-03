@@ -37,8 +37,9 @@ Future<void> main() async {
     setUp(() async {
       sessions = await Hive.openBox("sessions");
       for (int i = 0; i < dates.length; i += 2) {
-        Session s = Session(start: dates[i], breath: BREATH);
+        Session s = Session(start: dates[i]);
         s.end = dates[i + 1];
+        s.breaths = 10; //TODO
         await sessions.add(s);
 
         Duration diff = dates[i + 1].difference(dates[i]);

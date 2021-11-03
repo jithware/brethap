@@ -23,10 +23,13 @@ class PreferencesWidget extends StatefulWidget {
 
 class _PreferencesWidgetState extends State<PreferencesWidget> {
   late double _durationD = DURATION.toDouble() / Duration.secondsPerMinute,
-      _breathD = BREATH.toDouble() / Duration.millisecondsPerSecond * 10,
+      _inhale0 = BREATH.toDouble() / Duration.millisecondsPerSecond * 10,
+      _inhale1 = 0,
+      _exhale0 = BREATH.toDouble() / Duration.millisecondsPerSecond * 10,
+      _exhale1 = 0,
       _vibrateDurationD = VIBRATE_DURATION.toDouble() / 10,
       _vibrateBreathD = VIBRATE_BREATH.toDouble() / 10;
-  late bool _speakDuration = SPEAK_DURATION, _speakBreath = SPEAK_BREATH;
+  late bool _durationTts = DURATION_TTS, _breathTts = BREATH_TTS;
 
   @override
   initState() {
@@ -50,12 +53,18 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
 
     setState(() {
       _durationD = preference.duration.toDouble() / Duration.secondsPerMinute;
-      _breathD =
-          preference.breath.toDouble() / Duration.millisecondsPerSecond * 10;
+      _inhale0 =
+          preference.inhale[0].toDouble() / Duration.millisecondsPerSecond * 10;
+      _inhale1 =
+          preference.inhale[1].toDouble() / Duration.millisecondsPerSecond * 10;
+      _exhale0 =
+          preference.exhale[0].toDouble() / Duration.millisecondsPerSecond * 10;
+      _exhale1 =
+          preference.exhale[1].toDouble() / Duration.millisecondsPerSecond * 10;
       _vibrateDurationD = preference.vibrateDuration.toDouble() / 10;
       _vibrateBreathD = preference.vibrateBreath.toDouble() / 10;
-      _speakDuration = preference.speakDuration;
-      _speakBreath = preference.speakBreath;
+      _durationTts = preference.durationTts;
+      _breathTts = preference.breathTts;
     });
   }
 
@@ -155,7 +164,10 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       List<List<dynamic>> rows = [
         [
           "duration",
-          "breath",
+          "inhale0",
+          "inhale1",
+          "exhale0",
+          "exhale1",
           "vibrateDuration",
           "vibrateBreath",
           "speakDuration",
@@ -167,11 +179,14 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
         added++;
         rows.add([
           element.duration,
-          element.breath,
+          element.inhale[0],
+          element.inhale[1],
+          element.exhale[0],
+          element.exhale[1],
           element.vibrateDuration,
           element.vibrateBreath,
-          element.speakDuration,
-          element.speakBreath
+          element.durationTts,
+          element.breathTts
         ]);
       });
       String csv = ListToCsvConverter().convert(rows);
@@ -198,11 +213,12 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
         Preference preference = widget.preferences.getAt(i - 1);
         Preference p = Preference(
             duration: row[0],
-            breath: row[1],
-            vibrateDuration: row[2],
-            vibrateBreath: row[3],
-            speakDuration: row[4].contains("true"),
-            speakBreath: row[5].contains("true"));
+            inhale: [row[1], row[2]],
+            exhale: [row[3], row[4]],
+            vibrateDuration: row[5],
+            vibrateBreath: row[6],
+            durationTts: row[7].contains("true"),
+            breathTts: row[8].contains("true"));
         preference.copy(p);
         await preference.save();
         added++;
@@ -272,6 +288,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           padding: const EdgeInsets.all(15),
           child: ListView(
             children: [
+              // Duration
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -315,6 +332,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       )),
                 ],
               ),
+              // Duration vibrate
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -355,22 +373,23 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       ))
                 ],
               ),
+              // Duration TTS
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    DURATION_SPEAK_TEXT,
+                    DURATION_TTS_TEXT,
                   ),
                   Switch(
-                    key: Key(DURATION_SPEAK_TEXT),
-                    value: _speakDuration,
+                    key: Key(DURATION_TTS_TEXT),
+                    value: _durationTts,
                     onChanged: (value) {
                       setState(() {
-                        _speakDuration = value;
-                        preference.speakDuration = value;
+                        _durationTts = value;
+                        preference.durationTts = value;
                         preference.save();
                         debugPrint(
-                            "$DURATION_SPEAK_TEXT: ${preference.speakDuration}");
+                            "$DURATION_TTS_TEXT: ${preference.durationTts}");
                       });
                     },
                   )
@@ -379,14 +398,15 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
               Divider(
                 thickness: 3,
               ),
+              // Inhale
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    BREATH_TEXT,
+                    INHALE_TEXT,
                   ),
                   Text(
-                      (preference.breath.toDouble() /
+                      (preference.inhale[0].toDouble() /
                                   Duration.millisecondsPerSecond.toDouble())
                               .toString() +
                           " s",
@@ -399,16 +419,16 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   Container(
                       width: MediaQuery.of(context).size.width - 30,
                       child: Slider(
-                        key: Key(BREATH_TEXT),
-                        value: _breathD,
+                        key: Key(INHALE_TEXT),
+                        value: _inhale0,
                         min: 2,
                         max: 202,
-                        divisions: 100, //force breath even for equal half cycle
+                        divisions: 100,
                         onChanged: (double value) {
                           setState(() {
-                            _breathD = value;
+                            _inhale0 = value;
                             double tenthSeconds = (value.round().toInt()) / 10;
-                            preference.breath =
+                            preference.inhale[0] =
                                 (tenthSeconds * Duration.millisecondsPerSecond)
                                     .toInt();
                           });
@@ -416,17 +436,169 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         onChangeEnd: (double value) {
                           setState(() {
                             double tenthSeconds = (value.round().toInt()) / 10;
-                            preference.breath =
+                            preference.inhale[0] =
                                 (tenthSeconds * Duration.millisecondsPerSecond)
                                     .toInt();
                             preference.save();
                           });
-
-                          debugPrint("$BREATH_TEXT: ${preference.breath}");
+                          debugPrint("$INHALE_TEXT: ${preference.inhale[0]}");
                         },
                       ))
                 ],
               ),
+              // Inhale hold
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    INHALE_HOLD_TEXT,
+                  ),
+                  Text(
+                      (preference.inhale[1].toDouble() /
+                                  Duration.millisecondsPerSecond.toDouble())
+                              .toString() +
+                          " s",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      width: MediaQuery.of(context).size.width - 30,
+                      child: Slider(
+                        key: Key(INHALE_HOLD_TEXT),
+                        value: _inhale1,
+                        min: 0,
+                        max: 200,
+                        divisions: 100,
+                        onChanged: (double value) {
+                          setState(() {
+                            _inhale1 = value;
+                            double tenthSeconds = (value.round().toInt()) / 10;
+                            preference.inhale[1] =
+                                (tenthSeconds * Duration.millisecondsPerSecond)
+                                    .toInt();
+                          });
+                        },
+                        onChangeEnd: (double value) {
+                          setState(() {
+                            double tenthSeconds = (value.round().toInt()) / 10;
+                            preference.inhale[1] =
+                                (tenthSeconds * Duration.millisecondsPerSecond)
+                                    .toInt();
+                            preference.save();
+                          });
+                          debugPrint(
+                              "$INHALE_HOLD_TEXT: ${preference.inhale[1]}");
+                        },
+                      ))
+                ],
+              ),
+              Divider(
+                thickness: 3,
+              ),
+              // Exhale
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    EXHALE_TEXT,
+                  ),
+                  Text(
+                      (preference.exhale[0].toDouble() /
+                                  Duration.millisecondsPerSecond.toDouble())
+                              .toString() +
+                          " s",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      width: MediaQuery.of(context).size.width - 30,
+                      child: Slider(
+                        key: Key(EXHALE_TEXT),
+                        value: _exhale0,
+                        min: 2,
+                        max: 202,
+                        divisions: 100,
+                        onChanged: (double value) {
+                          setState(() {
+                            _exhale0 = value;
+                            double tenthSeconds = (value.round().toInt()) / 10;
+                            preference.exhale[0] =
+                                (tenthSeconds * Duration.millisecondsPerSecond)
+                                    .toInt();
+                          });
+                        },
+                        onChangeEnd: (double value) {
+                          setState(() {
+                            double tenthSeconds = (value.round().toInt()) / 10;
+                            preference.exhale[0] =
+                                (tenthSeconds * Duration.millisecondsPerSecond)
+                                    .toInt();
+                            preference.save();
+                          });
+                          debugPrint("$EXHALE_TEXT: ${preference.exhale[0]}");
+                        },
+                      ))
+                ],
+              ),
+              // Exhale hold
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    EXHALE_HOLD_TEXT,
+                  ),
+                  Text(
+                      (preference.exhale[1].toDouble() /
+                                  Duration.millisecondsPerSecond.toDouble())
+                              .toString() +
+                          " s",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      width: MediaQuery.of(context).size.width - 30,
+                      child: Slider(
+                        key: Key(EXHALE_HOLD_TEXT),
+                        value: _exhale1,
+                        min: 0,
+                        max: 200,
+                        divisions: 100,
+                        onChanged: (double value) {
+                          setState(() {
+                            _exhale1 = value;
+                            double tenthSeconds = (value.round().toInt()) / 10;
+                            preference.exhale[1] =
+                                (tenthSeconds * Duration.millisecondsPerSecond)
+                                    .toInt();
+                          });
+                        },
+                        onChangeEnd: (double value) {
+                          setState(() {
+                            double tenthSeconds = (value.round().toInt()) / 10;
+                            preference.exhale[1] =
+                                (tenthSeconds * Duration.millisecondsPerSecond)
+                                    .toInt();
+                            preference.save();
+                          });
+                          debugPrint(
+                              "$EXHALE_HOLD_TEXT: ${preference.exhale[1]}");
+                        },
+                      ))
+                ],
+              ),
+              Divider(
+                thickness: 3,
+              ),
+              // Breath vibrate
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -467,22 +639,22 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       ))
                 ],
               ),
+              // Breath TTS
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    BREATH_SPEAK_TEXT,
+                    BREATH_TTS_TEXT,
                   ),
                   Switch(
-                    key: Key(BREATH_SPEAK_TEXT),
-                    value: _speakBreath,
+                    key: Key(BREATH_TTS_TEXT),
+                    value: _breathTts,
                     onChanged: (value) {
                       setState(() {
-                        _speakBreath = value;
-                        preference.speakBreath = value;
+                        _breathTts = value;
+                        preference.breathTts = value;
                         preference.save();
-                        debugPrint(
-                            "$BREATH_SPEAK_TEXT: ${preference.speakBreath}");
+                        debugPrint("$BREATH_TTS_TEXT: ${preference.breathTts}");
                       });
                     },
                   ),
@@ -491,6 +663,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
               Divider(
                 thickness: 3,
               ),
+              SizedBox(height: 50),
             ],
           ),
         ),

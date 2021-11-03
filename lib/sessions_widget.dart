@@ -75,7 +75,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
       ];
       list.forEach((element) {
         added++;
-        rows.add([element.start, element.end, element.breath]);
+        rows.add([element.start, element.end, element.breaths]);
       });
       String csv = ListToCsvConverter().convert(rows);
       final file = await _getExportFile();
@@ -109,8 +109,9 @@ class _SessionsWidgetState extends State<SessionsWidget> {
           }
         }
         if (!exists) {
-          Session session = Session(start: start, breath: row[2]);
+          Session session = Session(start: start);
           session.end = DateTime.parse(row[1]);
+          session.breaths = row[2];
           _list.add(session);
           await widget.sessions.add(session);
           added++;

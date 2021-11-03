@@ -18,8 +18,9 @@ class SessionAdapter extends TypeAdapter<Session> {
     };
     return Session(
       start: fields[0] as DateTime,
-      breath: fields[2] as int,
-    )..end = fields[1] as DateTime;
+    )
+      ..end = fields[1] as DateTime
+      ..breaths = fields[2] as int;
   }
 
   @override
@@ -31,7 +32,7 @@ class SessionAdapter extends TypeAdapter<Session> {
       ..writeByte(1)
       ..write(obj.end)
       ..writeByte(2)
-      ..write(obj.breath);
+      ..write(obj.breaths);
   }
 
   @override
@@ -57,30 +58,33 @@ class PreferenceAdapter extends TypeAdapter<Preference> {
     };
     return Preference(
       duration: fields[0] as int,
-      breath: fields[1] as int,
-      vibrateDuration: fields[2] as int,
-      vibrateBreath: fields[3] as int,
-      speakDuration: fields[4] as bool,
-      speakBreath: fields[5] as bool,
+      inhale: (fields[1] as List).cast<int>(),
+      exhale: (fields[2] as List).cast<int>(),
+      vibrateDuration: fields[3] as int,
+      vibrateBreath: fields[4] as int,
+      durationTts: fields[5] as bool,
+      breathTts: fields[6] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Preference obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.duration)
       ..writeByte(1)
-      ..write(obj.breath)
+      ..write(obj.inhale)
       ..writeByte(2)
-      ..write(obj.vibrateDuration)
+      ..write(obj.exhale)
       ..writeByte(3)
-      ..write(obj.vibrateBreath)
+      ..write(obj.vibrateDuration)
       ..writeByte(4)
-      ..write(obj.speakDuration)
+      ..write(obj.vibrateBreath)
       ..writeByte(5)
-      ..write(obj.speakBreath);
+      ..write(obj.durationTts)
+      ..writeByte(6)
+      ..write(obj.breathTts);
   }
 
   @override
