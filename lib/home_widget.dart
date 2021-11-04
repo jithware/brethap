@@ -185,56 +185,81 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
       _update();
       _isRunning = true;
       Session session = Session(start: DateTime.now());
-      _status = INHALE_TEXT;
       _wakeLock(true);
 
       Duration timerSpan = Duration(milliseconds: 100);
-      bool state = true;
-      int halfCycle = preference.inhale[0]; //TODO: calculate
-      int mod = (_duration.inMilliseconds) % halfCycle;
-      double scaleAdjust = timerSpan.inMilliseconds / halfCycle;
+
+      int inhale = preference.inhale[0] + preference.inhale[1];
+      int exhale = preference.exhale[0] + preference.exhale[1];
+      int breath = inhale + exhale;
+      int cycle = 0;
+      double inhaleScale = timerSpan.inMilliseconds / preference.inhale[0];
+      double exhaleScale = timerSpan.inMilliseconds / preference.exhale[0];
+      bool inhaling = true, exhaling = false;
+
       Timer.periodic(timerSpan, (Timer timer) {
         if (!_isRunning || _duration.inSeconds <= 0) {
           setState(() {
             _status = PRESS_BUTTON_TEXT;
             _isRunning = false;
             session.end = DateTime.now();
-            session.breaths =
-                (preference.duration * 1000 - _duration.inMilliseconds) ~/
-                    (preference.inhale[0] +
-                        preference.inhale[1] +
-                        preference.exhale[0] +
-                        preference.exhale[1]); //TODO: calculate
+            session.breaths = (preference.duration - _duration.inSeconds) ~/
+                (breath / Duration.millisecondsPerSecond);
             _addSession(session);
             _onDuration(session);
             _wakeLock(false);
             _duration = Duration(seconds: preference.duration);
+            _scale = 0;
             timer.cancel();
           });
         } else {
           setState(() {
-            if ((_duration.inMilliseconds - mod) % halfCycle == 0) {
-              String text;
-              if (state) {
-                text = INHALE_TEXT;
-                _scale = 0;
-              } else {
-                text = EXHALE_TEXT;
-                _scale = 1;
-              }
-              state = !state;
+            String text;
+            if (cycle == 0) {
+              inhaling = true;
+              exhaling = false;
+              text = INHALE_TEXT;
+              _scale = 0.0;
+              _onBreath(text);
+              _status = text;
+            } else if (preference.inhale[1] > 0 &&
+                cycle == preference.inhale[0]) {
+              inhaling = false;
+              exhaling = false;
+              text = HOLD_TEXT;
+              _onBreath(text);
+              _status = text;
+            } else if (cycle == inhale) {
+              inhaling = false;
+              exhaling = true;
+              text = EXHALE_TEXT;
+              _scale = 1.0;
+              _onBreath(text);
+              _status = text;
+            } else if (preference.exhale[1] > 0 &&
+                cycle == inhale + preference.exhale[0]) {
+              inhaling = false;
+              exhaling = false;
+              text = HOLD_TEXT;
               _onBreath(text);
               _status = text;
             }
+
+            cycle += timerSpan.inMilliseconds;
+            if (cycle >= breath) {
+              cycle = 0;
+            }
+            if (inhaling) {
+              _scale += inhaleScale;
+            } else if (exhaling) {
+              _scale -= exhaleScale;
+            }
+
             _duration -= timerSpan;
           });
         }
-        if (state) {
-          _scale -= scaleAdjust; //TODO: adjust to position in breath
-        } else {
-          _scale += scaleAdjust; //TODO: adjust to position in breath
-        }
-        debugPrint("_duration: $_duration _scale: $_scale");
+
+        debugPrint("_duration: $_duration _scale: $_scale cycle: $cycle");
       });
     }
   }

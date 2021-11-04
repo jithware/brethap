@@ -40,8 +40,11 @@ Future<void> main() async {
       const Duration WAIT = Duration(milliseconds: 500);
       Preference preference = preferences.get(0);
       Duration duration = Duration(seconds: preference.duration),
-          cycle = Duration(milliseconds: preference.inhale[0] ~/ 2), //TODO
-          totalTime = Duration();
+          totalTime = Duration(),
+          inhale = Duration(
+              milliseconds: preference.inhale[0] + preference.inhale[1]),
+          exhale = Duration(
+              milliseconds: preference.exhale[0] + preference.exhale[1]);
 
       // Verify app name in title bar
       expect(find.text(APP_NAME), findsOneWidget);
@@ -89,8 +92,8 @@ Future<void> main() async {
       expect(find.text(INHALE_TEXT), findsOneWidget);
 
       // Forward ahead to exhale
-      await tester.pump(cycle);
-      totalTime += cycle;
+      await tester.pump(inhale);
+      totalTime += inhale;
 
       // Wait a bit
       await tester.pump(WAIT);
@@ -98,6 +101,10 @@ Future<void> main() async {
 
       // Verify status text
       expect(find.text(EXHALE_TEXT), findsOneWidget);
+
+      // Forward ahead to inhale
+      await tester.pump(exhale);
+      totalTime += exhale;
 
       // Verify decremented timer text
       duration -= totalTime;
@@ -122,7 +129,7 @@ Future<void> main() async {
       Session session = sessions.get(0);
       expect(session.start.difference(start).inSeconds, 0);
       expect(session.end.difference(end).inSeconds, 0);
-      expect(session.breaths, BREATH);
+      expect(session.breaths, 1);
     });
   });
 }

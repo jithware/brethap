@@ -8,6 +8,7 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     PRESS_BUTTON_TEXT = "Press button to begin",
     INHALE_TEXT = "Inhale",
     EXHALE_TEXT = "Exhale",
+    HOLD_TEXT = "Hold",
     INHALE_HOLD_TEXT = "Inhale Hold",
     EXHALE_HOLD_TEXT = "Exhale Hold",
     DURATION_TEXT = "Duration",
@@ -27,6 +28,6 @@ const int DURATION = 120, //seconds
     BREATH = 4000, //milliseconds
     VIBRATE_DURATION = 250, //milliseconds
     VIBRATE_BREATH = 25, //milliseconds
-    SAVED_PREFERENCES = 4;
+    SAVED_PREFERENCES = 5;
 
 const bool DURATION_TTS = true, BREATH_TTS = true;

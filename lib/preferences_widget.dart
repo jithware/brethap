@@ -66,17 +66,19 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       _durationTts = preference.durationTts;
       _breathTts = preference.breathTts;
     });
+
+    debugPrint("preferences: ${widget.preferences.values}");
   }
 
   Future<void> _createSavedPreferences(int length) async {
-    while (widget.preferences.length <= length) {
+    while (widget.preferences.length < length) {
       createDefaultPref(widget.preferences);
     }
   }
 
   Future<void> _savePreference(int index) async {
     if (widget.preferences.length <= index) {
-      await _createSavedPreferences(index);
+      await _createSavedPreferences(index + 1);
     }
     Preference preference = widget.preferences.get(0);
     Preference p = widget.preferences.getAt(index);
@@ -160,6 +162,9 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     int added = 0;
     List<Preference> list =
         widget.preferences.values.toList().cast<Preference>();
+    if (list.length <= 1) {
+      return added;
+    }
     try {
       List<List<dynamic>> rows = [
         [
@@ -170,8 +175,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           "exhale1",
           "vibrateDuration",
           "vibrateBreath",
-          "speakDuration",
-          "speakBreath"
+          "durationTts",
+          "breathTts"
         ]
       ];
 
@@ -196,7 +201,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       debugPrint(e.toString());
       return 0;
     }
-    return added;
+    return added - 1; // Do not report preference 0
   }
 
   Future<int> _importCsv() async {
@@ -205,10 +210,10 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       final file = await _getExportFile();
       final contents = await file.readAsString();
       List<List<dynamic>> rows = CsvToListConverter().convert(contents);
-      _createSavedPreferences(SAVED_PREFERENCES);
+      _createSavedPreferences(rows.length - 1); // skip header
 
       // skip header at 0
-      for (int i = 1; i < rows.length && i <= SAVED_PREFERENCES + 1; i++) {
+      for (int i = 1; i < rows.length; i++) {
         var row = rows[i];
         Preference preference = widget.preferences.getAt(i - 1);
         Preference p = Preference(
@@ -221,7 +226,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
             breathTts: row[8].contains("true"));
         preference.copy(p);
         await preference.save();
-        added++;
+        added = i - 1;
       }
       _init();
     } catch (e) {
@@ -332,6 +337,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       )),
                 ],
               ),
+
               // Duration vibrate
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -373,6 +379,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       ))
                 ],
               ),
+
               // Duration TTS
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -395,9 +402,11 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   )
                 ],
               ),
+
               Divider(
                 thickness: 3,
               ),
+
               // Inhale
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -421,9 +430,9 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       child: Slider(
                         key: Key(INHALE_TEXT),
                         value: _inhale0,
-                        min: 2,
-                        max: 202,
-                        divisions: 100,
+                        min: 5,
+                        max: 100,
+                        divisions: 95,
                         onChanged: (double value) {
                           setState(() {
                             _inhale0 = value;
@@ -446,6 +455,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       ))
                 ],
               ),
+
               // Inhale hold
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -470,7 +480,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         key: Key(INHALE_HOLD_TEXT),
                         value: _inhale1,
                         min: 0,
-                        max: 200,
+                        max: 100,
                         divisions: 100,
                         onChanged: (double value) {
                           setState(() {
@@ -495,9 +505,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       ))
                 ],
               ),
-              Divider(
-                thickness: 3,
-              ),
+
               // Exhale
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -521,9 +529,9 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       child: Slider(
                         key: Key(EXHALE_TEXT),
                         value: _exhale0,
-                        min: 2,
-                        max: 202,
-                        divisions: 100,
+                        min: 5,
+                        max: 100,
+                        divisions: 95,
                         onChanged: (double value) {
                           setState(() {
                             _exhale0 = value;
@@ -546,6 +554,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       ))
                 ],
               ),
+
               // Exhale hold
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -570,7 +579,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         key: Key(EXHALE_HOLD_TEXT),
                         value: _exhale1,
                         min: 0,
-                        max: 200,
+                        max: 100,
                         divisions: 100,
                         onChanged: (double value) {
                           setState(() {
@@ -595,9 +604,11 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       ))
                 ],
               ),
+
               Divider(
                 thickness: 3,
               ),
+
               // Breath vibrate
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -639,6 +650,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       ))
                 ],
               ),
+
               // Breath TTS
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -660,9 +672,11 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   ),
                 ],
               ),
+
               Divider(
                 thickness: 3,
               ),
+
               SizedBox(height: 50),
             ],
           ),
