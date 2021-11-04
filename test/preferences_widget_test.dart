@@ -27,27 +27,29 @@ Future<void> main() async {
 
     // ignore: unused_element
     void verifyDefault(Preference preference) {
-      expect(preference.duration, DURATION);
+      Preference p = getDefaultPref();
+      expect(preference.duration, p.duration);
       expect(
           find.textContaining(
-              "${getDurationString(Duration(seconds: DURATION))}"),
+              "${getDurationString(Duration(seconds: p.duration))}"),
           findsOneWidget);
-      expect(preference.vibrateDuration, VIBRATE_DURATION);
-      expect(find.textContaining("$VIBRATE_DURATION ms"), findsOneWidget);
-      expect(preference.durationTts, DURATION_TTS);
+      expect(preference.vibrateDuration, p.vibrateDuration);
+      expect(find.textContaining("${p.vibrateDuration} ms"), findsOneWidget);
+      expect(preference.durationTts, p.durationTts);
       expect(
           find.byWidgetPredicate((widget) =>
               widget is Switch &&
               widget.key == Key(DURATION_TTS_TEXT) &&
               widget.value == DURATION_TTS),
           findsOneWidget);
-      expect(preference.inhale, [BREATH, 0]);
+      expect(preference.inhale, p.inhale);
+      expect(preference.exhale, p.exhale);
       expect(
           find.textContaining("${(BREATH / Duration.millisecondsPerSecond)} s"),
           findsOneWidget);
-      expect(preference.vibrateBreath, VIBRATE_BREATH);
-      expect(find.textContaining("$VIBRATE_BREATH ms"), findsOneWidget);
-      expect(preference.breathTts, BREATH_TTS);
+      expect(preference.vibrateBreath, p.vibrateBreath);
+      expect(find.textContaining("${p.vibrateBreath} ms"), findsOneWidget);
+      expect(preference.breathTts, p.breathTts);
       expect(
           find.byWidgetPredicate((widget) =>
               widget is Switch &&
@@ -89,7 +91,7 @@ Future<void> main() async {
       expect(preference.vibrateDuration, 500);
       expect(find.textContaining("500 ms"), findsOneWidget);
 
-      // Drag speak duration switch
+      // Drag duration tts switch
       expect(preference.durationTts, DURATION_TTS);
       await tester.drag(
           find.byKey(Key(DURATION_TTS_TEXT)), const Offset(0.0, 0.0));
@@ -99,11 +101,36 @@ Future<void> main() async {
       // Drag inhale slider
       expect(
           find.textContaining("${(BREATH / Duration.millisecondsPerSecond)} s"),
-          findsNWidgets(2));
+          findsWidgets);
       await tester.drag(find.byKey(Key(INHALE_TEXT)), const Offset(0.0, 0.0));
       await tester.pump(WAIT);
       expect(preference.inhale, [5300, 0]);
-      expect(find.textContaining("5.3 s"), findsOneWidget);
+      expect(find.textContaining("5.3 s"), findsWidgets);
+
+      // Drag inhale hold slider
+      expect(find.textContaining("0.0 s"), findsWidgets);
+      await tester.drag(
+          find.byKey(Key(INHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
+      await tester.pump(WAIT);
+      expect(preference.inhale, [5300, 5000]);
+      expect(find.textContaining("5.0 s"), findsWidgets);
+
+      // Drag exhale slider
+      expect(
+          find.textContaining("${(BREATH / Duration.millisecondsPerSecond)} s"),
+          findsWidgets);
+      await tester.drag(find.byKey(Key(EXHALE_TEXT)), const Offset(0.0, 0.0));
+      await tester.pump(WAIT);
+      expect(preference.exhale, [5300, 0]);
+      expect(find.textContaining("5.3 s"), findsWidgets);
+
+      // Drag exhale hold slider
+      expect(find.textContaining("0.0 s"), findsWidgets);
+      await tester.drag(
+          find.byKey(Key(EXHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
+      await tester.pump(WAIT);
+      expect(preference.exhale, [5300, 5000]);
+      expect(find.textContaining("5.0 s"), findsWidgets);
 
       // Drag vibrate breath slider
       expect(find.textContaining("$VIBRATE_BREATH ms"), findsOneWidget);
@@ -116,7 +143,8 @@ Future<void> main() async {
 
       // Drag breath tts switch
       expect(preference.breathTts, BREATH_TTS);
-      await tester.ensureVisible(find.byKey(Key(BREATH_TTS_TEXT)));
+      await tester
+          .ensureVisible(find.byKey(Key(BREATH_TTS_TEXT), skipOffstage: false));
       await tester.pump(WAIT);
       await tester.drag(
           find.byKey(Key(BREATH_TTS_TEXT)), const Offset(0.0, 0.0));
@@ -134,8 +162,9 @@ Future<void> main() async {
         expect(preference.duration, 3660);
         expect(preference.vibrateDuration, 500);
         expect(preference.durationTts, !DURATION_TTS);
-        expect(preference.inhale, [10200]);
-        expect(preference.vibrateBreath, 250);
+        expect(preference.inhale, [5300, 5000]);
+        expect(preference.exhale, [5300, 5000]);
+        expect(preference.vibrateBreath, 25);
         expect(preference.breathTts, !BREATH_TTS);
       }
 
@@ -179,7 +208,9 @@ Future<void> main() async {
       await tester.tap(cont);
       await tester.pumpAndSettle();
 
-      // TODO: Verify preference reset
+      //TODO: Verify preferences reset
+      //expect(preferences.length, 1);
+
       // debugDumpApp();
     });
   });

@@ -21,7 +21,7 @@ Future<void> main() async {
   tearDownAll((() async {}));
 
   group('Sessions', () {
-    const int BREATH = 4000;
+    const int BREATHS = 10;
     Duration totalDuration = Duration();
     int totalBreaths = 0;
     late Box sessions;
@@ -39,12 +39,12 @@ Future<void> main() async {
       for (int i = 0; i < dates.length; i += 2) {
         Session s = Session(start: dates[i]);
         s.end = dates[i + 1];
-        s.breaths = 10; //TODO
+        s.breaths = BREATHS;
         await sessions.add(s);
 
         Duration diff = dates[i + 1].difference(dates[i]);
         totalDuration += roundDuration(diff);
-        totalBreaths += (roundDuration(diff).inMilliseconds / BREATH).round();
+        totalBreaths += BREATHS;
       }
       debugPrint("test sessions: ${sessions.values}");
       debugPrint(
@@ -83,8 +83,7 @@ Future<void> main() async {
         Duration diff = roundDuration(dates[i + 1].difference(dates[i]));
         expect(find.textContaining("Duration:${getDurationString(diff)}"),
             findsWidgets);
-        int breaths = (diff.inMilliseconds / BREATH).round();
-        expect(find.textContaining("Breaths:$breaths"), findsWidgets);
+        expect(find.textContaining("Breaths:$BREATHS"), findsWidgets);
       }
 
       // Press the button
@@ -139,7 +138,6 @@ Future<void> main() async {
       // get the last session
       DateTime start = dates[dates.length - 2], end = dates[dates.length - 1];
       Duration diff = roundDuration(end.difference(start));
-      int breaths = (diff.inMilliseconds / BREATH).round();
 
       await tester.pumpWidget(
           MaterialApp(home: SessionsCalendarWidget(sessions: sessions)));
@@ -156,7 +154,7 @@ Future<void> main() async {
           findsWidgets);
 
       // Verify breaths text
-      expect(find.textContaining("Breaths:$breaths"), findsWidgets);
+      expect(find.textContaining("Breaths:$BREATHS"), findsWidgets);
 
       // Press the button
       await tester.tap(find.byType(FloatingActionButton));
@@ -164,6 +162,8 @@ Future<void> main() async {
       await tester.pump(WAIT);
 
       expectStats();
+
+      //debugDumpApp();
     });
   });
 }
