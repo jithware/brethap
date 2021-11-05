@@ -197,7 +197,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
       bool inhaling = true, exhaling = false;
 
       Timer.periodic(timerSpan, (Timer timer) {
-        if (!_isRunning || _duration.inSeconds <= 0) {
+        if (!_isRunning || (_duration.inSeconds <= 0 && cycle <= 0)) {
           setState(() {
             _status = PRESS_BUTTON_TEXT;
             _isRunning = false;
@@ -261,7 +261,9 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               }
             }
 
-            _duration -= timerSpan;
+            if (!_duration.isNegative) {
+              _duration -= timerSpan;
+            }
           });
         }
 
