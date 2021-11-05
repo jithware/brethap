@@ -140,8 +140,8 @@ String getStreak(
 Preference getDefaultPref() {
   Preference preference = Preference(
     duration: DURATION,
-    inhale: [BREATH, 0],
-    exhale: [BREATH, 0],
+    inhale: [INHALE, INHALE_HOLD],
+    exhale: [EXHALE, EXHALE_HOLD],
     vibrateDuration: VIBRATE_DURATION,
     vibrateBreath: VIBRATE_BREATH,
     durationTts: DURATION_TTS,

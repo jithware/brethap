@@ -24,10 +24,14 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     CANCEL_TEXT = "Cancel",
     OK_TEXT = "Ok";
 
-const int DURATION = 120, //seconds
-    BREATH = 4000, //milliseconds
-    VIBRATE_DURATION = 250, //milliseconds
-    VIBRATE_BREATH = 25, //milliseconds
-    SAVED_PREFERENCES = 5;
+const int SAVED_PREFERENCES = 5;
 
+// Default values
+const int DURATION = 120, //seconds
+    INHALE = 4000, //milliseconds
+    INHALE_HOLD = 0, //milliseconds
+    EXHALE = 4000, //milliseconds
+    EXHALE_HOLD = 0, //milliseconds
+    VIBRATE_DURATION = 250, //milliseconds
+    VIBRATE_BREATH = 25; //milliseconds
 const bool DURATION_TTS = true, BREATH_TTS = true;

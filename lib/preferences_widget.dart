@@ -23,10 +23,10 @@ class PreferencesWidget extends StatefulWidget {
 
 class _PreferencesWidgetState extends State<PreferencesWidget> {
   late double _durationD = DURATION.toDouble() / Duration.secondsPerMinute,
-      _inhale0 = BREATH.toDouble() / Duration.millisecondsPerSecond * 10,
-      _inhale1 = 0,
-      _exhale0 = BREATH.toDouble() / Duration.millisecondsPerSecond * 10,
-      _exhale1 = 0,
+      _inhale0 = INHALE.toDouble() / Duration.millisecondsPerSecond * 10,
+      _inhale1 = INHALE_HOLD.toDouble() / Duration.millisecondsPerSecond * 10,
+      _exhale0 = INHALE.toDouble() / Duration.millisecondsPerSecond * 10,
+      _exhale1 = EXHALE_HOLD.toDouble() / Duration.millisecondsPerSecond * 10,
       _vibrateDurationD = VIBRATE_DURATION.toDouble() / 10,
       _vibrateBreathD = VIBRATE_BREATH.toDouble() / 10;
   late bool _durationTts = DURATION_TTS, _breathTts = BREATH_TTS;
