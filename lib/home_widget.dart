@@ -188,7 +188,6 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
       _wakeLock(true);
 
       Duration timerSpan = Duration(milliseconds: 100);
-
       int inhale = preference.inhale[0] + preference.inhale[1];
       int exhale = preference.exhale[0] + preference.exhale[1];
       int breath = inhale + exhale;
@@ -209,7 +208,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             _onDuration(session);
             _wakeLock(false);
             _duration = Duration(seconds: preference.duration);
-            _scale = 0;
+            _scale = 0.0;
             timer.cancel();
           });
         } else {
@@ -249,10 +248,17 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
             if (cycle >= breath) {
               cycle = 0;
             }
+
             if (inhaling) {
               _scale += inhaleScale;
+              if (_scale > 1.0) {
+                _scale = 1.0;
+              }
             } else if (exhaling) {
               _scale -= exhaleScale;
+              if (_scale < 0.0) {
+                _scale = 0.0;
+              }
             }
 
             _duration -= timerSpan;
