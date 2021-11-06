@@ -1,0 +1,4 @@
+* Settings to allow for inhale, inhale hold, exhale, and exhale hold
+* Duration completes when time and exhale expires
+* Settings preset menu
+* Minor enhancements
