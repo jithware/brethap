@@ -25,7 +25,6 @@ Future<void> main() async {
 
     tearDown((() async {}));
 
-    // ignore: unused_element
     void verifyDefault(Preference preference) {
       Preference p = getDefaultPref();
       expect(preference.duration, p.duration);
@@ -46,9 +45,12 @@ Future<void> main() async {
               widget.value == DURATION_TTS),
           findsOneWidget);
       expect(preference.inhale, p.inhale);
-      expect(preference.exhale, p.exhale);
       expect(
           find.textContaining("${(INHALE / Duration.millisecondsPerSecond)} s"),
+          findsWidgets);
+      expect(preference.exhale, p.exhale);
+      expect(
+          find.textContaining("${(EXHALE / Duration.millisecondsPerSecond)} s"),
           findsWidgets);
       expect(preference.vibrateBreath, p.vibrateBreath);
       expect(find.textContaining("${p.vibrateBreath} ms"), findsOneWidget);
@@ -59,6 +61,13 @@ Future<void> main() async {
               widget.key == Key(BREATH_TTS_TEXT) &&
               widget.value == BREATH_TTS),
           findsOneWidget);
+    }
+
+    Future<void> tapMenu(WidgetTester tester) async {
+      Finder menu = find.byKey(Key("menu"));
+      expect(menu, findsOneWidget);
+      await tester.tap(menu);
+      await tester.pumpAndSettle();
     }
 
     testWidgets('PreferencesWidget', (WidgetTester tester) async {
@@ -177,41 +186,21 @@ Future<void> main() async {
         expect(preference.breathTts, !BREATH_TTS);
       }
 
-      // Verify menu items
-      Finder menu = find.byKey(Key("menu"));
-      expect(menu, findsOneWidget);
-      await tester.tap(menu);
-      await tester.pumpAndSettle();
-
-      // Verify menu items
-      Finder resetAll = find.byKey(Key(RESET_ALL_TEXT));
-      expect(resetAll, findsOneWidget);
-      Finder backup = find.byKey(Key(BACKUP_TEXT));
-      expect(backup, findsOneWidget);
-      Finder restore = find.byKey(Key(RESTORE_TEXT));
-      expect(restore, findsOneWidget);
-      Finder presets = find.byKey(Key(PRESETS_TEXT));
-      expect(presets, findsOneWidget);
+      await tapMenu(tester);
 
       // Verify backup
+      Finder backup = find.byKey(Key(BACKUP_TEXT));
+      expect(backup, findsOneWidget);
       await tester.tap(backup);
       await tester.pumpAndSettle();
+      expect(find.textContaining("$SAVED_PREFERENCES preferences backed up"),
+          findsOneWidget);
 
-      menu = find.byKey(Key("menu"));
-      expect(menu, findsOneWidget);
-      await tester.tap(menu);
-      await tester.pumpAndSettle();
-
-      // Verify restore
-      await tester.tap(restore);
-      await tester.pumpAndSettle();
-
-      menu = find.byKey(Key("menu"));
-      expect(menu, findsOneWidget);
-      await tester.tap(menu);
-      await tester.pumpAndSettle();
+      await tapMenu(tester);
 
       // Verify reset all
+      Finder resetAll = find.byKey(Key(RESET_ALL_TEXT));
+      expect(resetAll, findsOneWidget);
       await tester.tap(resetAll);
       await tester.pumpAndSettle();
       Finder cont = find.byKey(Key(CONTINUE_TEXT));
@@ -222,17 +211,25 @@ Future<void> main() async {
       //TODO: Verify preferences reset
       //expect(preferences.length, 1);
 
-      menu = find.byKey(Key("menu"));
-      expect(menu, findsOneWidget);
-      await tester.tap(menu);
+      await tapMenu(tester);
+
+      // Verify restore
+      Finder restore = find.byKey(Key(RESTORE_TEXT));
+      expect(restore, findsOneWidget);
+      await tester.tap(restore);
       await tester.pumpAndSettle();
+      expect(preferences.length, 5);
+
+      await tapMenu(tester);
 
       // Verify presets
+      Finder presets = find.byKey(Key(PRESETS_TEXT));
+      expect(presets, findsOneWidget);
       await tester.tap(presets);
       await tester.pumpAndSettle();
-      Finder def = find.textContaining(DEFAULT_TEXT);
-      expect(def, findsOneWidget);
-      await tester.tap(def);
+      Finder defalt = find.textContaining(DEFAULT_TEXT);
+      expect(defalt, findsOneWidget);
+      await tester.tap(defalt);
       await tester.pumpAndSettle();
 
       verifyDefault(preferences.get(0));
