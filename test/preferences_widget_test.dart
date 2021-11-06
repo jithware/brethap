@@ -31,10 +31,13 @@ Future<void> main() async {
       expect(preference.duration, p.duration);
       expect(
           find.textContaining(
-              "${getDurationString(Duration(seconds: p.duration))}"),
+              "${getDurationString(Duration(seconds: p.duration))}",
+              skipOffstage: false),
           findsOneWidget);
       expect(preference.vibrateDuration, p.vibrateDuration);
-      expect(find.textContaining("${p.vibrateDuration} ms"), findsOneWidget);
+      expect(
+          find.textContaining("${p.vibrateDuration} ms", skipOffstage: false),
+          findsOneWidget);
       expect(preference.durationTts, p.durationTts);
       expect(
           find.byWidgetPredicate((widget) =>
@@ -46,7 +49,7 @@ Future<void> main() async {
       expect(preference.exhale, p.exhale);
       expect(
           find.textContaining("${(INHALE / Duration.millisecondsPerSecond)} s"),
-          findsOneWidget);
+          findsWidgets);
       expect(preference.vibrateBreath, p.vibrateBreath);
       expect(find.textContaining("${p.vibrateBreath} ms"), findsOneWidget);
       expect(preference.breathTts, p.breathTts);
@@ -144,8 +147,8 @@ Future<void> main() async {
         const Offset(0.0, 0.0),
       );
       await tester.pumpAndSettle();
-      expect(preference.vibrateBreath, 250);
-      expect(find.textContaining("250 ms"), findsOneWidget);
+      expect(preference.vibrateBreath, 500);
+      expect(find.textContaining("500 ms"), findsOneWidget);
 
       // Drag breath tts switch
       expect(preference.breathTts, BREATH_TTS);
@@ -170,7 +173,7 @@ Future<void> main() async {
         expect(preference.durationTts, !DURATION_TTS);
         expect(preference.inhale, [5300, 5000]);
         expect(preference.exhale, [5300, 5000]);
-        expect(preference.vibrateBreath, 250);
+        expect(preference.vibrateBreath, 500);
         expect(preference.breathTts, !BREATH_TTS);
       }
 
@@ -187,6 +190,8 @@ Future<void> main() async {
       expect(backup, findsOneWidget);
       Finder restore = find.byKey(Key(RESTORE_TEXT));
       expect(restore, findsOneWidget);
+      Finder presets = find.byKey(Key(PRESETS_TEXT));
+      expect(presets, findsOneWidget);
 
       // Verify backup
       await tester.tap(backup);
@@ -216,6 +221,21 @@ Future<void> main() async {
 
       //TODO: Verify preferences reset
       //expect(preferences.length, 1);
+
+      menu = find.byKey(Key("menu"));
+      expect(menu, findsOneWidget);
+      await tester.tap(menu);
+      await tester.pumpAndSettle();
+
+      // Verify presets
+      await tester.tap(presets);
+      await tester.pumpAndSettle();
+      Finder def = find.textContaining(DEFAULT_TEXT);
+      expect(def, findsOneWidget);
+      await tester.tap(def);
+      await tester.pumpAndSettle();
+
+      verifyDefault(preferences.get(0));
 
       // debugDumpApp();
     });

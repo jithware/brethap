@@ -106,7 +106,6 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       key: Key(name),
       onLongPress: () {
         debugPrint("onLongPress $name");
-        Feedback.forLongPress(context);
         _savePreference(position);
       },
       onPressed: () {
@@ -236,6 +235,45 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     return added;
   }
 
+  _showPresetDialog() {
+    SimpleDialog dialog = SimpleDialog(
+      title: const Text('Select a preset'),
+      children: <Widget>[
+        SimpleDialogOption(
+          onPressed: () {
+            Preference preference = widget.preferences.get(0);
+            preference.copy(getDefaultPref());
+            preference.save();
+            widget.callback();
+            _init();
+            Navigator.of(context).pop();
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("$DEFAULT_TEXT preference set"),
+            ));
+          },
+          child: Text(
+            DEFAULT_TEXT,
+            textScaleFactor: 1.5,
+          ),
+        ),
+        TextButton(
+          child: Text(CANCEL_TEXT, key: Key(CANCEL_TEXT)),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        )
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return dialog;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Preference preference = widget.preferences.get(0);
@@ -274,18 +312,36 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     });
                     debugPrint(RESTORE_TEXT);
                     break;
+                  case PRESETS_TEXT:
+                    _showPresetDialog();
+                    debugPrint(PRESETS_TEXT);
+                    break;
                 }
               },
-              itemBuilder: (BuildContext context) {
-                return {RESET_ALL_TEXT, BACKUP_TEXT, RESTORE_TEXT}
-                    .map((String choice) {
-                  return PopupMenuItem<String>(
-                    key: Key("$choice"),
-                    value: choice,
-                    child: Text(choice),
-                  );
-                }).toList();
-              },
+              itemBuilder: (BuildContext context) => [
+                PopupMenuItem<String>(
+                  key: Key(RESET_ALL_TEXT),
+                  value: RESET_ALL_TEXT,
+                  child: Text(RESET_ALL_TEXT),
+                ),
+                PopupMenuDivider(),
+                PopupMenuItem<String>(
+                  key: Key(BACKUP_TEXT),
+                  value: BACKUP_TEXT,
+                  child: Text(BACKUP_TEXT),
+                ),
+                PopupMenuItem<String>(
+                  key: Key(RESTORE_TEXT),
+                  value: RESTORE_TEXT,
+                  child: Text(RESTORE_TEXT),
+                ),
+                PopupMenuDivider(),
+                PopupMenuItem<String>(
+                  key: Key(PRESETS_TEXT),
+                  value: PRESETS_TEXT,
+                  child: Text(PRESETS_TEXT),
+                ),
+              ],
             ),
           ],
         ),
@@ -629,8 +685,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         key: Key(BREATH_VIBRATE_TEXT),
                         value: _vibrateBreathD,
                         min: 0,
-                        max: 50,
-                        divisions: 50,
+                        max: 100,
+                        divisions: 100,
                         onChanged: (double value) {
                           setState(() {
                             _vibrateBreathD = value;
