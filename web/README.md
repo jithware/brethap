@@ -12,6 +12,6 @@ flutter build web
 
 Copy files from ```build/web``` directory to the ```docs``` directory:
 ```
-rsync -av --exclude=README.md build/web/ docs/
+cp -avr build/web/* docs/
 ```
  Commit changes to github
