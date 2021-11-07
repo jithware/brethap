@@ -2,6 +2,7 @@ const String JITHWARE_URL = "http://www.jithware.com",
     DONATE_URL =
         "https://www.paypal.com/donate/?hosted_button_id=2ZFSMQ8DGQVFS",
     BUGS_URL = "https://github.com/jithware/brethap/issues",
+    HELP_URL = "https://github.com/jithware/brethap#readme",
     COPYRIGHT = "Copyright 2021 Jithware. All rights reserved.";
 
 const String DATE_FORMAT = "yyyy-MM-dd h:mm a",

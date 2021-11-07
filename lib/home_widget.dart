@@ -428,10 +428,10 @@ $url'''),
                 applicationLegalese: COPYRIGHT,
                 aboutBoxChildren: [
                   ListTile(
-                    title: const Text('Website'),
-                    leading: Icon(Icons.web_asset),
+                    title: const Text('Help'),
+                    leading: Icon(Icons.help),
                     onTap: () {
-                      _launchURL(JITHWARE_URL);
+                      _launchURL(HELP_URL);
                     },
                   ),
                   ListTile(
