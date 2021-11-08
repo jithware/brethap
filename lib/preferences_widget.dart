@@ -462,6 +462,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
               Divider(
                 thickness: 3,
               ),
+              SizedBox(height: 50),
 
               // Inhale
               Row(
@@ -664,6 +665,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
               Divider(
                 thickness: 3,
               ),
+              SizedBox(height: 50),
 
               // Breath vibrate
               Row(
@@ -732,7 +734,6 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
               Divider(
                 thickness: 3,
               ),
-
               SizedBox(height: 50),
             ],
           ),
