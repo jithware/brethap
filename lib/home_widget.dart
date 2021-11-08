@@ -145,18 +145,23 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
 
     _vibrate(preference.vibrateDuration);
 
+    Duration diff = roundDuration(session.end.difference(session.start));
+    String duration = getDurationString(diff);
+    int breaths = session.breaths;
+    String text = "Completed a $duration session";
+    if (breaths == 1) {
+      text += ", with $breaths breath";
+    } else {
+      text += ", with $breaths breaths";
+    }
+
     if (preference.durationTts) {
-      Duration diff = roundDuration(session.end.difference(session.start));
-      String duration = getDurationString(diff);
-      int breaths = session.breaths;
-      String text = "Completed a $duration session";
-      if (breaths == 1) {
-        text += ", with $breaths breath";
-      } else {
-        text += ", with $breaths breaths";
-      }
       await _speak(text);
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(text),
+    ));
   }
 
   Future<void> _onBreath(String text) async {

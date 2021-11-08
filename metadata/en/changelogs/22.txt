@@ -1,0 +1,2 @@
+* Added message when session completes of duration and breaths
+* Minor enhancements
