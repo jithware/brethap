@@ -105,6 +105,8 @@ Future<void> main() async {
       expect(backup, findsOneWidget);
       Finder restore = find.byKey(Key(RESTORE_TEXT));
       expect(restore, findsOneWidget);
+      Finder export = find.byKey(Key(EXPORT_TEXT));
+      expect(export, findsOneWidget);
 
       // Verify backup
       await tester.tap(backup);
@@ -117,6 +119,15 @@ Future<void> main() async {
 
       // Verify restore
       await tester.tap(restore);
+      await tester.pumpAndSettle();
+
+      menu = find.byKey(Key("menu"));
+      expect(menu, findsOneWidget);
+      await tester.tap(menu);
+      await tester.pumpAndSettle();
+
+      // Verify export
+      await tester.tap(export);
       await tester.pumpAndSettle();
 
       menu = find.byKey(Key("menu"));
