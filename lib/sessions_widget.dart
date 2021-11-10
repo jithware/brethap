@@ -71,7 +71,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
     int added = 0;
     try {
       List<List<dynamic>> rows = [
-        ["start", "end", "breath"]
+        ["start", "end", "breaths"]
       ];
       list.forEach((element) {
         added++;
@@ -180,18 +180,44 @@ class _SessionsWidgetState extends State<SessionsWidget> {
                   });
                   debugPrint(RESTORE_TEXT);
                   break;
+                case EXPORT_TEXT:
+                  _exportCsv(_list).then((number) {
+                    _getExportFile().then((file) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content:
+                            Text("$number sessions exported to:\n${file.path}"),
+                        duration: Duration(seconds: 5),
+                      ));
+                    });
+                  });
+                  debugPrint(EXPORT_TEXT);
+                  break;
               }
             },
-            itemBuilder: (BuildContext context) {
-              return {CLEAR_ALL_TEXT, BACKUP_TEXT, RESTORE_TEXT}
-                  .map((String choice) {
-                return PopupMenuItem<String>(
-                  key: Key("$choice"),
-                  value: choice,
-                  child: Text(choice),
-                );
-              }).toList();
-            },
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem<String>(
+                key: Key(CLEAR_ALL_TEXT),
+                value: CLEAR_ALL_TEXT,
+                child: Text(CLEAR_ALL_TEXT),
+              ),
+              PopupMenuDivider(),
+              PopupMenuItem<String>(
+                key: Key(BACKUP_TEXT),
+                value: BACKUP_TEXT,
+                child: Text(BACKUP_TEXT),
+              ),
+              PopupMenuItem<String>(
+                key: Key(RESTORE_TEXT),
+                value: RESTORE_TEXT,
+                child: Text(RESTORE_TEXT),
+              ),
+              PopupMenuDivider(),
+              PopupMenuItem<String>(
+                key: Key(EXPORT_TEXT),
+                value: EXPORT_TEXT,
+                child: Text(EXPORT_TEXT),
+              ),
+            ],
           ),
         ],
       ),
