@@ -140,13 +140,21 @@ String getStreak(
 Preference getDefaultPref() {
   Preference preference = Preference(
     duration: DURATION,
-    inhale: [INHALE, INHALE_HOLD],
-    exhale: [EXHALE, EXHALE_HOLD],
+    inhale: [INHALE, INHALE_HOLD, INHALE_LAST],
+    exhale: [EXHALE, EXHALE_HOLD, EXHALE_LAST],
     vibrateDuration: VIBRATE_DURATION,
     vibrateBreath: VIBRATE_BREATH,
     durationTts: DURATION_TTS,
     breathTts: BREATH_TTS,
   );
+  return preference;
+}
+
+Preference getPhysSighPref() {
+  Preference preference = getDefaultPref();
+  preference.duration = DURATION_PS;
+  preference.inhale = [INHALE_PS, INHALE_HOLD_PS, INHALE_LAST_PS];
+  preference.exhale[0] = EXHALE_PS;
   return preference;
 }
 

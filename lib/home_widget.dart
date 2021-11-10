@@ -193,12 +193,16 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
       _wakeLock(true);
 
       Duration timerSpan = Duration(milliseconds: 100);
-      int inhale = preference.inhale[0] + preference.inhale[1];
-      int exhale = preference.exhale[0] + preference.exhale[1];
+      int inhale =
+          preference.inhale[0] + preference.inhale[1] + preference.inhale[2];
+      int exhale =
+          preference.exhale[0] + preference.exhale[1] + preference.exhale[2];
       int breath = inhale + exhale;
       int cycle = 0;
-      double inhaleScale = timerSpan.inMilliseconds / preference.inhale[0];
-      double exhaleScale = timerSpan.inMilliseconds / preference.exhale[0];
+      double inhaleScale = timerSpan.inMilliseconds /
+          (preference.inhale[0] + preference.inhale[2]);
+      double exhaleScale = timerSpan.inMilliseconds /
+          (preference.exhale[0] + preference.exhale[2]);
       bool inhaling = true, exhaling = false;
 
       Timer.periodic(timerSpan, (Timer timer) {
@@ -233,6 +237,13 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               text = HOLD_TEXT;
               _onBreath(text);
               _status = text;
+            } else if (preference.inhale[2] > 0 &&
+                cycle == preference.inhale[0] + preference.inhale[1]) {
+              inhaling = true;
+              exhaling = false;
+              text = INHALE_TEXT;
+              _onBreath(text);
+              _status = text;
             } else if (cycle == inhale) {
               inhaling = false;
               exhaling = true;
@@ -245,6 +256,13 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               inhaling = false;
               exhaling = false;
               text = HOLD_TEXT;
+              _onBreath(text);
+              _status = text;
+            } else if (preference.exhale[2] > 0 &&
+                cycle == inhale + preference.exhale[0] + preference.exhale[1]) {
+              inhaling = false;
+              exhaling = true;
+              text = EXHALE_TEXT;
               _onBreath(text);
               _status = text;
             }

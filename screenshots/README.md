@@ -2,5 +2,5 @@
 
 To take screenshots, run:
 ```
-flutter screenshot -d <device name> -o <image.png>
+flutter screenshot -d <device name> -o metadata/en/images/phoneScreenshots/<image number>.png
 ```

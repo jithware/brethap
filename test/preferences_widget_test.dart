@@ -25,42 +25,14 @@ Future<void> main() async {
 
     tearDown((() async {}));
 
-    void verifyDefault(Preference preference) {
-      Preference p = getDefaultPref();
-      expect(preference.duration, p.duration);
-      expect(
-          find.textContaining(
-              "${getDurationString(Duration(seconds: p.duration))}",
-              skipOffstage: false),
-          findsOneWidget);
-      expect(preference.vibrateDuration, p.vibrateDuration);
-      expect(
-          find.textContaining("${p.vibrateDuration} ms", skipOffstage: false),
-          findsOneWidget);
-      expect(preference.durationTts, p.durationTts);
-      expect(
-          find.byWidgetPredicate((widget) =>
-              widget is Switch &&
-              widget.key == Key(DURATION_TTS_TEXT) &&
-              widget.value == DURATION_TTS),
-          findsOneWidget);
-      expect(preference.inhale, p.inhale);
-      expect(
-          find.textContaining("${(INHALE / Duration.millisecondsPerSecond)} s"),
-          findsWidgets);
-      expect(preference.exhale, p.exhale);
-      expect(
-          find.textContaining("${(EXHALE / Duration.millisecondsPerSecond)} s"),
-          findsWidgets);
-      expect(preference.vibrateBreath, p.vibrateBreath);
-      expect(find.textContaining("${p.vibrateBreath} ms"), findsOneWidget);
-      expect(preference.breathTts, p.breathTts);
-      expect(
-          find.byWidgetPredicate((widget) =>
-              widget is Switch &&
-              widget.key == Key(BREATH_TTS_TEXT) &&
-              widget.value == BREATH_TTS),
-          findsOneWidget);
+    void verifyPreferences(Preference pref1, Preference pref2) {
+      expect(pref1.duration, pref2.duration);
+      expect(pref1.vibrateDuration, pref2.vibrateDuration);
+      expect(pref1.durationTts, pref2.durationTts);
+      expect(pref1.inhale, pref2.inhale);
+      expect(pref1.exhale, pref2.exhale);
+      expect(pref1.vibrateBreath, pref2.vibrateBreath);
+      expect(pref1.breathTts, pref2.breathTts);
     }
 
     Future<void> tapMenu(WidgetTester tester) async {
@@ -114,7 +86,7 @@ Future<void> main() async {
           findsWidgets);
       await tester.drag(find.byKey(Key(INHALE_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
-      expect(preference.inhale, [5300, INHALE_HOLD]);
+      expect(preference.inhale, [5300, INHALE_HOLD, INHALE_LAST]);
       expect(find.textContaining("5.3 s"), findsWidgets);
 
       // Drag inhale hold slider
@@ -125,20 +97,32 @@ Future<void> main() async {
       await tester.drag(
           find.byKey(Key(INHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
-      expect(preference.inhale, [5300, 5000]);
+      expect(preference.inhale, [5300, 5000, INHALE_LAST]);
+      expect(find.textContaining("5.0 s"), findsWidgets);
+
+      // Drag inhale last slider
+      expect(
+          find.textContaining(
+              "${(INHALE_LAST / Duration.millisecondsPerSecond)} s"),
+          findsWidgets);
+      await tester.drag(
+          find.byKey(Key(INHALE_LAST_TEXT)), const Offset(0.0, 0.0));
+      await tester.pumpAndSettle();
+      expect(preference.inhale, [5300, 5000, 5000]);
       expect(find.textContaining("5.0 s"), findsWidgets);
 
       // Drag exhale slider
+      await tester.ensureVisible(find.byKey(Key(EXHALE_TEXT)));
+      await tester.pumpAndSettle();
       expect(
-          find.textContaining("${(INHALE / Duration.millisecondsPerSecond)} s"),
+          find.textContaining("${(EXHALE / Duration.millisecondsPerSecond)} s"),
           findsWidgets);
       await tester.drag(find.byKey(Key(EXHALE_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
-      expect(preference.exhale, [5300, EXHALE_HOLD]);
+      expect(preference.exhale, [5300, EXHALE_HOLD, EXHALE_LAST]);
       expect(find.textContaining("5.3 s"), findsWidgets);
 
       // Drag exhale hold slider
-      await tester.ensureVisible(find.byKey(Key(EXHALE_HOLD_TEXT)));
       expect(
           find.textContaining(
               "${(EXHALE_HOLD / Duration.millisecondsPerSecond)} s"),
@@ -146,7 +130,18 @@ Future<void> main() async {
       await tester.drag(
           find.byKey(Key(EXHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
-      expect(preference.exhale, [5300, 5000]);
+      expect(preference.exhale, [5300, 5000, EXHALE_LAST]);
+      expect(find.textContaining("5.0 s"), findsWidgets);
+
+      // Drag exhale last slider
+      expect(
+          find.textContaining(
+              "${(EXHALE_LAST / Duration.millisecondsPerSecond)} s"),
+          findsWidgets);
+      await tester.drag(
+          find.byKey(Key(EXHALE_LAST_TEXT)), const Offset(0.0, 0.0));
+      await tester.pumpAndSettle();
+      expect(preference.exhale, [5300, 5000, 5000]);
       expect(find.textContaining("5.0 s"), findsWidgets);
 
       // Drag vibrate breath slider
@@ -180,8 +175,8 @@ Future<void> main() async {
         expect(preference.duration, 3660);
         expect(preference.vibrateDuration, 500);
         expect(preference.durationTts, !DURATION_TTS);
-        expect(preference.inhale, [5300, 5000]);
-        expect(preference.exhale, [5300, 5000]);
+        expect(preference.inhale, [5300, 5000, 5000]);
+        expect(preference.exhale, [5300, 5000, 5000]);
         expect(preference.vibrateBreath, 500);
         expect(preference.breathTts, !BREATH_TTS);
       }
@@ -225,14 +220,25 @@ Future<void> main() async {
       // Verify presets
       Finder presets = find.byKey(Key(PRESETS_TEXT));
       expect(presets, findsOneWidget);
+
+      // Verify default preset
       await tester.tap(presets);
       await tester.pumpAndSettle();
       Finder defalt = find.textContaining(DEFAULT_TEXT);
       expect(defalt, findsOneWidget);
       await tester.tap(defalt);
       await tester.pumpAndSettle();
+      verifyPreferences(preferences.get(0), getDefaultPref());
 
-      verifyDefault(preferences.get(0));
+      // Verify physiological sigh preset
+      await tapMenu(tester);
+      await tester.tap(presets);
+      await tester.pumpAndSettle();
+      Finder physsigh = find.textContaining(PHYS_SIGH_TEXT);
+      expect(physsigh, findsOneWidget);
+      await tester.tap(physsigh);
+      await tester.pumpAndSettle();
+      verifyPreferences(preferences.get(0), getPhysSighPref());
 
       // debugDumpApp();
     });

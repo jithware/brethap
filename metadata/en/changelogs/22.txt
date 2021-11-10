@@ -1,3 +1,4 @@
 * Added message when session completes of duration and breaths
 * Added spacers between preferences for easier scrolling
+* Added physiological sigh preset
 * Minor enhancements

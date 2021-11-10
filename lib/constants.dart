@@ -12,6 +12,8 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     HOLD_TEXT = "Hold",
     INHALE_HOLD_TEXT = "Inhale Hold",
     EXHALE_HOLD_TEXT = "Exhale Hold",
+    INHALE_LAST_TEXT = "Inhale Last",
+    EXHALE_LAST_TEXT = "Exhale Last",
     DURATION_TEXT = "Duration",
     DURATION_VIBRATE_TEXT = "Duration Vibrate",
     DURATION_TTS_TEXT = "Duration TTS",
@@ -23,6 +25,7 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     RESTORE_TEXT = "Restore",
     PRESETS_TEXT = "Presets",
     DEFAULT_TEXT = "Default",
+    PHYS_SIGH_TEXT = "Physiological Sigh",
     CONTINUE_TEXT = "Continue",
     CANCEL_TEXT = "Cancel",
     OK_TEXT = "Ok";
@@ -33,8 +36,17 @@ const int SAVED_PREFERENCES = 5;
 const int DURATION = 120, //seconds
     INHALE = 4000, //milliseconds
     INHALE_HOLD = 0, //milliseconds
+    INHALE_LAST = 0, //milliseconds
     EXHALE = 4000, //milliseconds
     EXHALE_HOLD = 0, //milliseconds
+    EXHALE_LAST = 0, //milliseconds
     VIBRATE_DURATION = 250, //milliseconds
     VIBRATE_BREATH = 25; //milliseconds
 const bool DURATION_TTS = true, BREATH_TTS = true;
+
+// Physiological sigh values
+const int DURATION_PS = 60, //seconds
+    INHALE_PS = 1000, //milliseconds
+    INHALE_HOLD_PS = 500, //milliseconds
+    INHALE_LAST_PS = 500, //milliseconds
+    EXHALE_PS = 3000; //milliseconds

@@ -25,8 +25,10 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
   late double _durationD = DURATION.toDouble() / Duration.secondsPerMinute,
       _inhale0 = INHALE.toDouble() / Duration.millisecondsPerSecond * 10,
       _inhale1 = INHALE_HOLD.toDouble() / Duration.millisecondsPerSecond * 10,
+      _inhale2 = INHALE_LAST.toDouble() / Duration.millisecondsPerSecond * 10,
       _exhale0 = EXHALE.toDouble() / Duration.millisecondsPerSecond * 10,
       _exhale1 = EXHALE_HOLD.toDouble() / Duration.millisecondsPerSecond * 10,
+      _exhale2 = EXHALE_LAST.toDouble() / Duration.millisecondsPerSecond * 10,
       _vibrateDurationD = VIBRATE_DURATION.toDouble() / 10,
       _vibrateBreathD = VIBRATE_BREATH.toDouble() / 10;
   late bool _durationTts = DURATION_TTS, _breathTts = BREATH_TTS;
@@ -57,10 +59,14 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           preference.inhale[0].toDouble() / Duration.millisecondsPerSecond * 10;
       _inhale1 =
           preference.inhale[1].toDouble() / Duration.millisecondsPerSecond * 10;
+      _inhale2 =
+          preference.inhale[2].toDouble() / Duration.millisecondsPerSecond * 10;
       _exhale0 =
           preference.exhale[0].toDouble() / Duration.millisecondsPerSecond * 10;
       _exhale1 =
           preference.exhale[1].toDouble() / Duration.millisecondsPerSecond * 10;
+      _exhale2 =
+          preference.exhale[2].toDouble() / Duration.millisecondsPerSecond * 10;
       _vibrateDurationD = preference.vibrateDuration.toDouble() / 10;
       _vibrateBreathD = preference.vibrateBreath.toDouble() / 10;
       _durationTts = preference.durationTts;
@@ -170,8 +176,10 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           "duration",
           "inhale0",
           "inhale1",
+          "inhale2",
           "exhale0",
           "exhale1",
+          "exhale2",
           "vibrateDuration",
           "vibrateBreath",
           "durationTts",
@@ -185,8 +193,10 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           element.duration,
           element.inhale[0],
           element.inhale[1],
+          element.inhale[2],
           element.exhale[0],
           element.exhale[1],
+          element.exhale[2],
           element.vibrateDuration,
           element.vibrateBreath,
           element.durationTts,
@@ -217,12 +227,12 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
         Preference preference = widget.preferences.getAt(i - 1);
         Preference p = Preference(
             duration: row[0],
-            inhale: [row[1], row[2]],
-            exhale: [row[3], row[4]],
-            vibrateDuration: row[5],
-            vibrateBreath: row[6],
-            durationTts: row[7].contains("true"),
-            breathTts: row[8].contains("true"));
+            inhale: [row[1], row[2], row[3]],
+            exhale: [row[4], row[5], row[6]],
+            vibrateDuration: row[7],
+            vibrateBreath: row[8],
+            durationTts: row[9].contains("true"),
+            breathTts: row[10].contains("true"));
         preference.copy(p);
         await preference.save();
         added = i - 1;
@@ -239,6 +249,23 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     SimpleDialog dialog = SimpleDialog(
       title: const Text('Select a preset'),
       children: <Widget>[
+        SimpleDialogOption(
+          onPressed: () {
+            Preference preference = widget.preferences.get(0);
+            preference.copy(getPhysSighPref());
+            preference.save();
+            widget.callback();
+            _init();
+            Navigator.of(context).pop();
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("$PHYS_SIGH_TEXT preference set"),
+            ));
+          },
+          child: Text(
+            PHYS_SIGH_TEXT,
+            textScaleFactor: 1.5,
+          ),
+        ),
         SimpleDialogOption(
           onPressed: () {
             Preference preference = widget.preferences.get(0);
@@ -563,6 +590,61 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 ],
               ),
 
+              // Inhale last
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    INHALE_LAST_TEXT,
+                  ),
+                  Text(
+                      (preference.inhale[2].toDouble() /
+                                  Duration.millisecondsPerSecond.toDouble())
+                              .toString() +
+                          " s",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      width: MediaQuery.of(context).size.width - 30,
+                      child: Slider(
+                        key: Key(INHALE_LAST_TEXT),
+                        value: _inhale2,
+                        min: 0,
+                        max: 100,
+                        divisions: 100,
+                        onChanged: (double value) {
+                          setState(() {
+                            _inhale2 = value;
+                            double tenthSeconds = (value.round().toInt()) / 10;
+                            preference.inhale[2] =
+                                (tenthSeconds * Duration.millisecondsPerSecond)
+                                    .toInt();
+                          });
+                        },
+                        onChangeEnd: (double value) {
+                          setState(() {
+                            double tenthSeconds = (value.round().toInt()) / 10;
+                            preference.inhale[2] =
+                                (tenthSeconds * Duration.millisecondsPerSecond)
+                                    .toInt();
+                            preference.save();
+                          });
+                          debugPrint(
+                              "$INHALE_LAST_TEXT: ${preference.inhale[2]}");
+                        },
+                      ))
+                ],
+              ),
+
+              Divider(
+                thickness: 3,
+              ),
+              SizedBox(height: 50),
+
               // Exhale
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -657,6 +739,56 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                           });
                           debugPrint(
                               "$EXHALE_HOLD_TEXT: ${preference.exhale[1]}");
+                        },
+                      ))
+                ],
+              ),
+
+              // Exhale last
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    EXHALE_LAST_TEXT,
+                  ),
+                  Text(
+                      (preference.exhale[2].toDouble() /
+                                  Duration.millisecondsPerSecond.toDouble())
+                              .toString() +
+                          " s",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      width: MediaQuery.of(context).size.width - 30,
+                      child: Slider(
+                        key: Key(EXHALE_LAST_TEXT),
+                        value: _exhale2,
+                        min: 0,
+                        max: 100,
+                        divisions: 100,
+                        onChanged: (double value) {
+                          setState(() {
+                            _exhale2 = value;
+                            double tenthSeconds = (value.round().toInt()) / 10;
+                            preference.exhale[2] =
+                                (tenthSeconds * Duration.millisecondsPerSecond)
+                                    .toInt();
+                          });
+                        },
+                        onChangeEnd: (double value) {
+                          setState(() {
+                            double tenthSeconds = (value.round().toInt()) / 10;
+                            preference.exhale[2] =
+                                (tenthSeconds * Duration.millisecondsPerSecond)
+                                    .toInt();
+                            preference.save();
+                          });
+                          debugPrint(
+                              "$EXHALE_LAST_TEXT: ${preference.exhale[2]}");
                         },
                       ))
                 ],
