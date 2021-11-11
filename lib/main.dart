@@ -24,17 +24,24 @@ Future<void> main() async {
   Hive.registerAdapter(PreferenceAdapter());
   Hive.registerAdapter(SessionAdapter());
 
+  // Initialize package info
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  String appName = packageInfo.appName;
+  String version = "${packageInfo.version}+${packageInfo.buildNumber}";
+  String major = packageInfo.version.split(".")[0];
+  String minor = packageInfo.version.split(".")[1];
+
   // Initialize Hive boxes
   Box preferences;
-  const String PREFERENCES_BOX = "preferences";
+  String preferencesBox = "preferences.$major.$minor";
   try {
-    preferences = await Hive.openBox(PREFERENCES_BOX);
+    preferences = await Hive.openBox(preferencesBox);
   } catch (e) {
     // Corrupted or incompatible box
     debugPrint(e.toString());
-    await Hive.deleteBoxFromDisk(PREFERENCES_BOX);
+    await Hive.deleteBoxFromDisk(preferencesBox);
     // Try again
-    preferences = await Hive.openBox(PREFERENCES_BOX);
+    preferences = await Hive.openBox(preferencesBox);
   }
 
   Box sessions;
@@ -48,11 +55,6 @@ Future<void> main() async {
     // Try again
     sessions = await Hive.openBox(SESSIONS_BOX);
   }
-
-  // Initialize package info
-  PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  String appName = packageInfo.appName;
-  String version = "${packageInfo.version}+${packageInfo.buildNumber}";
 
   runApp(MainWidget(
     appName: appName,
