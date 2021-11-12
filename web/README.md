@@ -14,4 +14,4 @@ Copy files from ```build/web``` directory to the ```docs``` directory:
 ```
 cp -avr build/web/* docs/
 ```
- Commit changes to github
+Commit changes to github
