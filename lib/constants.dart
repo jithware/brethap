@@ -49,7 +49,7 @@ const int DURATION = 120, //seconds
 const bool DURATION_TTS = true, BREATH_TTS = true;
 
 // Physiological sigh values
-const int DURATION_PS = 60, //seconds
+const int DURATION_PS = 15, //seconds
     INHALE_PS = 1000, //milliseconds
     INHALE_HOLD_PS = 500, //milliseconds
     INHALE_LAST_PS = 500, //milliseconds
