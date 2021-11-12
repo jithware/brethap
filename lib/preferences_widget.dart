@@ -245,44 +245,34 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     return added;
   }
 
+  _getPresetOption(String text, Preference pref) {
+    return SimpleDialogOption(
+      onPressed: () {
+        Preference preference = widget.preferences.get(0);
+        preference.copy(pref);
+        preference.save();
+        widget.callback();
+        _init();
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("$text preference set"),
+        ));
+        debugPrint("$text preference set");
+      },
+      child: Text(
+        text,
+        textScaleFactor: 1.5,
+      ),
+    );
+  }
+
   _showPresetDialog() {
     SimpleDialog dialog = SimpleDialog(
       title: const Text('Select a preset'),
       children: <Widget>[
-        SimpleDialogOption(
-          onPressed: () {
-            Preference preference = widget.preferences.get(0);
-            preference.copy(getPhysSighPref());
-            preference.save();
-            widget.callback();
-            _init();
-            Navigator.of(context).pop();
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("$PHYS_SIGH_TEXT preference set"),
-            ));
-          },
-          child: Text(
-            PHYS_SIGH_TEXT,
-            textScaleFactor: 1.5,
-          ),
-        ),
-        SimpleDialogOption(
-          onPressed: () {
-            Preference preference = widget.preferences.get(0);
-            preference.copy(getDefaultPref());
-            preference.save();
-            widget.callback();
-            _init();
-            Navigator.of(context).pop();
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("$DEFAULT_TEXT preference set"),
-            ));
-          },
-          child: Text(
-            DEFAULT_TEXT,
-            textScaleFactor: 1.5,
-          ),
-        ),
+        _getPresetOption(PRESET_478_TEXT, get478Pref()),
+        _getPresetOption(PHYS_SIGH_TEXT, getPhysSighPref()),
+        _getPresetOption(DEFAULT_TEXT, getDefaultPref()),
         TextButton(
           child: Text(CANCEL_TEXT, key: Key(CANCEL_TEXT)),
           onPressed: () {

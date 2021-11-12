@@ -27,6 +27,7 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     PRESETS_TEXT = "Presets",
     DEFAULT_TEXT = "Default",
     PHYS_SIGH_TEXT = "Physiological Sigh",
+    PRESET_478_TEXT = "4-7-8",
     CONTINUE_TEXT = "Continue",
     CANCEL_TEXT = "Cancel",
     OK_TEXT = "Ok";
@@ -51,3 +52,9 @@ const int DURATION_PS = 60, //seconds
     INHALE_HOLD_PS = 500, //milliseconds
     INHALE_LAST_PS = 500, //milliseconds
     EXHALE_PS = 3000; //milliseconds
+
+// 4-7-8  values
+const int DURATION_478 = 76, //seconds
+    INHALE_478 = 4000, //milliseconds
+    INHALE_HOLD_478 = 7000, //milliseconds
+    EXHALE_478 = 8000; //milliseconds

@@ -158,6 +158,15 @@ Preference getPhysSighPref() {
   return preference;
 }
 
+Preference get478Pref() {
+  Preference preference = getDefaultPref();
+  preference.duration = DURATION_478;
+  preference.inhale[0] = INHALE_478;
+  preference.inhale[1] = INHALE_HOLD_478;
+  preference.exhale[0] = EXHALE_478;
+  return preference;
+}
+
 Future<void> createDefaultPref(Box preferences) async {
   Preference preference = getDefaultPref();
   await preferences.add(preference);

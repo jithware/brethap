@@ -240,6 +240,16 @@ Future<void> main() async {
       await tester.pumpAndSettle();
       verifyPreferences(preferences.get(0), getPhysSighPref());
 
+      // Verify 4-7-8 preset
+      await tapMenu(tester);
+      await tester.tap(presets);
+      await tester.pumpAndSettle();
+      Finder preset478 = find.textContaining(PRESET_478_TEXT);
+      expect(preset478, findsOneWidget);
+      await tester.tap(preset478);
+      await tester.pumpAndSettle();
+      verifyPreferences(preferences.get(0), get478Pref());
+
       // debugDumpApp();
     });
   });
