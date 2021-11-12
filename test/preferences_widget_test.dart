@@ -55,15 +55,23 @@ Future<void> main() async {
 
       Preference preference = preferences.get(0);
 
-      // Drag duration slider
+      // Drag duration minutes slider
       expect(
           find.textContaining(
               "${getDurationString(Duration(seconds: DURATION))}"),
           findsOneWidget);
-      await tester.drag(find.byKey(Key(DURATION_TEXT)), const Offset(0.0, 0.0));
+      await tester.drag(
+          find.byKey(Key(DURATION_MINUTES_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
-      expect(preference.duration, 3660);
-      expect(find.bySemanticsLabel(RegExp("1:01:00")), findsOneWidget);
+      expect(preference.duration, 3600);
+      expect(find.bySemanticsLabel(RegExp("1:00:00")), findsOneWidget);
+
+      // Drag duration seconds slider
+      await tester.drag(
+          find.byKey(Key(DURATION_SECONDS_TEXT)), const Offset(0.0, 0.0));
+      await tester.pumpAndSettle();
+      expect(preference.duration, 3629);
+      expect(find.bySemanticsLabel(RegExp("1:00:29")), findsOneWidget);
 
       // Drag vibrate duration slider
       expect(find.textContaining("$VIBRATE_DURATION ms"), findsOneWidget);
@@ -112,7 +120,8 @@ Future<void> main() async {
       expect(find.textContaining("5.0 s"), findsWidgets);
 
       // Drag exhale slider
-      await tester.ensureVisible(find.byKey(Key(EXHALE_TEXT)));
+      await tester
+          .ensureVisible(find.byKey(Key(EXHALE_TEXT), skipOffstage: false));
       await tester.pumpAndSettle();
       expect(
           find.textContaining("${(EXHALE / Duration.millisecondsPerSecond)} s"),
@@ -172,7 +181,7 @@ Future<void> main() async {
 
         // Verify preference
         preference = preferences.get(i);
-        expect(preference.duration, 3660);
+        expect(preference.duration, 3629);
         expect(preference.vibrateDuration, 500);
         expect(preference.durationTts, !DURATION_TTS);
         expect(preference.inhale, [5300, 5000, 5000]);

@@ -22,16 +22,18 @@ class PreferencesWidget extends StatefulWidget {
 }
 
 class _PreferencesWidgetState extends State<PreferencesWidget> {
-  late double _durationD = DURATION.toDouble() / Duration.secondsPerMinute,
-      _inhale0 = INHALE.toDouble() / Duration.millisecondsPerSecond * 10,
-      _inhale1 = INHALE_HOLD.toDouble() / Duration.millisecondsPerSecond * 10,
-      _inhale2 = INHALE_LAST.toDouble() / Duration.millisecondsPerSecond * 10,
-      _exhale0 = EXHALE.toDouble() / Duration.millisecondsPerSecond * 10,
-      _exhale1 = EXHALE_HOLD.toDouble() / Duration.millisecondsPerSecond * 10,
-      _exhale2 = EXHALE_LAST.toDouble() / Duration.millisecondsPerSecond * 10,
-      _vibrateDurationD = VIBRATE_DURATION.toDouble() / 10,
-      _vibrateBreathD = VIBRATE_BREATH.toDouble() / 10;
-  late bool _durationTts = DURATION_TTS, _breathTts = BREATH_TTS;
+  static const double MINIMUM_BREATH = 5.0;
+  late double _durationMinutes = 0.0,
+      _durationSeconds = 0.0,
+      _inhale0 = MINIMUM_BREATH,
+      _inhale1 = 0.0,
+      _inhale2 = 0.0,
+      _exhale0 = MINIMUM_BREATH,
+      _exhale1 = 0.0,
+      _exhale2 = 0.0,
+      _vibrateDurationD = 0.0,
+      _vibrateBreathD = 0.0;
+  late bool _durationTts = false, _breathTts = false;
 
   @override
   initState() {
@@ -54,7 +56,10 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     Preference preference = widget.preferences.get(0);
 
     setState(() {
-      _durationD = preference.duration.toDouble() / Duration.secondsPerMinute;
+      Duration duration = Duration(seconds: preference.duration);
+      _durationMinutes = duration.inMinutes.toDouble();
+      _durationSeconds =
+          (duration.inSeconds % Duration.secondsPerMinute).toDouble();
       _inhale0 =
           preference.inhale[0].toDouble() / Duration.millisecondsPerSecond * 10;
       _inhale1 =
@@ -384,28 +389,72 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   Container(
                       width: MediaQuery.of(context).size.width - 30,
                       child: Slider(
-                        key: Key(DURATION_TEXT),
-                        value: _durationD,
-                        min: 1,
+                        key: Key(DURATION_MINUTES_TEXT),
+                        value: _durationMinutes,
+                        min: 0,
                         max: 120,
-                        divisions: 120,
+                        divisions: 121,
                         onChanged: (double value) {
                           setState(() {
-                            _durationD = value;
-                            preference.duration =
-                                (value.round() * Duration.secondsPerMinute)
-                                    .toInt();
+                            _durationMinutes = value;
+                            preference.duration = Duration(
+                                    minutes: _durationMinutes.toInt(),
+                                    seconds: _durationSeconds.toInt())
+                                .inSeconds
+                                .toInt();
                           });
                         },
                         onChangeEnd: (double value) {
                           setState(() {
-                            preference.duration =
-                                (value.round() * Duration.secondsPerMinute)
-                                    .toInt();
+                            preference.duration = Duration(
+                                    minutes: _durationMinutes.toInt(),
+                                    seconds: _durationSeconds.toInt())
+                                .inSeconds
+                                .toInt();
                             preference.save();
                             widget.callback();
                           });
-                          debugPrint("$DURATION_TEXT: ${preference.duration}");
+                          debugPrint(
+                              "$DURATION_SECONDS_TEXT: ${preference.duration}");
+                        },
+                      )),
+                ],
+              ),
+
+              // Duration seconds
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      width: MediaQuery.of(context).size.width - 30,
+                      child: Slider(
+                        key: Key(DURATION_SECONDS_TEXT),
+                        value: _durationSeconds,
+                        min: 0,
+                        max: 59,
+                        divisions: 60,
+                        onChanged: (double value) {
+                          setState(() {
+                            _durationSeconds = value;
+                            preference.duration = Duration(
+                                    minutes: _durationMinutes.toInt(),
+                                    seconds: _durationSeconds.toInt())
+                                .inSeconds
+                                .toInt();
+                          });
+                        },
+                        onChangeEnd: (double value) {
+                          setState(() {
+                            preference.duration = Duration(
+                                    minutes: _durationMinutes.toInt(),
+                                    seconds: _durationSeconds.toInt())
+                                .inSeconds
+                                .toInt();
+                            preference.save();
+                            widget.callback();
+                          });
+                          debugPrint(
+                              "$DURATION_SECONDS_TEXT: ${preference.duration}");
                         },
                       )),
                 ],
@@ -504,9 +553,9 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       child: Slider(
                         key: Key(INHALE_TEXT),
                         value: _inhale0,
-                        min: 5,
+                        min: MINIMUM_BREATH,
                         max: 100,
-                        divisions: 95,
+                        divisions: 100 - MINIMUM_BREATH.toInt(),
                         onChanged: (double value) {
                           setState(() {
                             _inhale0 = value;
@@ -658,9 +707,9 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       child: Slider(
                         key: Key(EXHALE_TEXT),
                         value: _exhale0,
-                        min: 5,
+                        min: MINIMUM_BREATH,
                         max: 100,
-                        divisions: 95,
+                        divisions: 100 - MINIMUM_BREATH.toInt(),
                         onChanged: (double value) {
                           setState(() {
                             _exhale0 = value;
