@@ -25,7 +25,7 @@ Brethap is yet another meditation app (yama). Including a timer for meditation, 
      alt="Sessions"
      height="400">](./screenshots/android/sessions.webp)
 [<img src="./screenshots/android/calendar.webp"
-     alt="Sessions"
+     alt="Calendar"
      height="400">](./screenshots/android/calendar.webp)
 [<img src="./screenshots/android/preferences.webp"
      alt="Preferences"
