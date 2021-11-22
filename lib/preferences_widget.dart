@@ -22,7 +22,7 @@ class PreferencesWidget extends StatefulWidget {
 }
 
 class _PreferencesWidgetState extends State<PreferencesWidget> {
-  static const double MINIMUM_BREATH = 5.0;
+  static const double MINIMUM_BREATH = 5.0, MAXIMUM_BREATH = 150.0;
   late double _durationMinutes = 0.0,
       _durationSeconds = 0.0,
       _inhale0 = MINIMUM_BREATH,
@@ -554,8 +554,9 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         key: Key(INHALE_TEXT),
                         value: _inhale0,
                         min: MINIMUM_BREATH,
-                        max: 100,
-                        divisions: 100 - MINIMUM_BREATH.toInt(),
+                        max: MAXIMUM_BREATH,
+                        divisions:
+                            MAXIMUM_BREATH.toInt() - MINIMUM_BREATH.toInt(),
                         onChanged: (double value) {
                           setState(() {
                             _inhale0 = value;
@@ -708,8 +709,9 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         key: Key(EXHALE_TEXT),
                         value: _exhale0,
                         min: MINIMUM_BREATH,
-                        max: 100,
-                        divisions: 100 - MINIMUM_BREATH.toInt(),
+                        max: MAXIMUM_BREATH,
+                        divisions:
+                            MAXIMUM_BREATH.toInt() - MINIMUM_BREATH.toInt(),
                         onChanged: (double value) {
                           setState(() {
                             _exhale0 = value;

@@ -94,8 +94,8 @@ Future<void> main() async {
           findsWidgets);
       await tester.drag(find.byKey(Key(INHALE_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
-      expect(preference.inhale, [5300, INHALE_HOLD, INHALE_LAST]);
-      expect(find.textContaining("5.3 s"), findsWidgets);
+      expect(preference.inhale, [7800, INHALE_HOLD, INHALE_LAST]);
+      expect(find.textContaining("7.8 s"), findsWidgets);
 
       // Drag inhale hold slider
       expect(
@@ -105,7 +105,7 @@ Future<void> main() async {
       await tester.drag(
           find.byKey(Key(INHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
-      expect(preference.inhale, [5300, 5000, INHALE_LAST]);
+      expect(preference.inhale, [7800, 5000, INHALE_LAST]);
       expect(find.textContaining("5.0 s"), findsWidgets);
 
       // Drag inhale last slider
@@ -116,7 +116,7 @@ Future<void> main() async {
       await tester.drag(
           find.byKey(Key(INHALE_LAST_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
-      expect(preference.inhale, [5300, 5000, 5000]);
+      expect(preference.inhale, [7800, 5000, 5000]);
       expect(find.textContaining("5.0 s"), findsWidgets);
 
       // Drag exhale slider
@@ -128,8 +128,8 @@ Future<void> main() async {
           findsWidgets);
       await tester.drag(find.byKey(Key(EXHALE_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
-      expect(preference.exhale, [5300, EXHALE_HOLD, EXHALE_LAST]);
-      expect(find.textContaining("5.3 s"), findsWidgets);
+      expect(preference.exhale, [7800, EXHALE_HOLD, EXHALE_LAST]);
+      expect(find.textContaining("7.8 s"), findsWidgets);
 
       // Drag exhale hold slider
       expect(
@@ -139,7 +139,7 @@ Future<void> main() async {
       await tester.drag(
           find.byKey(Key(EXHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
-      expect(preference.exhale, [5300, 5000, EXHALE_LAST]);
+      expect(preference.exhale, [7800, 5000, EXHALE_LAST]);
       expect(find.textContaining("5.0 s"), findsWidgets);
 
       // Drag exhale last slider
@@ -150,7 +150,7 @@ Future<void> main() async {
       await tester.drag(
           find.byKey(Key(EXHALE_LAST_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
-      expect(preference.exhale, [5300, 5000, 5000]);
+      expect(preference.exhale, [7800, 5000, 5000]);
       expect(find.textContaining("5.0 s"), findsWidgets);
 
       // Drag vibrate breath slider
@@ -184,8 +184,8 @@ Future<void> main() async {
         expect(preference.duration, 3629);
         expect(preference.vibrateDuration, 500);
         expect(preference.durationTts, !DURATION_TTS);
-        expect(preference.inhale, [5300, 5000, 5000]);
-        expect(preference.exhale, [5300, 5000, 5000]);
+        expect(preference.inhale, [7800, 5000, 5000]);
+        expect(preference.exhale, [7800, 5000, 5000]);
         expect(preference.vibrateBreath, 500);
         expect(preference.breathTts, !BREATH_TTS);
       }
