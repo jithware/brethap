@@ -1,0 +1,3 @@
+* Adjust dark mode breath circle color to be more congruent
+* Increase maximum inhale+exhale time to 30 seconds
+* Minor enhancements
