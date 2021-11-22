@@ -1,6 +1,6 @@
 # Brethap
 
-Brethap is yet another meditation app (yama). Including a timer for meditation, it also allows you to configure a breathing pattern for you to follow. Your sessions will be saved, allowing you to monitor and view stats about your progress in either a list or calendar view. Duration, breath and other options are configurable through saved preferences.
+Brethap is yet another meditation app (yama). Including a timer for meditation, it also allows you to configure a breathing pattern for you to follow. Your sessions will be saved, allowing you to monitor and view stats about your progress in either a list or calendar view. Duration, breath and other options are configurable through saved preferences. Breathing technique presets include 4-7-8, physiological sigh, among others.
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
      alt="Get it on F-Droid"
