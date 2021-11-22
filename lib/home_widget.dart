@@ -377,7 +377,7 @@ $url'''),
                         width: 150.0,
                         height: 150.0,
                         decoration: BoxDecoration(
-                          color: Colors.blue,
+                          color: Theme.of(context).primaryColor,
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -399,7 +399,6 @@ $url'''),
           children: [
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
                 image:
                     DecorationImage(image: AssetImage("images/launcher.png")),
               ),

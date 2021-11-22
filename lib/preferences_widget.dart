@@ -134,7 +134,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
               (Set<MaterialState> states) {
             if (widget.preferences.length <= position) {
-              return Colors.grey;
+              return Theme.of(context).disabledColor;
             }
             return Theme.of(context).primaryColor;
           }),

@@ -142,10 +142,10 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
               CalendarBuilders(markerBuilder: (context, date, events) {
             if (events.isNotEmpty) {
               DateTime dt = DateTime(date.year, date.month, date.day);
-              Color color = Colors.blue;
+              Color color = Theme.of(context).primaryColor;
               if (dt.compareTo(_statFirstDay) < 0 ||
                   dt.compareTo(_statLastDay) >= 0) {
-                color = Colors.grey.shade400;
+                color = Theme.of(context).disabledColor;
               }
 
               return Container(
