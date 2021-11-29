@@ -59,6 +59,4 @@ Brethap is yet another meditation app (yama). Including a timer for meditation, 
 
 ## Donate
 
-| Liberapay | Paypal |
-| :-------: | :----: |
-| [![liberapay](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/jithware/donate) | [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?hosted_button_id=2ZFSMQ8DGQVFS) |
+[![liberapay](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/jithware/donate) | [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate/?hosted_button_id=2ZFSMQ8DGQVFS)
