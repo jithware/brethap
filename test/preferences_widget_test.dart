@@ -259,6 +259,16 @@ Future<void> main() async {
       await tester.pumpAndSettle();
       verifyPreferences(preferences.get(0), get478Pref());
 
+      // Verify Box preset
+      await tapMenu(tester);
+      await tester.tap(presets);
+      await tester.pumpAndSettle();
+      Finder presetBox = find.textContaining(BOX_TEXT);
+      expect(presetBox, findsOneWidget);
+      await tester.tap(presetBox);
+      await tester.pumpAndSettle();
+      verifyPreferences(preferences.get(0), getBoxPref());
+
       // debugDumpApp();
     });
   });

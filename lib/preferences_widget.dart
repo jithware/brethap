@@ -276,6 +276,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       title: const Text('Select a preset'),
       children: <Widget>[
         _getPresetOption(PRESET_478_TEXT, get478Pref()),
+        _getPresetOption(BOX_TEXT, getBoxPref()),
         _getPresetOption(PHYS_SIGH_TEXT, getPhysSighPref()),
         _getPresetOption(DEFAULT_TEXT, getDefaultPref()),
         TextButton(

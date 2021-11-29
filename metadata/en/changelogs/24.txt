@@ -1,0 +1,2 @@
+* Add box breathing preset
+* Minor enhancements

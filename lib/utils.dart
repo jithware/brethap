@@ -167,6 +167,16 @@ Preference get478Pref() {
   return preference;
 }
 
+Preference getBoxPref() {
+  Preference preference = getDefaultPref();
+  preference.duration = DURATION_BOX;
+  preference.inhale[0] = INHALE_BOX;
+  preference.inhale[1] = INHALE_HOLD_BOX;
+  preference.exhale[0] = EXHALE_BOX;
+  preference.exhale[1] = EXHALE_HOLD_BOX;
+  return preference;
+}
+
 Future<void> createDefaultPref(Box preferences) async {
   Preference preference = getDefaultPref();
   await preferences.add(preference);
