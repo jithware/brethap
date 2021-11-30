@@ -146,6 +146,7 @@ Preference getDefaultPref() {
     vibrateBreath: VIBRATE_BREATH,
     durationTts: DURATION_TTS,
     breathTts: BREATH_TTS,
+    colors: [COLOR_PRIMARY],
   );
   return preference;
 }

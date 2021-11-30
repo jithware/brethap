@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:csv/csv.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:get/get.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
@@ -34,11 +36,13 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       _vibrateDurationD = 0.0,
       _vibrateBreathD = 0.0;
   late bool _durationTts = false, _breathTts = false;
+  late MaterialColor _primaryColor = materialColors[0] as MaterialColor;
 
   @override
   initState() {
     debugPrint("${this.widget}.initState");
     _init();
+
     super.initState();
   }
 
@@ -53,7 +57,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     if (widget.preferences.isEmpty) {
       await _createSavedPreferences(1);
     }
-    Preference preference = widget.preferences.get(0);
+    Preference preference = widget.preferences.getAt(0);
 
     setState(() {
       Duration duration = Duration(seconds: preference.duration);
@@ -76,6 +80,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       _vibrateBreathD = preference.vibrateBreath.toDouble() / 10;
       _durationTts = preference.durationTts;
       _breathTts = preference.breathTts;
+      _primaryColor = materialColors[preference.colors[0]] as MaterialColor;
     });
 
     debugPrint("preferences: ${widget.preferences.values}");
@@ -91,7 +96,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     if (widget.preferences.length <= index) {
       await _createSavedPreferences(index + 1);
     }
-    Preference preference = widget.preferences.get(0);
+    Preference preference = widget.preferences.getAt(0);
     Preference p = widget.preferences.getAt(index);
     p.copy(preference);
     await p.save();
@@ -102,16 +107,38 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     if (widget.preferences.length <= index) {
       await _createSavedPreferences(index);
     }
-    Preference preference = widget.preferences.get(0);
+    Preference preference = widget.preferences.getAt(0);
     Preference p = widget.preferences.getAt(index);
     preference.copy(p);
     await preference.save();
     widget.callback();
+
+    _refreshColors(index);
+
     debugPrint("set $index preferences in: ${widget.preferences.values}");
+  }
+
+  void _refreshColors(int index) {
+    Preference preference = widget.preferences.getAt(index);
+    MaterialColor primarySwatch =
+        materialColors[preference.colors[0]] as MaterialColor;
+    Get.changeTheme(ThemeData(primarySwatch: primarySwatch));
+
+    debugPrint("refreshed primarySwatch $primarySwatch");
+  }
+
+  int _getColorPosition(List colors, MaterialColor color) {
+    for (int i = 0; i < colors.length; i++) {
+      if (colors[i] == color) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   ElevatedButton _getPreferenceButton(int position) {
     String name = "Preference $position";
+
     return ElevatedButton(
       child: Text("$position", semanticsLabel: name),
       key: Key(name),
@@ -136,7 +163,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
             if (widget.preferences.length <= position) {
               return Theme.of(context).disabledColor;
             }
-            return Theme.of(context).primaryColor;
+            Preference preference = widget.preferences.getAt(position);
+            return materialColors[preference.colors[0]];
           }),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
@@ -205,7 +233,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           element.vibrateDuration,
           element.vibrateBreath,
           element.durationTts,
-          element.breathTts
+          element.breathTts,
+          element.colors[0],
         ]);
       });
       String csv = ListToCsvConverter().convert(rows);
@@ -237,7 +266,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
             vibrateDuration: row[7],
             vibrateBreath: row[8],
             durationTts: row[9].contains("true"),
-            breathTts: row[10].contains("true"));
+            breathTts: row[10].contains("true"),
+            colors: [row[11]]);
         preference.copy(p);
         await preference.save();
         added = i - 1;
@@ -253,7 +283,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
   _getPresetOption(String text, Preference pref) {
     return SimpleDialogOption(
       onPressed: () {
-        Preference preference = widget.preferences.get(0);
+        Preference preference = widget.preferences.getAt(0);
         preference.copy(pref);
         preference.save();
         widget.callback();
@@ -299,7 +329,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Preference preference = widget.preferences.get(0);
+    Preference preference = widget.preferences.getAt(0);
     return Scaffold(
         appBar: AppBar(
           title: Text('Preferences'),
@@ -902,6 +932,41 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       });
                     },
                   ),
+                ],
+              ),
+
+              Divider(
+                thickness: 3,
+              ),
+              SizedBox(height: 50),
+
+              // Color
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    COLOR_PRIMARY_TEXT,
+                  ),
+                ],
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  MaterialColorPicker(
+                      key: Key(COLOR_PRIMARY_TEXT),
+                      colors: materialColors,
+                      allowShades: false,
+                      onMainColorChange: (ColorSwatch? color) {
+                        _primaryColor = color as MaterialColor;
+                        Get.changeTheme(
+                            ThemeData(primarySwatch: _primaryColor));
+                        preference.colors[0] =
+                            _getColorPosition(materialColors, color);
+                        preference.save();
+                        debugPrint("$COLOR_PRIMARY_TEXT: $color");
+                      },
+                      selectedColor: _primaryColor),
                 ],
               ),
 

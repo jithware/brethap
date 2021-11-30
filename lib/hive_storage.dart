@@ -35,6 +35,8 @@ class Preference extends HiveObject {
   bool durationTts;
   @HiveField(6)
   bool breathTts;
+  @HiveField(7)
+  List<int> colors;
 
   Preference(
       {required this.duration,
@@ -43,7 +45,8 @@ class Preference extends HiveObject {
       required this.vibrateDuration,
       required this.vibrateBreath,
       required this.durationTts,
-      required this.breathTts});
+      required this.breathTts,
+      required this.colors});
 
   void copy(Preference preference) {
     this.duration = preference.duration;
@@ -53,10 +56,11 @@ class Preference extends HiveObject {
     this.vibrateBreath = preference.vibrateBreath;
     this.durationTts = preference.durationTts;
     this.breathTts = preference.breathTts;
+    this.colors = List.from(preference.colors);
   }
 
   @override
   String toString() {
-    return "{duration: $duration, inhale: ${inhale.toString()}, exhale: ${exhale.toString()}, vibrateDuration: $vibrateDuration, vibrateBreath: $vibrateBreath, durationTts: $durationTts, breathTts: $breathTts}";
+    return "{duration: $duration, inhale: ${inhale.toString()}, exhale: ${exhale.toString()}, vibrateDuration: $vibrateDuration, vibrateBreath: $vibrateBreath, durationTts: $durationTts, breathTts: $breathTts, colors: ${colors.toString()}}";
   }
 }

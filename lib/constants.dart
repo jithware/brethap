@@ -33,7 +33,8 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     BOX_TEXT = "Box",
     CONTINUE_TEXT = "Continue",
     CANCEL_TEXT = "Cancel",
-    OK_TEXT = "Ok";
+    OK_TEXT = "Ok",
+    COLOR_PRIMARY_TEXT = "Primary Color";
 
 const int SAVED_PREFERENCES = 5;
 
@@ -46,7 +47,8 @@ const int DURATION = 120, //seconds
     EXHALE_HOLD = 0, //milliseconds
     EXHALE_LAST = 0, //milliseconds
     VIBRATE_DURATION = 250, //milliseconds
-    VIBRATE_BREATH = 25; //milliseconds
+    VIBRATE_BREATH = 25, //milliseconds
+    COLOR_PRIMARY = 5; //color position
 const bool DURATION_TTS = true, BREATH_TTS = true;
 
 // Physiological sigh values
