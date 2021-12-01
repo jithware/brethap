@@ -89,9 +89,8 @@ class MainWidget extends StatelessWidget {
     }
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          primarySwatch: primaryColor,
-          scaffoldBackgroundColor: backgroundColor),
+      theme:
+          ThemeData(primarySwatch: primaryColor, canvasColor: backgroundColor),
       darkTheme: ThemeData.dark(),
       home: HomeWidget(
           appName: appName,

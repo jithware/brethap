@@ -115,24 +115,21 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     await preference.save();
     widget.callback();
 
-    _refreshColors(index);
+    _setColors(index);
 
     debugPrint("set $index preferences in: ${widget.preferences.values}");
   }
 
-  Future<void> _refreshColors(int index) async {
+  Future<void> _setColors(int index) async {
     if (widget.preferences.length <= index) {
       await _createSavedPreferences(index);
     }
     Preference preference = widget.preferences.getAt(index);
-    MaterialColor primarySwatch =
-        COLORS_PRIMARY[preference.colors[0]] as MaterialColor;
-    Color backgroundColor = Color(preference.colors[1]);
-    Get.changeTheme(ThemeData(
-        primarySwatch: primarySwatch,
-        scaffoldBackgroundColor: backgroundColor));
+    _primaryColor = COLORS_PRIMARY[preference.colors[0]] as MaterialColor;
+    _backgroundColor = Color(preference.colors[1]);
+    _changeTheme();
 
-    debugPrint("refreshed primarySwatch $primarySwatch");
+    debugPrint("_setColors: $_primaryColor, $_backgroundColor");
   }
 
   int _getColorPosition(List colors, MaterialColor color) {
@@ -299,12 +296,12 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
         preference.save();
         widget.callback();
         _init();
-        _refreshColors(0);
+        _setColors(0);
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("$text preference set"),
+          content: Text("$text preset set"),
         ));
-        debugPrint("$text preference set");
+        debugPrint("$text preset set");
       },
       child: Text(
         text,
@@ -337,6 +334,11 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
         return dialog;
       },
     );
+  }
+
+  void _changeTheme() {
+    Get.changeTheme(
+        ThemeData(primarySwatch: _primaryColor, canvasColor: _backgroundColor));
   }
 
   @override
@@ -971,9 +973,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       allowShades: false,
                       onMainColorChange: (ColorSwatch? color) {
                         _primaryColor = color as MaterialColor;
-                        Get.changeTheme(ThemeData(
-                            primarySwatch: _primaryColor,
-                            scaffoldBackgroundColor: _backgroundColor));
+                        _changeTheme();
                         preference.colors[0] =
                             _getColorPosition(COLORS_PRIMARY, color);
                         preference.save();
@@ -1000,16 +1000,13 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       key: Key(COLOR_BACKGROUND_TEXT),
                       colors: COLORS_BACKGROUND,
                       onBack: () {
-                        Get.changeTheme(ThemeData(
-                            primarySwatch: _primaryColor,
-                            scaffoldBackgroundColor: _backgroundColor));
+                        _changeTheme();
                       },
                       onColorChange: (Color color) {
                         _backgroundColor = color;
                         preference.colors[1] = color.value;
                         preference.save();
-                        debugPrint(
-                            "onColorChange:$COLOR_BACKGROUND_TEXT: $color");
+                        debugPrint("$COLOR_BACKGROUND_TEXT: $color");
                       },
                       selectedColor: _backgroundColor),
                 ],
