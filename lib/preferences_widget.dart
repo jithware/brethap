@@ -36,7 +36,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       _vibrateDurationD = 0.0,
       _vibrateBreathD = 0.0;
   late bool _durationTts = false, _breathTts = false;
-  late MaterialColor _primaryColor = materialColors[0] as MaterialColor;
+  late MaterialColor _primaryColor = COLORS_PRIMARY[0] as MaterialColor;
 
   @override
   initState() {
@@ -80,7 +80,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       _vibrateBreathD = preference.vibrateBreath.toDouble() / 10;
       _durationTts = preference.durationTts;
       _breathTts = preference.breathTts;
-      _primaryColor = materialColors[preference.colors[0]] as MaterialColor;
+      _primaryColor = COLORS_PRIMARY[preference.colors[0]] as MaterialColor;
     });
 
     debugPrint("preferences: ${widget.preferences.values}");
@@ -118,10 +118,13 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     debugPrint("set $index preferences in: ${widget.preferences.values}");
   }
 
-  void _refreshColors(int index) {
+  Future<void> _refreshColors(int index) async {
+    if (widget.preferences.length <= index) {
+      await _createSavedPreferences(index);
+    }
     Preference preference = widget.preferences.getAt(index);
     MaterialColor primarySwatch =
-        materialColors[preference.colors[0]] as MaterialColor;
+        COLORS_PRIMARY[preference.colors[0]] as MaterialColor;
     Get.changeTheme(ThemeData(primarySwatch: primarySwatch));
 
     debugPrint("refreshed primarySwatch $primarySwatch");
@@ -164,7 +167,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
               return Theme.of(context).disabledColor;
             }
             Preference preference = widget.preferences.getAt(position);
-            return materialColors[preference.colors[0]];
+            return COLORS_PRIMARY[preference.colors[0]];
           }),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
@@ -288,6 +291,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
         preference.save();
         widget.callback();
         _init();
+        _refreshColors(0);
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("$text preference set"),
@@ -955,14 +959,14 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 children: [
                   MaterialColorPicker(
                       key: Key(COLOR_PRIMARY_TEXT),
-                      colors: materialColors,
+                      colors: COLORS_PRIMARY,
                       allowShades: false,
                       onMainColorChange: (ColorSwatch? color) {
                         _primaryColor = color as MaterialColor;
                         Get.changeTheme(
                             ThemeData(primarySwatch: _primaryColor));
                         preference.colors[0] =
-                            _getColorPosition(materialColors, color);
+                            _getColorPosition(COLORS_PRIMARY, color);
                         preference.save();
                         debugPrint("$COLOR_PRIMARY_TEXT: $color");
                       },

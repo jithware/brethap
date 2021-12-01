@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 import 'package:brethap/hive_storage.dart';
 import 'package:brethap/home_widget.dart';
+import 'package:brethap/constants.dart';
 
 Future<void> main() async {
   // Do not debugPrint in release
@@ -79,10 +80,15 @@ class MainWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MaterialColor primaryColor = COLORS_PRIMARY[0] as MaterialColor;
+    if (preferences.isNotEmpty) {
+      Preference preference = preferences.getAt(0);
+      primaryColor = COLORS_PRIMARY[preference.colors[0]] as MaterialColor;
+    }
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          primarySwatch: Colors.blue, scaffoldBackgroundColor: Colors.white),
+          primarySwatch: primaryColor, scaffoldBackgroundColor: Colors.white),
       darkTheme: ThemeData.dark(),
       home: HomeWidget(
           appName: appName,

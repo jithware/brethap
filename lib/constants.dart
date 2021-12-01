@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 const String JITHWARE_URL = "http://www.jithware.com",
     DONATE_URL =
         "https://www.paypal.com/donate/?hosted_button_id=2ZFSMQ8DGQVFS",
@@ -48,8 +50,30 @@ const int DURATION = 120, //seconds
     EXHALE_LAST = 0, //milliseconds
     VIBRATE_DURATION = 250, //milliseconds
     VIBRATE_BREATH = 25, //milliseconds
-    COLOR_PRIMARY = 5; //color position
+    COLOR_PRIMARY = 0; //color position
 const bool DURATION_TTS = true, BREATH_TTS = true;
+
+const List<ColorSwatch> COLORS_PRIMARY = const <ColorSwatch>[
+  Colors.blue,
+  Colors.red,
+  Colors.pink,
+  Colors.purple,
+  Colors.deepPurple,
+  Colors.indigo,
+  Colors.lightBlue,
+  Colors.cyan,
+  Colors.teal,
+  Colors.green,
+  Colors.lightGreen,
+  Colors.lime,
+  Colors.yellow,
+  Colors.amber,
+  Colors.orange,
+  Colors.deepOrange,
+  Colors.brown,
+  Colors.grey,
+  Colors.blueGrey,
+];
 
 // Physiological sigh values
 const int DURATION_PS = 15, //seconds
