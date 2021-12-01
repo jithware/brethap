@@ -37,6 +37,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       _vibrateBreathD = 0.0;
   late bool _durationTts = false, _breathTts = false;
   late MaterialColor _primaryColor = COLORS_PRIMARY[0] as MaterialColor;
+  late Color _backgroundColor = Color(COLOR_BACKGROUND);
 
   @override
   initState() {
@@ -81,6 +82,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       _durationTts = preference.durationTts;
       _breathTts = preference.breathTts;
       _primaryColor = COLORS_PRIMARY[preference.colors[0]] as MaterialColor;
+      _backgroundColor = Color(preference.colors[1]);
     });
 
     debugPrint("preferences: ${widget.preferences.values}");
@@ -125,7 +127,10 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     Preference preference = widget.preferences.getAt(index);
     MaterialColor primarySwatch =
         COLORS_PRIMARY[preference.colors[0]] as MaterialColor;
-    Get.changeTheme(ThemeData(primarySwatch: primarySwatch));
+    Color backgroundColor = Color(preference.colors[1]);
+    Get.changeTheme(ThemeData(
+        primarySwatch: primarySwatch,
+        scaffoldBackgroundColor: backgroundColor));
 
     debugPrint("refreshed primarySwatch $primarySwatch");
   }
@@ -219,7 +224,9 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           "vibrateDuration",
           "vibrateBreath",
           "durationTts",
-          "breathTts"
+          "breathTts",
+          "color0",
+          "color1"
         ]
       ];
 
@@ -238,6 +245,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           element.durationTts,
           element.breathTts,
           element.colors[0],
+          element.colors[1],
         ]);
       });
       String csv = ListToCsvConverter().convert(rows);
@@ -270,7 +278,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
             vibrateBreath: row[8],
             durationTts: row[9].contains("true"),
             breathTts: row[10].contains("true"),
-            colors: [row[11]]);
+            colors: [row[11], row[12]]);
         preference.copy(p);
         await preference.save();
         added = i - 1;
@@ -944,7 +952,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
               ),
               SizedBox(height: 50),
 
-              // Color
+              // Primary Color
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -963,14 +971,47 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       allowShades: false,
                       onMainColorChange: (ColorSwatch? color) {
                         _primaryColor = color as MaterialColor;
-                        Get.changeTheme(
-                            ThemeData(primarySwatch: _primaryColor));
+                        Get.changeTheme(ThemeData(
+                            primarySwatch: _primaryColor,
+                            scaffoldBackgroundColor: _backgroundColor));
                         preference.colors[0] =
                             _getColorPosition(COLORS_PRIMARY, color);
                         preference.save();
                         debugPrint("$COLOR_PRIMARY_TEXT: $color");
                       },
                       selectedColor: _primaryColor),
+                ],
+              ),
+
+              // Background Color
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    COLOR_BACKGROUND_TEXT,
+                  ),
+                ],
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  MaterialColorPicker(
+                      key: Key(COLOR_BACKGROUND_TEXT),
+                      colors: COLORS_BACKGROUND,
+                      onBack: () {
+                        Get.changeTheme(ThemeData(
+                            primarySwatch: _primaryColor,
+                            scaffoldBackgroundColor: _backgroundColor));
+                      },
+                      onColorChange: (Color color) {
+                        _backgroundColor = color;
+                        preference.colors[1] = color.value;
+                        preference.save();
+                        debugPrint(
+                            "onColorChange:$COLOR_BACKGROUND_TEXT: $color");
+                      },
+                      selectedColor: _backgroundColor),
                 ],
               ),
 

@@ -36,7 +36,8 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     CONTINUE_TEXT = "Continue",
     CANCEL_TEXT = "Cancel",
     OK_TEXT = "Ok",
-    COLOR_PRIMARY_TEXT = "Primary Color";
+    COLOR_PRIMARY_TEXT = "Primary Color",
+    COLOR_BACKGROUND_TEXT = "Background Color";
 
 const int SAVED_PREFERENCES = 5;
 
@@ -50,7 +51,8 @@ const int DURATION = 120, //seconds
     EXHALE_LAST = 0, //milliseconds
     VIBRATE_DURATION = 250, //milliseconds
     VIBRATE_BREATH = 25, //milliseconds
-    COLOR_PRIMARY = 0; //color position
+    COLOR_PRIMARY = 0, //color position
+    COLOR_BACKGROUND = 0xfffafafa; //color white
 const bool DURATION_TTS = true, BREATH_TTS = true;
 
 const List<ColorSwatch> COLORS_PRIMARY = const <ColorSwatch>[
@@ -74,6 +76,8 @@ const List<ColorSwatch> COLORS_PRIMARY = const <ColorSwatch>[
   Colors.grey,
   Colors.blueGrey,
 ];
+
+const List<ColorSwatch> COLORS_BACKGROUND = COLORS_PRIMARY;
 
 // Physiological sigh values
 const int DURATION_PS = 15, //seconds

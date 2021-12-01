@@ -81,14 +81,17 @@ class MainWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MaterialColor primaryColor = COLORS_PRIMARY[0] as MaterialColor;
+    Color backgroundColor = Color(COLOR_BACKGROUND);
     if (preferences.isNotEmpty) {
       Preference preference = preferences.getAt(0);
       primaryColor = COLORS_PRIMARY[preference.colors[0]] as MaterialColor;
+      backgroundColor = Color(preference.colors[1]);
     }
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          primarySwatch: primaryColor, scaffoldBackgroundColor: Colors.white),
+          primarySwatch: primaryColor,
+          scaffoldBackgroundColor: backgroundColor),
       darkTheme: ThemeData.dark(),
       home: HomeWidget(
           appName: appName,
