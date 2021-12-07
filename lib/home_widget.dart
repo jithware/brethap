@@ -40,7 +40,7 @@ class HomeWidget extends StatefulWidget {
   _HomeWidgetState createState() => _HomeWidgetState();
 }
 
-class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
+class _HomeWidgetState extends State<HomeWidget> {
   bool _isRunning = false,
       _hasVibrator = false,
       _hasCustomVibrate = false,
