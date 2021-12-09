@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:io';
-import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:hive/hive.dart';
