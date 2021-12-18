@@ -1,0 +1,2 @@
+* Fix dark mode color not changing
+* Minor enhancements

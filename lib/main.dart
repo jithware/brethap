@@ -86,11 +86,11 @@ class MainWidget extends StatelessWidget {
       primaryColor = COLORS_PRIMARY[preference.colors[0]] as MaterialColor;
       backgroundColor = Color(preference.colors[1]);
     }
+    Get.changeThemeMode(ThemeMode.light);
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme:
           ThemeData(primarySwatch: primaryColor, canvasColor: backgroundColor),
-      darkTheme: ThemeData.dark(),
       home: HomeWidget(
           appName: appName,
           version: version,
