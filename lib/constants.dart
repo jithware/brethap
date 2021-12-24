@@ -5,7 +5,8 @@ const String JITHWARE_URL = "http://www.jithware.com",
         "https://www.paypal.com/donate/?hosted_button_id=2ZFSMQ8DGQVFS",
     BUGS_URL = "https://github.com/jithware/brethap/issues",
     HELP_URL = "https://github.com/jithware/brethap#readme",
-    COPYRIGHT = "Copyright 2021 Jithware. All rights reserved.";
+    COPYRIGHT = "Copyright 2021 Jithware. All rights reserved.",
+    APP_NAME = "Brethap";
 
 const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     PRESS_BUTTON_TEXT = "Press button to begin",
@@ -31,13 +32,14 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     PRESETS_TEXT = "Presets",
     DEFAULT_TEXT = "Default",
     PHYS_SIGH_TEXT = "Physiological Sigh",
-    PRESET_478_TEXT = "4-7-8",
-    BOX_TEXT = "Box",
+    PRESET_478_TEXT = "4-7-8 Breathing",
+    BOX_TEXT = "Box Breathing",
     CONTINUE_TEXT = "Continue",
     CANCEL_TEXT = "Cancel",
     OK_TEXT = "Ok",
     COLOR_PRIMARY_TEXT = "Primary Color",
-    COLOR_BACKGROUND_TEXT = "Background Color";
+    COLOR_BACKGROUND_TEXT = "Background Color",
+    NAME_TEXT = "Name";
 
 const int SAVED_PREFERENCES = 5;
 

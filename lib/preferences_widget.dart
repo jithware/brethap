@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:csv/csv.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:get/get.dart';
 
@@ -35,6 +33,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       _vibrateDurationD = 0.0,
       _vibrateBreathD = 0.0;
   late bool _durationTts = false, _breathTts = false;
+  final TextEditingController _textEditingController = TextEditingController();
+
   late MaterialColor _primaryColor = COLORS_PRIMARY[0] as MaterialColor;
   late Color _backgroundColor = Color(COLOR_BACKGROUND);
 
@@ -42,13 +42,13 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
   initState() {
     debugPrint("${this.widget}.initState");
     _init();
-
     super.initState();
   }
 
   @override
   void dispose() {
     debugPrint("${this.widget}.dispose");
+    _textEditingController.dispose();
     super.dispose();
   }
 
@@ -82,9 +82,13 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       _breathTts = preference.breathTts;
       _primaryColor = COLORS_PRIMARY[preference.colors[0]] as MaterialColor;
       _backgroundColor = Color(preference.colors[1]);
+      _textEditingController.text = preference.name;
     });
 
-    debugPrint("preferences: ${widget.preferences.values}");
+    debugPrint("preferences (${widget.preferences.length}):");
+    for (Preference p in widget.preferences.values) {
+      debugPrint("$p");
+    }
   }
 
   Future<void> _createSavedPreferences(int length) async {
@@ -101,7 +105,11 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     Preference p = widget.preferences.getAt(index);
     p.copy(preference);
     await p.save();
-    debugPrint("saved $index preference in: ${widget.preferences.values}");
+
+    debugPrint("saved preference $index in:");
+    for (Preference p in widget.preferences.values) {
+      debugPrint("$p");
+    }
   }
 
   Future<void> _setPreference(int index) async {
@@ -116,7 +124,10 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
 
     _setColors(index);
 
-    debugPrint("set $index preferences in: ${widget.preferences.values}");
+    debugPrint("set preference $index in:");
+    for (Preference p in widget.preferences.values) {
+      debugPrint("$p");
+    }
   }
 
   Future<void> _setColors(int index) async {
@@ -185,106 +196,6 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     }
     widget.callback();
     _init();
-  }
-
-  Future<File> _getExportFile() async {
-    Directory? directory = await getStorageDir();
-    File file = File("${directory?.path}/brethap.preferences.csv");
-    file.exists().then((value) async {
-      if (!value) {
-        file
-            .create(recursive: true)
-            .then((value) => debugPrint("created: ${file.path}"));
-      }
-    });
-    return file;
-  }
-
-  Future<int> _exportCsv() async {
-    int added = 0;
-    List<Preference> list =
-        widget.preferences.values.toList().cast<Preference>();
-    if (list.length <= 1) {
-      return added;
-    }
-    try {
-      List<List<dynamic>> rows = [
-        [
-          "duration",
-          "inhale0",
-          "inhale1",
-          "inhale2",
-          "exhale0",
-          "exhale1",
-          "exhale2",
-          "vibrateDuration",
-          "vibrateBreath",
-          "durationTts",
-          "breathTts",
-          "color0",
-          "color1"
-        ]
-      ];
-
-      list.forEach((element) {
-        added++;
-        rows.add([
-          element.duration,
-          element.inhale[0],
-          element.inhale[1],
-          element.inhale[2],
-          element.exhale[0],
-          element.exhale[1],
-          element.exhale[2],
-          element.vibrateDuration,
-          element.vibrateBreath,
-          element.durationTts,
-          element.breathTts,
-          element.colors[0],
-          element.colors[1],
-        ]);
-      });
-      String csv = ListToCsvConverter().convert(rows);
-      final file = await _getExportFile();
-      file.writeAsString(csv);
-    } catch (e) {
-      debugPrint(e.toString());
-      return 0;
-    }
-    return added - 1; // Do not report preference 0
-  }
-
-  Future<int> _importCsv() async {
-    int added = 0;
-    try {
-      final file = await _getExportFile();
-      final contents = await file.readAsString();
-      List<List<dynamic>> rows = CsvToListConverter().convert(contents);
-      _createSavedPreferences(rows.length - 1); // skip header
-
-      // skip header at 0
-      for (int i = 1; i < rows.length; i++) {
-        var row = rows[i];
-        Preference preference = widget.preferences.getAt(i - 1);
-        Preference p = Preference(
-            duration: row[0],
-            inhale: [row[1], row[2], row[3]],
-            exhale: [row[4], row[5], row[6]],
-            vibrateDuration: row[7],
-            vibrateBreath: row[8],
-            durationTts: row[9].contains("true"),
-            breathTts: row[10].contains("true"),
-            colors: [row[11], row[12]]);
-        preference.copy(p);
-        await preference.save();
-        added = i - 1;
-      }
-      _init();
-    } catch (e) {
-      debugPrint(e.toString());
-      return 0;
-    }
-    return added;
   }
 
   _getPresetOption(String text, Preference pref) {
@@ -362,22 +273,6 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     });
                     debugPrint(RESET_ALL_TEXT);
                     break;
-                  case BACKUP_TEXT:
-                    _exportCsv().then((value) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("$value preferences backed up"),
-                      ));
-                    });
-                    debugPrint(BACKUP_TEXT);
-                    break;
-                  case RESTORE_TEXT:
-                    _importCsv().then((value) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("$value preferences restored"),
-                      ));
-                    });
-                    debugPrint(RESTORE_TEXT);
-                    break;
                   case PRESETS_TEXT:
                     _showPresetDialog();
                     debugPrint(PRESETS_TEXT);
@@ -389,17 +284,6 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   key: Key(RESET_ALL_TEXT),
                   value: RESET_ALL_TEXT,
                   child: Text(RESET_ALL_TEXT),
-                ),
-                PopupMenuDivider(),
-                PopupMenuItem<String>(
-                  key: Key(BACKUP_TEXT),
-                  value: BACKUP_TEXT,
-                  child: Text(BACKUP_TEXT),
-                ),
-                PopupMenuItem<String>(
-                  key: Key(RESTORE_TEXT),
-                  value: RESTORE_TEXT,
-                  child: Text(RESTORE_TEXT),
                 ),
                 PopupMenuDivider(),
                 PopupMenuItem<String>(
@@ -415,6 +299,24 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           padding: const EdgeInsets.all(15),
           child: ListView(
             children: [
+              // Name
+              Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: TextFormField(
+                    controller: _textEditingController,
+                    maxLength: 32,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), hintText: 'Enter a name'),
+                    onChanged: (value) {
+                      setState(() {
+                        preference.name = value;
+                        preference.save();
+                        widget.callback();
+                      });
+                      debugPrint("$NAME_TEXT: ${preference.name}");
+                    },
+                  )),
+
               // Duration
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

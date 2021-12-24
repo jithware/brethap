@@ -8,6 +8,8 @@ import 'package:brethap/constants.dart';
 import 'package:brethap/preferences_widget.dart';
 import 'package:brethap/hive_storage.dart';
 
+const Duration wait = Duration(milliseconds: 500);
+
 Future<void> main() async {
   late Box preferences;
   setUpAll((() async {
@@ -32,6 +34,7 @@ Future<void> main() async {
       expect(pref1.exhale, pref2.exhale);
       expect(pref1.vibrateBreath, pref2.vibrateBreath);
       expect(pref1.breathTts, pref2.breathTts);
+      expect(pref1.name, pref2.name);
     }
 
     Future<void> tapMenu(WidgetTester tester) async {
@@ -88,13 +91,15 @@ Future<void> main() async {
       expect(preference.durationTts, !DURATION_TTS);
 
       // Drag inhale slider
+      Finder inhaleSlider = find.byKey(Key(INHALE_TEXT), skipOffstage: false);
+      await tester.ensureVisible(inhaleSlider);
+      await tester.pumpAndSettle();
       expect(
           find.textContaining("${(INHALE / Duration.millisecondsPerSecond)} s"),
           findsWidgets);
-      await tester.drag(find.byKey(Key(INHALE_TEXT)), const Offset(0.0, 0.0));
+      await tester.drag(inhaleSlider, const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
       expect(preference.inhale, [7800, INHALE_HOLD, INHALE_LAST]);
-      expect(find.textContaining("7.8 s"), findsWidgets);
 
       // Drag inhale hold slider
       expect(
@@ -122,13 +127,9 @@ Future<void> main() async {
       Finder exhale = find.byKey(Key(EXHALE_TEXT), skipOffstage: false);
       await tester.ensureVisible(exhale);
       await tester.pumpAndSettle();
-      //expect(
-      //find.textContaining("${(EXHALE / Duration.millisecondsPerSecond)} s"),
-      //findsWidgets);
       await tester.drag(exhale, const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
       expect(preference.exhale, [7800, EXHALE_HOLD, EXHALE_LAST]);
-      //expect(find.textContaining("7.8 s"), findsWidgets);
 
       // Drag exhale hold slider
       expect(
@@ -206,17 +207,8 @@ Future<void> main() async {
         expect(preference.vibrateBreath, 500);
         expect(preference.breathTts, !BREATH_TTS);
         expect(preference.colors, [5, 0xff3f51b5]);
+        expect(preference.name, "");
       }
-
-      await tapMenu(tester);
-
-      // Verify backup
-      Finder backup = find.byKey(Key(BACKUP_TEXT));
-      expect(backup, findsOneWidget);
-      await tester.tap(backup);
-      await tester.pumpAndSettle();
-      expect(find.textContaining("$SAVED_PREFERENCES preferences backed up"),
-          findsOneWidget);
 
       await tapMenu(tester);
 
@@ -233,15 +225,6 @@ Future<void> main() async {
       //TODO: Verify preferences reset
       //debugPrint("${preferences.values}");
       //expect(preferences.length, 1);
-
-      await tapMenu(tester);
-
-      // Verify restore
-      Finder restore = find.byKey(Key(RESTORE_TEXT));
-      expect(restore, findsOneWidget);
-      await tester.tap(restore);
-      await tester.pumpAndSettle();
-      expect(preferences.length, 5);
 
       await tapMenu(tester);
 

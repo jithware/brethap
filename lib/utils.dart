@@ -146,6 +146,7 @@ Preference getDefaultPref() {
     durationTts: DURATION_TTS,
     breathTts: BREATH_TTS,
     colors: [COLOR_PRIMARY, COLOR_BACKGROUND],
+    name: "",
   );
   return preference;
 }
@@ -155,6 +156,7 @@ Preference getPhysSighPref() {
   preference.duration = DURATION_PS;
   preference.inhale = [INHALE_PS, INHALE_HOLD_PS, INHALE_LAST_PS];
   preference.exhale[0] = EXHALE_PS;
+  preference.name = PHYS_SIGH_TEXT;
   return preference;
 }
 
@@ -164,6 +166,7 @@ Preference get478Pref() {
   preference.inhale[0] = INHALE_478;
   preference.inhale[1] = INHALE_HOLD_478;
   preference.exhale[0] = EXHALE_478;
+  preference.name = PRESET_478_TEXT;
   return preference;
 }
 
@@ -174,6 +177,7 @@ Preference getBoxPref() {
   preference.inhale[1] = INHALE_HOLD_BOX;
   preference.exhale[0] = EXHALE_BOX;
   preference.exhale[1] = EXHALE_HOLD_BOX;
+  preference.name = BOX_TEXT;
   return preference;
 }
 

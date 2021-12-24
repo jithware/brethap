@@ -47,3 +47,5 @@ app.*.map.json
 
 # To backup source archive run: git archive -o brethap.tar.gz HEAD
 brethap.tar.gz
+
+# To create a new branch from a tag run: git checkout -b 1.0 1.0.0+0

@@ -47,7 +47,7 @@ class _HomeWidgetState extends State<HomeWidget> {
       _hasWakelock = false,
       _hasSpeak = false;
   late Duration _duration;
-  late String _status;
+  late String _status, _appName;
   late FlutterTts _tts;
   double _scale = 0.0;
 
@@ -126,6 +126,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   void _update() {
     Preference preference = widget.preferences.get(0);
     _duration = Duration(seconds: preference.duration);
+    _appName = preference.name.isEmpty ? APP_NAME : preference.name;
     debugPrint("session preference:$preference");
   }
 
@@ -324,10 +325,10 @@ $url'''),
   // Callback for variables needed in HomeWidget when PreferenceWidget closes
   void _preferenceUpdated() {
     debugPrint("HomeWidget.preferenceUpdated()");
-    debugPrint("preferences: ${widget.preferences.values}");
     Preference preference = widget.preferences.get(0);
     setState(() {
       _duration = Duration(seconds: preference.duration);
+      _appName = preference.name.isEmpty ? APP_NAME : preference.name;
     });
   }
 
@@ -340,7 +341,7 @@ $url'''),
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.appName),
+        title: Text(_appName),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it

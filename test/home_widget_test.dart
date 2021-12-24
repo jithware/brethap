@@ -27,7 +27,7 @@ Future<void> main() async {
     tearDown((() async {}));
 
     testWidgets('HomeWidget', (WidgetTester tester) async {
-      const String APP_NAME = "Brethap", APP_VERSION = "1.0.0";
+      const String APP_VERSION = "1.0.0";
       await tester.pumpWidget(MaterialApp(
           home: HomeWidget(
         appName: APP_NAME,
