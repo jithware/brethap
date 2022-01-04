@@ -1,3 +1,5 @@
+// See https://docs.flutter.dev/deployment/android
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
