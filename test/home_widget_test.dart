@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
@@ -29,12 +30,14 @@ Future<void> main() async {
     testWidgets('HomeWidget', (WidgetTester tester) async {
       const String APP_VERSION = "1.0.0";
       await tester.pumpWidget(MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: HomeWidget(
-        appName: APP_NAME,
-        version: APP_VERSION,
-        preferences: preferences,
-        sessions: sessions,
-      )));
+            appName: APP_NAME,
+            version: APP_VERSION,
+            preferences: preferences,
+            sessions: sessions,
+          )));
 
       const Duration WAIT = Duration(milliseconds: 500);
       Preference preference = preferences.get(0);

@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/hive_storage.dart';
@@ -94,7 +95,7 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Calendar'),
+        title: Text(AppLocalizations.of(context)!.calendar),
       ),
       body: Column(children: [
         TableCalendar<Session>(
@@ -103,9 +104,9 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
           focusedDay: _focusedDay,
           calendarFormat: _calendarFormat,
           eventLoader: _getSessionsForDay,
-          availableCalendarFormats: const {
-            CalendarFormat.month: 'Month',
-            CalendarFormat.week: 'Week',
+          availableCalendarFormats: {
+            CalendarFormat.month: AppLocalizations.of(context)!.month,
+            CalendarFormat.week: AppLocalizations.of(context)!.week,
           },
           selectedDayPredicate: (day) {
             return isSameDay(_selectedDay, day);
@@ -171,7 +172,7 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
                 itemCount: value.length,
                 itemBuilder: (context, index) {
                   Session session = value[index];
-                  return getSessionCard(session);
+                  return getSessionCard(context, session);
                 },
               );
             },
@@ -180,8 +181,10 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
       ]),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            String stats = getStats(_list, _statFirstDay, _statLastDay);
-            String streak = getStreak(_list, _statFirstDay, _statLastDay);
+            String stats =
+                getStats(context, _list, _statFirstDay, _statLastDay);
+            String streak =
+                getStreak(context, _list, _statFirstDay, _statLastDay);
             setState(() {
               _selectedDay = null;
               _selectedSessions.value =
@@ -193,7 +196,7 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
               ),
             );
           },
-          tooltip: 'Stats',
+          tooltip: AppLocalizations.of(context)!.statistics,
           child: Icon(Icons.query_stats)),
     );
   }

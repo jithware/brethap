@@ -3,6 +3,7 @@ import 'package:brethap/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:brethap/constants.dart';
 import 'package:brethap/preferences_widget.dart';
@@ -46,12 +47,14 @@ Future<void> main() async {
 
     testWidgets('PreferencesWidget', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: PreferencesWidget(
-        preferences: preferences,
-        callback: () {
-          debugPrint("testWidget callback executed");
-        },
-      )));
+            preferences: preferences,
+            callback: () {
+              debugPrint("testWidget callback executed");
+            },
+          )));
 
       await tester.pumpAndSettle();
 

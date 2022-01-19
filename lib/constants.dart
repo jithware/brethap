@@ -5,11 +5,11 @@ const String JITHWARE_URL = "http://www.jithware.com",
         "https://www.paypal.com/donate/?hosted_button_id=2ZFSMQ8DGQVFS",
     BUGS_URL = "https://github.com/jithware/brethap/issues",
     HELP_URL = "https://github.com/jithware/brethap#readme",
-    COPYRIGHT = "Copyright 2021 Jithware. All rights reserved.",
+    COPYRIGHT = "Copyright 2022 Jithware. All rights reserved.",
     APP_NAME = "Brethap";
 
 const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
-    PRESS_BUTTON_TEXT = "Press button to begin",
+    PRESS_BUTTON_TEXT = "Press Start",
     INHALE_TEXT = "Inhale",
     EXHALE_TEXT = "Exhale",
     HOLD_TEXT = "Hold",

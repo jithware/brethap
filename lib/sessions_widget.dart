@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:csv/csv.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
@@ -146,19 +147,22 @@ class _SessionsWidgetState extends State<SessionsWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sessions'),
+        title: Text(AppLocalizations.of(context)!.sessions),
         actions: <Widget>[
           PopupMenuButton<String>(
             key: Key("menu"),
             onSelected: (value) {
               switch (value) {
                 case CLEAR_ALL_TEXT:
-                  showAlertDialog(context, CLEAR_ALL_TEXT,
-                      "Are you sure you want to clear all sessions?", () {
+                  showAlertDialog(
+                      context,
+                      AppLocalizations.of(context)!.clearAll,
+                      AppLocalizations.of(context)!.clearAllSessions, () {
                     _clearAll();
                     Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Sessions cleared"),
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content:
+                          Text(AppLocalizations.of(context)!.sessionsCleared),
                     ));
                   });
                   debugPrint(CLEAR_ALL_TEXT);
@@ -166,7 +170,8 @@ class _SessionsWidgetState extends State<SessionsWidget> {
                 case BACKUP_TEXT:
                   _exportCsv(_list).then((value) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("$value sessions backed up"),
+                      content: Text(
+                          "$value ${AppLocalizations.of(context)!.sessionsBackedUp}"),
                     ));
                   });
                   debugPrint(BACKUP_TEXT);
@@ -174,7 +179,8 @@ class _SessionsWidgetState extends State<SessionsWidget> {
                 case RESTORE_TEXT:
                   _importCsv().then((value) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("$value sessions restored"),
+                      content: Text(
+                          "$value ${AppLocalizations.of(context)!.sessionsRestored}"),
                     ));
                   });
                   debugPrint(RESTORE_TEXT);
@@ -183,8 +189,8 @@ class _SessionsWidgetState extends State<SessionsWidget> {
                   _exportCsv(_list).then((number) {
                     _getExportFile().then((file) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content:
-                            Text("$number sessions exported to:\n${file.path}"),
+                        content: Text(
+                            "$number ${AppLocalizations.of(context)!.sessionsExportedTo}:\n${file.path}"),
                         duration: Duration(seconds: 5),
                       ));
                     });
@@ -197,24 +203,24 @@ class _SessionsWidgetState extends State<SessionsWidget> {
               PopupMenuItem<String>(
                 key: Key(CLEAR_ALL_TEXT),
                 value: CLEAR_ALL_TEXT,
-                child: Text(CLEAR_ALL_TEXT),
+                child: Text(AppLocalizations.of(context)!.clearAll),
               ),
               PopupMenuDivider(),
               PopupMenuItem<String>(
                 key: Key(BACKUP_TEXT),
                 value: BACKUP_TEXT,
-                child: Text(BACKUP_TEXT),
+                child: Text(AppLocalizations.of(context)!.backup),
               ),
               PopupMenuItem<String>(
                 key: Key(RESTORE_TEXT),
                 value: RESTORE_TEXT,
-                child: Text(RESTORE_TEXT),
+                child: Text(AppLocalizations.of(context)!.restore),
               ),
               PopupMenuDivider(),
               PopupMenuItem<String>(
                 key: Key(EXPORT_TEXT),
                 value: EXPORT_TEXT,
-                child: Text(EXPORT_TEXT),
+                child: Text(AppLocalizations.of(context)!.export),
               ),
             ],
           ),
@@ -232,21 +238,22 @@ class _SessionsWidgetState extends State<SessionsWidget> {
                   _list.remove(session); // removes from list
                 });
               },
-              child: getSessionCard(session));
+              child: getSessionCard(context, session));
         },
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
             DateTime firstDate = _getFirstDate(_list);
-            String stats = getStats(_list, firstDate, DateTime.now());
-            String streak = getStreak(_list, firstDate, DateTime.now());
+            String stats = getStats(context, _list, firstDate, DateTime.now());
+            String streak =
+                getStreak(context, _list, firstDate, DateTime.now());
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text("$stats $streak", key: Key("stats")),
               ),
             );
           },
-          tooltip: 'Stats',
+          tooltip: AppLocalizations.of(context)!.statistics,
           child: Icon(Icons.query_stats)),
     );
   }

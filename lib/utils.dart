@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:brethap/constants.dart';
 import 'package:brethap/hive_storage.dart';
@@ -22,7 +23,8 @@ Duration roundDuration(Duration duration) {
   return Duration(seconds: duration.inSeconds + 1);
 }
 
-Card getSessionCard(Session session, {String dateFormat = DATE_FORMAT}) {
+Card getSessionCard(context, Session session,
+    {String dateFormat = DATE_FORMAT}) {
   Duration diff = roundDuration(session.end.difference(session.start));
   return Card(
       child: ListTile(
@@ -30,8 +32,8 @@ Card getSessionCard(Session session, {String dateFormat = DATE_FORMAT}) {
       debugPrint("session: ${session.toString()}");
     },
     title: Text(DateFormat(dateFormat).format(session.start)),
-    subtitle:
-        Text("Duration:${getDurationString(diff)}  Breaths:${session.breaths}"),
+    subtitle: Text(
+        "${AppLocalizations.of(context)!.duration}:${getDurationString(diff)}  ${AppLocalizations.of(context)!.breaths}:${session.breaths}"),
   ));
 }
 
@@ -82,6 +84,7 @@ DateTime firstDateOfMonth(DateTime dateTime) {
 }
 
 String getStats(
+  context,
   List<Session> list,
   DateTime start,
   DateTime end,
@@ -98,16 +101,17 @@ String getStats(
     }
   });
 
-  return "Sessions:$totalSessions Duration:${getDurationString(totalDuration)} Breaths:$totalBreaths";
+  return "${AppLocalizations.of(context)!.sessions}:$totalSessions ${AppLocalizations.of(context)!.duration}:${getDurationString(totalDuration)} ${AppLocalizations.of(context)!.breaths}:$totalBreaths";
 }
 
 String getStreak(
+  context,
   List<Session> list,
   DateTime start,
   DateTime end,
 ) {
   if (list.length == 0) {
-    return "Streak:0";
+    return "${AppLocalizations.of(context)!.streak}:0";
   }
   int streak = 1, runningStreak = 1;
   for (int i = 0; i < list.length - 1; i++) {
@@ -133,7 +137,7 @@ String getStreak(
       }
     }
   }
-  return "Streak:$streak";
+  return "${AppLocalizations.of(context)!.streak}:$streak";
 }
 
 Preference getDefaultPref() {
@@ -190,14 +194,14 @@ Future<void> createDefaultPref(Box preferences) async {
 
 showAlertDialog(BuildContext context, String title, String content, callback) {
   Widget cancelButton = TextButton(
-    child: Text(CANCEL_TEXT, key: Key(CANCEL_TEXT)),
+    child: Text(AppLocalizations.of(context)!.cancel, key: Key(CANCEL_TEXT)),
     onPressed: () {
       Navigator.of(context).pop();
     },
   );
   Widget continueButton = TextButton(
     key: Key(CONTINUE_TEXT),
-    child: Text(CONTINUE_TEXT),
+    child: Text(AppLocalizations.of(context)!.cont),
     onPressed: callback,
   );
 
@@ -221,7 +225,7 @@ showAlertDialog(BuildContext context, String title, String content, callback) {
 
 showInfoDialog(BuildContext context, String title, String content) {
   Widget cancelButton = TextButton(
-    child: Text(OK_TEXT, key: Key(OK_TEXT)),
+    child: Text(AppLocalizations.of(context)!.ok, key: Key(OK_TEXT)),
     onPressed: () {
       Navigator.of(context).pop();
     },

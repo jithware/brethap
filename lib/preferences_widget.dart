@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:get/get.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
@@ -151,8 +152,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     return -1;
   }
 
-  ElevatedButton _getPreferenceButton(int position) {
-    String name = "Preference $position";
+  ElevatedButton _getPreferenceButton(context, int position) {
+    String name = "${AppLocalizations.of(context)!.preference} $position";
 
     return ElevatedButton(
       child: Text("$position", semanticsLabel: name),
@@ -164,8 +165,9 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       onPressed: () {
         debugPrint("onPressed $name");
         if (widget.preferences.length <= position) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Long press button to save preference'),
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                Text(AppLocalizations.of(context)!.longPressSavePreference),
           ));
         } else {
           _setPreference(position);
@@ -201,6 +203,29 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
   _getPresetOption(String text, Preference pref) {
     return SimpleDialogOption(
       onPressed: () {
+        switch (pref.name) {
+          case PHYS_SIGH_TEXT:
+            {
+              pref.name = AppLocalizations.of(context)!.physiologicalSigh;
+            }
+            break;
+          case PRESET_478_TEXT:
+            {
+              pref.name = AppLocalizations.of(context)!.breathing478;
+            }
+            break;
+          case BOX_TEXT:
+            {
+              pref.name = AppLocalizations.of(context)!.boxBreathing;
+            }
+            break;
+          default:
+            {
+              pref.name = "";
+            }
+            break;
+        }
+
         Preference preference = widget.preferences.getAt(0);
         preference.copy(pref);
         preference.save();
@@ -208,10 +233,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
         _init();
         _setColors(0);
         Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("$text preset set"),
-        ));
-        debugPrint("$text preset set");
+        debugPrint("$text preference set");
       },
       child: Text(
         text,
@@ -222,14 +244,18 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
 
   _showPresetDialog() {
     SimpleDialog dialog = SimpleDialog(
-      title: const Text('Select a preset'),
+      title: Text(AppLocalizations.of(context)!.selectAPreset),
       children: <Widget>[
-        _getPresetOption(PRESET_478_TEXT, get478Pref()),
-        _getPresetOption(BOX_TEXT, getBoxPref()),
-        _getPresetOption(PHYS_SIGH_TEXT, getPhysSighPref()),
-        _getPresetOption(DEFAULT_TEXT, getDefaultPref()),
+        _getPresetOption(
+            AppLocalizations.of(context)!.breathing478, get478Pref()),
+        _getPresetOption(
+            AppLocalizations.of(context)!.boxBreathing, getBoxPref()),
+        _getPresetOption(
+            AppLocalizations.of(context)!.physiologicalSigh, getPhysSighPref()),
+        _getPresetOption(AppLocalizations.of(context)!.def, getDefaultPref()),
         TextButton(
-          child: Text(CANCEL_TEXT, key: Key(CANCEL_TEXT)),
+          child:
+              Text(AppLocalizations.of(context)!.cancel, key: Key(CANCEL_TEXT)),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -256,19 +282,22 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     Preference preference = widget.preferences.getAt(0);
     return Scaffold(
         appBar: AppBar(
-          title: Text('Preferences'),
+          title: Text(AppLocalizations.of(context)!.preferences),
           actions: <Widget>[
             PopupMenuButton<String>(
               key: Key("menu"),
               onSelected: (value) {
                 switch (value) {
                   case RESET_ALL_TEXT:
-                    showAlertDialog(context, RESET_ALL_TEXT,
-                        "Are you sure you want to reset all preferences?", () {
+                    showAlertDialog(
+                        context,
+                        AppLocalizations.of(context)!.resetAll,
+                        AppLocalizations.of(context)!.resetAllPreferences, () {
                       _deleteAll();
                       Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Preferences reset"),
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            AppLocalizations.of(context)!.preferencesReset),
                       ));
                     });
                     debugPrint(RESET_ALL_TEXT);
@@ -283,13 +312,13 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 PopupMenuItem<String>(
                   key: Key(RESET_ALL_TEXT),
                   value: RESET_ALL_TEXT,
-                  child: Text(RESET_ALL_TEXT),
+                  child: Text(AppLocalizations.of(context)!.resetAll),
                 ),
                 PopupMenuDivider(),
                 PopupMenuItem<String>(
                   key: Key(PRESETS_TEXT),
                   value: PRESETS_TEXT,
-                  child: Text(PRESETS_TEXT),
+                  child: Text(AppLocalizations.of(context)!.presets),
                 ),
               ],
             ),
@@ -305,8 +334,9 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   child: TextFormField(
                     controller: _textEditingController,
                     maxLength: 32,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), hintText: 'Enter a name'),
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: AppLocalizations.of(context)!.enterAName),
                     onChanged: (value) {
                       setState(() {
                         preference.name = value;
@@ -322,7 +352,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    DURATION_TEXT,
+                    AppLocalizations.of(context)!.duration,
                   ),
                   Text(
                       getDurationString(Duration(seconds: preference.duration)),
@@ -411,7 +441,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    DURATION_VIBRATE_TEXT,
+                    AppLocalizations.of(context)!.durationVibrate,
                   ),
                   Text(preference.vibrateDuration.toString() + " ms",
                       style: TextStyle(fontWeight: FontWeight.bold)),
@@ -453,7 +483,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    DURATION_TTS_TEXT,
+                    AppLocalizations.of(context)!.durationTts,
                   ),
                   Switch(
                     key: Key(DURATION_TTS_TEXT),
@@ -481,7 +511,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    INHALE_TEXT,
+                    AppLocalizations.of(context)!.inhale,
                   ),
                   Text(
                       (preference.inhale[0].toDouble() /
@@ -531,7 +561,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    INHALE_HOLD_TEXT,
+                    AppLocalizations.of(context)!.inhaleHold,
                   ),
                   Text(
                       (preference.inhale[1].toDouble() /
@@ -581,7 +611,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    INHALE_LAST_TEXT,
+                    AppLocalizations.of(context)!.inhaleLast,
                   ),
                   Text(
                       (preference.inhale[2].toDouble() /
@@ -636,7 +666,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    EXHALE_TEXT,
+                    AppLocalizations.of(context)!.exhale,
                   ),
                   Text(
                       (preference.exhale[0].toDouble() /
@@ -686,7 +716,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    EXHALE_HOLD_TEXT,
+                    AppLocalizations.of(context)!.exhaleHold,
                   ),
                   Text(
                       (preference.exhale[1].toDouble() /
@@ -736,7 +766,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    EXHALE_LAST_TEXT,
+                    AppLocalizations.of(context)!.exhaleLast,
                   ),
                   Text(
                       (preference.exhale[2].toDouble() /
@@ -791,7 +821,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    BREATH_VIBRATE_TEXT,
+                    AppLocalizations.of(context)!.breathVibrate,
                   ),
                   Text(preference.vibrateBreath.toString() + " ms",
                       style: TextStyle(fontWeight: FontWeight.bold)),
@@ -833,7 +863,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    BREATH_TTS_TEXT,
+                    AppLocalizations.of(context)!.breathTts,
                   ),
                   Switch(
                     key: Key(BREATH_TTS_TEXT),
@@ -860,7 +890,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    COLOR_PRIMARY_TEXT,
+                    AppLocalizations.of(context)!.primaryColor,
                   ),
                 ],
               ),
@@ -889,7 +919,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    COLOR_BACKGROUND_TEXT,
+                    AppLocalizations.of(context)!.backgroundColor,
                   ),
                 ],
               ),
@@ -924,11 +954,11 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Padding(padding: EdgeInsets.only(left: 20.0)),
-            _getPreferenceButton(1),
-            _getPreferenceButton(2),
-            _getPreferenceButton(3),
-            _getPreferenceButton(4),
-            _getPreferenceButton(5),
+            _getPreferenceButton(context, 1),
+            _getPreferenceButton(context, 2),
+            _getPreferenceButton(context, 3),
+            _getPreferenceButton(context, 4),
+            _getPreferenceButton(context, 5),
           ],
         ));
   }

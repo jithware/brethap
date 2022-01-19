@@ -7,6 +7,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
@@ -72,8 +73,7 @@ class _HomeWidgetState extends State<HomeWidget> {
       createRandomSessions(widget.sessions, 200, DateTime(2021, 1),
           DateTime.now().subtract(Duration(days: 1)));
     }
-    _status = PRESS_BUTTON_TEXT;
-
+    _status = "";
     if (widget.preferences.isEmpty) {
       createDefaultPref(widget.preferences);
     }
@@ -149,11 +149,11 @@ class _HomeWidgetState extends State<HomeWidget> {
     Duration diff = roundDuration(session.end.difference(session.start));
     String duration = getDurationString(diff);
     int breaths = session.breaths;
-    String text = "Completed a $duration session";
+    String text = "$duration ${AppLocalizations.of(context)!.session}";
     if (breaths == 1) {
-      text += ", with $breaths breath";
+      text += ", $breaths ${AppLocalizations.of(context)!.breath}";
     } else {
-      text += ", with $breaths breaths";
+      text += ", $breaths ${AppLocalizations.of(context)!.breaths}";
     }
 
     if (preference.durationTts) {
@@ -181,7 +181,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     });
   }
 
-  void _buttonPressed() {
+  void _buttonPressed(context) {
     debugPrint("${this.widget}._buttonPressed");
 
     if (_isRunning) {
@@ -209,7 +209,7 @@ class _HomeWidgetState extends State<HomeWidget> {
       Timer.periodic(timerSpan, (Timer timer) {
         if (!_isRunning || (_duration.inSeconds <= 0 && cycle <= 0)) {
           setState(() {
-            _status = PRESS_BUTTON_TEXT;
+            _status = AppLocalizations.of(context)!.pressStart;
             _isRunning = false;
             session.end = DateTime.now();
             session.breaths = (preference.duration - _duration.inSeconds) ~/
@@ -227,7 +227,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             if (cycle == 0) {
               inhaling = true;
               exhaling = false;
-              text = INHALE_TEXT;
+              text = AppLocalizations.of(context)!.inhale;
               _scale = 0.0;
               _onBreath(text);
               _status = text;
@@ -235,20 +235,20 @@ class _HomeWidgetState extends State<HomeWidget> {
                 cycle == preference.inhale[0]) {
               inhaling = false;
               exhaling = false;
-              text = HOLD_TEXT;
+              text = AppLocalizations.of(context)!.hold;
               _onBreath(text);
               _status = text;
             } else if (preference.inhale[2] > 0 &&
                 cycle == preference.inhale[0] + preference.inhale[1]) {
               inhaling = true;
               exhaling = false;
-              text = INHALE_TEXT;
+              text = AppLocalizations.of(context)!.inhale;
               _onBreath(text);
               _status = text;
             } else if (cycle == inhale) {
               inhaling = false;
               exhaling = true;
-              text = EXHALE_TEXT;
+              text = AppLocalizations.of(context)!.exhale;
               _scale = 1.0;
               _onBreath(text);
               _status = text;
@@ -256,14 +256,14 @@ class _HomeWidgetState extends State<HomeWidget> {
                 cycle == inhale + preference.exhale[0]) {
               inhaling = false;
               exhaling = false;
-              text = HOLD_TEXT;
+              text = AppLocalizations.of(context)!.hold;
               _onBreath(text);
               _status = text;
             } else if (preference.exhale[2] > 0 &&
                 cycle == inhale + preference.exhale[0] + preference.exhale[1]) {
               inhaling = false;
               exhaling = true;
-              text = EXHALE_TEXT;
+              text = AppLocalizations.of(context)!.exhale;
               _onBreath(text);
               _status = text;
             }
@@ -301,9 +301,9 @@ class _HomeWidgetState extends State<HomeWidget> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Could not launch url"),
+          title: Text(AppLocalizations.of(context)!.couldNotLaunch),
           content: Text('''
-Please open a browser and go to: 
+${AppLocalizations.of(context)!.openBrowser}: 
 
 $url'''),
         );
@@ -339,6 +339,10 @@ $url'''),
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    if (_status.isEmpty) {
+      _status = AppLocalizations.of(context)!.pressStart;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(_appName),
@@ -406,7 +410,7 @@ $url'''),
               child: Text(widget.appName),
             ),
             ListTile(
-              title: const Text('Preferences'),
+              title: Text(AppLocalizations.of(context)!.preferences),
               leading: Icon(Icons.settings),
               onTap: () {
                 _isRunning = false;
@@ -420,7 +424,7 @@ $url'''),
               },
             ),
             ListTile(
-              title: const Text('Sessions'),
+              title: Text(AppLocalizations.of(context)!.sessions),
               leading: Icon(Icons.format_list_numbered_outlined),
               onTap: () {
                 Navigator.push(
@@ -432,7 +436,7 @@ $url'''),
               },
             ),
             ListTile(
-                title: const Text('Calendar'),
+                title: Text(AppLocalizations.of(context)!.calendar),
                 leading: Icon(Icons.calendar_today),
                 onTap: () {
                   Navigator.push(
@@ -451,14 +455,14 @@ $url'''),
                 applicationLegalese: COPYRIGHT,
                 aboutBoxChildren: [
                   ListTile(
-                    title: const Text('Help'),
+                    title: Text(AppLocalizations.of(context)!.help),
                     leading: Icon(Icons.help),
                     onTap: () {
                       _launchURL(HELP_URL);
                     },
                   ),
                   ListTile(
-                    title: const Text('Report an Issue'),
+                    title: Text(AppLocalizations.of(context)!.reportIssue),
                     leading: Icon(Icons.bug_report),
                     onTap: () {
                       _launchURL(BUGS_URL);
@@ -471,8 +475,12 @@ $url'''),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _buttonPressed,
-        tooltip: _isRunning ? 'Stop' : 'Start',
+        onPressed: () {
+          _buttonPressed(context);
+        },
+        tooltip: _isRunning
+            ? AppLocalizations.of(context)!.stop
+            : AppLocalizations.of(context)!.start,
         child:
             _isRunning ? Icon(Icons.stop_sharp) : Icon(Icons.not_started_sharp),
       ),

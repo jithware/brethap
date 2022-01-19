@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
@@ -71,8 +72,11 @@ Future<void> main() async {
     }
 
     testWidgets('SessionsWidget', (WidgetTester tester) async {
-      await tester
-          .pumpWidget(MaterialApp(home: SessionsWidget(sessions: sessions)));
+      await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: SessionsWidget(sessions: sessions),
+      ));
       await tester.pump(WAIT);
 
       // Verify texts
@@ -149,8 +153,11 @@ Future<void> main() async {
       DateTime start = dates[dates.length - 2], end = dates[dates.length - 1];
       Duration diff = roundDuration(end.difference(start));
 
-      await tester.pumpWidget(
-          MaterialApp(home: SessionsCalendarWidget(sessions: sessions)));
+      await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: SessionsCalendarWidget(sessions: sessions),
+      ));
 
       await tester.pump(WAIT);
 
