@@ -6,7 +6,7 @@ First configure the ```/docs``` publishing source on [github](https://docs.githu
 
 Build the web source:
 ```
-flutter build web
+flutter build web --base-href "/brethap/"
 ```
  For more information see [flutter web deployment](https://flutter.dev/docs/deployment/web)
 
