@@ -17,6 +17,8 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     EXHALE_HOLD_TEXT = "Exhale Hold",
     INHALE_LAST_TEXT = "Inhale Last",
     EXHALE_LAST_TEXT = "Exhale Last",
+    INHALE_AUDIO_TEXT = "Inhale Audio",
+    EXHALE_AUDIO_TEXT = "Exhale Audio",
     DURATION_TEXT = "Duration",
     DURATION_MINUTES_TEXT = "Duration Minutes",
     DURATION_SECONDS_TEXT = "Duration Seconds",
@@ -56,6 +58,9 @@ const int DURATION = 120, //seconds
     COLOR_PRIMARY = 0, //color position
     COLOR_BACKGROUND = 0xfffafafa; //color white
 const bool DURATION_TTS = true, BREATH_TTS = true;
+const String AUDIO_NONE = "none",
+    AUDIO_TONE1 = "tone 1",
+    AUDIO_TONE2 = "tone 2";
 
 const List<ColorSwatch> COLORS_PRIMARY = const <ColorSwatch>[
   Colors.blue,

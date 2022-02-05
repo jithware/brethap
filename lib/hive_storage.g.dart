@@ -66,13 +66,14 @@ class PreferenceAdapter extends TypeAdapter<Preference> {
       breathTts: fields[6] as bool,
       colors: (fields[7] as List).cast<int>(),
       name: fields[8] as String,
+      audio: (fields[9] as List).cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Preference obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.duration)
       ..writeByte(1)
@@ -90,7 +91,9 @@ class PreferenceAdapter extends TypeAdapter<Preference> {
       ..writeByte(7)
       ..write(obj.colors)
       ..writeByte(8)
-      ..write(obj.name);
+      ..write(obj.name)
+      ..writeByte(9)
+      ..write(obj.audio);
   }
 
   @override

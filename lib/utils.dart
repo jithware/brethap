@@ -142,16 +142,16 @@ String getStreak(
 
 Preference getDefaultPref() {
   Preference preference = Preference(
-    duration: DURATION,
-    inhale: [INHALE, INHALE_HOLD, INHALE_LAST],
-    exhale: [EXHALE, EXHALE_HOLD, EXHALE_LAST],
-    vibrateDuration: VIBRATE_DURATION,
-    vibrateBreath: VIBRATE_BREATH,
-    durationTts: DURATION_TTS,
-    breathTts: BREATH_TTS,
-    colors: [COLOR_PRIMARY, COLOR_BACKGROUND],
-    name: "",
-  );
+      duration: DURATION,
+      inhale: [INHALE, INHALE_HOLD, INHALE_LAST],
+      exhale: [EXHALE, EXHALE_HOLD, EXHALE_LAST],
+      vibrateDuration: VIBRATE_DURATION,
+      vibrateBreath: VIBRATE_BREATH,
+      durationTts: DURATION_TTS,
+      breathTts: BREATH_TTS,
+      colors: [COLOR_PRIMARY, COLOR_BACKGROUND],
+      name: "",
+      audio: [AUDIO_NONE, AUDIO_NONE]);
   return preference;
 }
 

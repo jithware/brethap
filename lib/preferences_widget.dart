@@ -39,6 +39,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
   late MaterialColor _primaryColor = COLORS_PRIMARY[0] as MaterialColor;
   late Color _backgroundColor = Color(COLOR_BACKGROUND);
 
+  late String _audio0 = AUDIO_NONE, _audio1 = AUDIO_NONE;
+
   @override
   initState() {
     debugPrint("${this.widget}.initState");
@@ -84,6 +86,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       _primaryColor = COLORS_PRIMARY[preference.colors[0]] as MaterialColor;
       _backgroundColor = Color(preference.colors[1]);
       _textEditingController.text = preference.name;
+      _audio0 = preference.audio[0];
+      _audio1 = preference.audio[1];
     });
 
     debugPrint("preferences (${widget.preferences.length}):");
@@ -656,6 +660,38 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 ],
               ),
 
+              // Inhale audio
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.inhaleAudio,
+                  ),
+                  DropdownButton<String>(
+                    key: Key(INHALE_AUDIO_TEXT),
+                    value: _audio0,
+                    icon: const Icon(Icons.arrow_downward),
+                    onChanged: (String? value) {
+                      setState(() {
+                        _audio0 = value!;
+                        preference.audio[0] = _audio0;
+                        preference.save();
+                      });
+                    },
+                    items: <String>[
+                      AUDIO_NONE,
+                      AUDIO_TONE1,
+                      AUDIO_TONE2,
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+
               Divider(
                 thickness: 3,
               ),
@@ -808,6 +844,38 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                               "$EXHALE_LAST_TEXT: ${preference.exhale[2]}");
                         },
                       ))
+                ],
+              ),
+
+              // Exhale audio
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.exhaleAudio,
+                  ),
+                  DropdownButton<String>(
+                    key: Key(EXHALE_AUDIO_TEXT),
+                    value: _audio1,
+                    icon: const Icon(Icons.arrow_downward),
+                    onChanged: (String? value) {
+                      setState(() {
+                        _audio1 = value!;
+                        preference.audio[1] = _audio1;
+                        preference.save();
+                      });
+                    },
+                    items: <String>[
+                      AUDIO_NONE,
+                      AUDIO_TONE1,
+                      AUDIO_TONE2,
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
                 ],
               ),
 

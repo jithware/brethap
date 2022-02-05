@@ -1,3 +1,6 @@
+// See https://docs.hivedb.dev/#/custom-objects/generate_adapter
+// flutter packages pub run build_runner build --delete-conflicting-outputs
+
 import 'package:hive/hive.dart';
 
 part 'hive_storage.g.dart';
@@ -39,6 +42,8 @@ class Preference extends HiveObject {
   List<int> colors;
   @HiveField(8)
   String name;
+  @HiveField(9)
+  List<String> audio;
 
   Preference(
       {required this.duration,
@@ -49,7 +54,8 @@ class Preference extends HiveObject {
       required this.durationTts,
       required this.breathTts,
       required this.colors,
-      required this.name});
+      required this.name,
+      required this.audio});
 
   void copy(Preference preference) {
     this.duration = preference.duration;
@@ -61,10 +67,11 @@ class Preference extends HiveObject {
     this.breathTts = preference.breathTts;
     this.colors = List.from(preference.colors);
     this.name = preference.name;
+    this.audio = List.from(preference.audio);
   }
 
   @override
   String toString() {
-    return "{name: $name, duration: $duration, inhale: ${inhale.toString()}, exhale: ${exhale.toString()}, vibrateDuration: $vibrateDuration, vibrateBreath: $vibrateBreath, durationTts: $durationTts, breathTts: $breathTts, colors: ${colors.toString()}}";
+    return "{name: $name, duration: $duration, inhale: ${inhale.toString()}, exhale: ${exhale.toString()}, vibrateDuration: $vibrateDuration, vibrateBreath: $vibrateBreath, durationTts: $durationTts, breathTts: $breathTts, colors: ${colors.toString()}, audio: ${audio.toString()}";
   }
 }

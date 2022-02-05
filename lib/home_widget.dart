@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:just_audio/just_audio.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
@@ -51,6 +52,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   late String _status, _appName;
   late FlutterTts _tts;
   double _scale = 0.0;
+  late AudioPlayer _player;
 
   @override
   initState() {
@@ -58,6 +60,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     _initVibrator();
     _initWakeLock();
     _initSpeak();
+    _initAudio();
     _init();
     super.initState();
   }
@@ -65,6 +68,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   @override
   void dispose() {
     debugPrint("${this.widget}.dispose");
+    _player.dispose();
     super.dispose();
   }
 
@@ -98,6 +102,10 @@ class _HomeWidgetState extends State<HomeWidget> {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  void _initAudio() {
+    _player = AudioPlayer();
   }
 
   Future _speak(String text) async {
@@ -175,6 +183,28 @@ class _HomeWidgetState extends State<HomeWidget> {
     }
   }
 
+  Future<void> _onInhale() async {
+    Preference preference = widget.preferences.get(0);
+
+    await _play(preference.audio[0]);
+  }
+
+  Future<void> _onExhale() async {
+    Preference preference = widget.preferences.get(0);
+
+    await _play(preference.audio[1]);
+  }
+
+  Future<void> _play(String audio) async {
+    if (audio == AUDIO_TONE1) {
+      await _player.setAsset('audio/tone1.oga');
+      await _player.play();
+    } else if (audio == AUDIO_TONE2) {
+      await _player.setAsset('audio/tone2.oga');
+      await _player.play();
+    }
+  }
+
   void _addSession(Session session) {
     widget.sessions.add(session).then((value) {
       debugPrint("added session:$session");
@@ -231,6 +261,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               _scale = 0.0;
               _onBreath(text);
               _status = text;
+              _onInhale();
             } else if (preference.inhale[1] > 0 &&
                 cycle == preference.inhale[0]) {
               inhaling = false;
@@ -252,6 +283,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               _scale = 1.0;
               _onBreath(text);
               _status = text;
+              _onExhale();
             } else if (preference.exhale[1] > 0 &&
                 cycle == inhale + preference.exhale[0]) {
               inhaling = false;

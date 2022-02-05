@@ -5,26 +5,33 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "brethap (debug)",
+            "name": "debug",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "debug",
-            "args": ["--web-port", "8000"]
+            "flutterMode": "debug"
         },
         {
-            "name": "brethap (profile)",
+            "name": "profile",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "brethap (release)",
+            "name": "release",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
         },
         {
-            "name": "breathap (tests)",
+            "name": "debug (chrome)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "chrome",
+            "flutterMode": "debug",
+            "args": ["--web-port", "8000"], // retains hive storage on restart
+        },
+        {
+            "name": "test",
             "type": "dart",
             "request": "launch",
             "program": "./test/"
