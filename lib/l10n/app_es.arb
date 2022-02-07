@@ -7,6 +7,8 @@
     "exhaleHold": "Exhalar aguantar",
     "inhaleLast": "Inhalar el último",
     "exhaleLast": "Exhalar último",
+    "inhaleAudio": "Exhalar Audio",
+    "exhaleAudio": "Exhale Audio",
     "duration": "Duración",
     "durationVibrate": "Duración Vibrar",
     "durationTts": "Duración TTS",
