@@ -7,23 +7,25 @@ const RESOURCES = {
 "canvaskit/canvaskit.wasm": "04ed3c745ff1dee16504be01f9623498",
 "canvaskit/profiling/canvaskit.js": "f3bfccc993a1e0bfdd3440af60d99df4",
 "canvaskit/profiling/canvaskit.wasm": "a9610cf39260f60fbe7524a785c66101",
-"main.dart.js": "b3e01a6c6dfa972972277109a0709d8b",
-"version.json": "0854ccbb86b8c8d63dacde06f99fc406",
+"main.dart.js": "08891f7727d65cc77868b85657f60b11",
+"version.json": "e4bf8990771837dafbab2f6af4b11437",
 "assets/images/launcher.png": "0950cc32a8f3e26588045a04f0cd6f55",
 "assets/images/donate.png": "b307bbd89f39b81a984fa8ef1808f2e8",
 "assets/images/animated.webp": "d9bc3793254b7792e5acf0abe5ed2391",
+"assets/audio/tone1.oga": "47d6e5ba97b4410b4a0696540aeda65f",
+"assets/audio/tone2.oga": "64a7862cfd8a3478ec78d142728eeeee",
 "assets/packages/wakelock_web/assets/no_sleep.js": "7748a45cd593f33280669b29c2c8919a",
 "assets/fonts/MaterialIcons-Regular.otf": "4e6447691c9509f7acdbf8a931a85ca1",
-"assets/AssetManifest.json": "2995457dc576d19d1e342a473e8d14b6",
+"assets/AssetManifest.json": "9dbafa1f5731b99233641675345d0e11",
 "assets/FontManifest.json": "7b2a36307916a9721811788013e65289",
-"assets/NOTICES": "a9041df734a9a50fe724b7674e709436",
+"assets/NOTICES": "7c6f4a6c085501abdf394f0996c00d37",
 "icons/Icon-192.png": "c1c6e61ac04053c7a7e425a2bf641eac",
 "icons/Icon-512.png": "47e7dfec5298557877f350ed4e7dd55e",
 "manifest.json": "7dbb56011187c29a1092f838ef6df339",
 "favicon.png": "6b0e697bd5734279a8c6298ea0aebfcb",
-"README.md": "71c6920f5e013ea5200e1633748c549d",
-"index.html": "20d86ca8d90892912df79a7c7e5add08",
-"/": "20d86ca8d90892912df79a7c7e5add08"
+"README.md": "8661ff51e2853880b2542edf31bdd28b",
+"index.html": "4ffdc1320f5bf8655e7473b850c3911c",
+"/": "4ffdc1320f5bf8655e7473b850c3911c"
 };
 
 // The application shell files that are downloaded before a service worker can
