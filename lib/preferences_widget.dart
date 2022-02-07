@@ -8,6 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
 import 'package:brethap/hive_storage.dart';
+import 'package:just_audio/just_audio.dart';
 
 class PreferencesWidget extends StatefulWidget {
   const PreferencesWidget(
@@ -40,6 +41,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
   late Color _backgroundColor = Color(COLOR_BACKGROUND);
 
   late String _audio0 = AUDIO_NONE, _audio1 = AUDIO_NONE;
+  late AudioPlayer _player = AudioPlayer();
 
   @override
   initState() {
@@ -51,6 +53,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
   @override
   void dispose() {
     debugPrint("${this.widget}.dispose");
+    _player.dispose();
     _textEditingController.dispose();
     super.dispose();
   }
@@ -677,6 +680,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         preference.audio[0] = _audio0;
                         preference.save();
                       });
+                      play(_player, _audio0);
                     },
                     items: <String>[
                       AUDIO_NONE,
@@ -864,6 +868,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         preference.audio[1] = _audio1;
                         preference.save();
                       });
+                      play(_player, _audio1);
                     },
                     items: <String>[
                       AUDIO_NONE,

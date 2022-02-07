@@ -186,23 +186,13 @@ class _HomeWidgetState extends State<HomeWidget> {
   Future<void> _onInhale() async {
     Preference preference = widget.preferences.get(0);
 
-    await _play(preference.audio[0]);
+    await play(_player, preference.audio[0]);
   }
 
   Future<void> _onExhale() async {
     Preference preference = widget.preferences.get(0);
 
-    await _play(preference.audio[1]);
-  }
-
-  Future<void> _play(String audio) async {
-    if (audio == AUDIO_TONE1) {
-      await _player.setAsset('audio/tone1.oga');
-      await _player.play();
-    } else if (audio == AUDIO_TONE2) {
-      await _player.setAsset('audio/tone2.oga');
-      await _player.play();
-    }
+    await play(_player, preference.audio[1]);
   }
 
   void _addSession(Session session) {

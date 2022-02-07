@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -262,4 +263,14 @@ Future<Directory?> getStorageDir() async {
     debugPrint(e.toString());
   }
   return directory;
+}
+
+Future<void> play(AudioPlayer player, String audio) async {
+  if (audio == AUDIO_TONE1) {
+    await player.setAsset('audio/tone1.oga');
+    await player.play();
+  } else if (audio == AUDIO_TONE2) {
+    await player.setAsset('audio/tone2.oga');
+    await player.play();
+  }
 }
