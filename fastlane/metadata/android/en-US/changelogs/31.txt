@@ -1,3 +1,4 @@
 Release version: 1.5.1+31
+* Fix color change in dark theme
 * Update internationalization
 * Minor enhancements

@@ -957,6 +957,10 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 thickness: 3,
               ),
               SizedBox(height: 50),
+              Text(
+                AppLocalizations.of(context)!.restartColors,
+              ),
+              SizedBox(height: 20),
 
               // Primary Color
               Row(

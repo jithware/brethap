@@ -46,8 +46,9 @@ Brethap is yet another meditation app (yama). Including a timer for meditation, 
 
 ### Preferences
 * To view preferences, press the drawer menu in the top left and press Preferences
-* To change a preference, move the preference slider either left or right or select a color. After selecting the background color, press the back arrow next to the colors.
+* To change a preference, move the preference slider either left or right or choose an option from the drop down
 * To save a preference, hold down a Preference button
+* To change the theme colors, select a color. After selecting the background color, press the back arrow next to the colors. If your system is set to dark theme, application restart is required for the change to take effect.
 * To select a preset preference, press the Preference menu in the top right and select Presets
 * To select a saved preference, press a Preference button
 
