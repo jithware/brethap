@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+For questions or comments, please use the [Discussions](https://github.com/jithware/brethap/discussions) section.
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
