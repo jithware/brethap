@@ -8833,7 +8833,7 @@ if(r>s)s=r}}}A.ai(a,B.o,t.J).toString
 return"Streak:"+s},
 a1I(){var s=t.t,r=A.a([4000,0,0],s),q=A.a([4000,0,0],s)
 s=A.a([0,4294638330],s)
-return A.aG5(A.a(["none","none"],t.s),!0,s,120,!0,q,r,"",25,250)},
+return A.aG5(A.a(["Tone 1","Tone 2"],t.s),!1,s,120,!1,q,r,"",0,250)},
 a1G(a){var s=0,r=A.C(t.H),q
 var $async$a1G=A.y(function(b,c){if(b===1)return A.z(c,r)
 while(true)switch(s){case 0:q=A.a1I()
@@ -8891,7 +8891,7 @@ case 2:return A.z(o,r)}})
 return A.B($async$Hs,r)},
 mp(a,b){var s=0,r=A.C(t.H)
 var $async$mp=A.y(function(c,d){if(c===1)return A.z(d,r)
-while(true)switch(s){case 0:s=b==="tone 1"?2:4
+while(true)switch(s){case 0:s=b==="Tone 1"?2:4
 break
 case 2:s=5
 return A.u(a.Io("audio/tone1.oga"),$async$mp)
@@ -8899,7 +8899,7 @@ case 5:s=6
 return A.u(a.fn(0),$async$mp)
 case 6:s=3
 break
-case 4:s=b==="tone 2"?7:8
+case 4:s=b==="Tone 2"?7:8
 break
 case 7:s=9
 return A.u(a.Io("audio/tone2.oga"),$async$mp)
@@ -43914,7 +43914,7 @@ A.ai(a1,B.o,q).toString
 f=A.ak("Help",c,c,c,c,c,c,c,c)
 f=A.pl(c,A.i4(B.Om,c),c,new A.ap1(d),!1,c,f)
 A.ai(a1,B.o,q).toString
-e=A.ak("Report an issue",c,c,c,c,c,c,c,c)
+e=A.ak("Report an Issue",c,c,c,c,c,c,c,c)
 n=A.NX(A.a([new A.LV(new A.cp(c,p,c,c,c,c,B.aL),r,c),m,l,k,A.BW(!0,new A.HQ(j,g,h,new A.zs(i,c),"Copyright 2022 Jithware. All rights reserved.",A.a([f,A.pl(c,A.i4(B.Oi,c),c,new A.ap2(d),!1,c,e)],n),c),B.ab,!0)],n),B.ab,!1)
 if(d.d){A.ai(a1,B.o,q).toString
 r="Stop"}else{A.ai(a1,B.o,q).toString
@@ -44080,9 +44080,9 @@ return s===$?this.dy=B.ez:s},
 grb(a){var s=this.fr
 return s===$?this.fr=new A.l(4294638330):s},
 gAO(){var s=this.fx
-return s===$?this.fx="none":s},
+return s===$?this.fx="None":s},
 gAP(){var s=this.fy
-return s===$?this.fy="none":s},
+return s===$?this.fy="None":s},
 gCI(){var s=this.go
 return s===$?this.go=A.aDD():s},
 bb(){$.aW.$1(this.a.j(0)+".initState")
@@ -44316,7 +44316,7 @@ a3=c1.gAO()
 a4=t.s
 a5=t.fo
 a6=a5.i("bi.E")
-a3=A.c8(A.a([a2,A.aEn(B.mH,A.aD(new A.aq(A.a(["none","tone 1","tone 2"],a4),new A.arT(),a5),!0,a6),new A.b4(c7,r),new A.arU(c1,d5),a3,q)],p),B.B,B.al,B.C)
+a3=A.c8(A.a([a2,A.aEn(B.mH,A.aD(new A.aq(A.a(["None","Tone 1","Tone 2"],a4),new A.arT(),a5),!0,a6),new A.b4(c7,r),new A.arU(c1,d5),a3,q)],p),B.B,B.al,B.C)
 a2=A.yC(c2,3)
 a7=A.eL(c2,50,c2)
 A.ai(d8,B.o,d6).toString
@@ -44340,7 +44340,7 @@ b3=A.c8(A.a([A.bI(c2,A.lL(100,new A.b4(c9,r),100,0,new A.as_(c1,d5),new A.as0(c1
 A.ai(d8,B.o,d6).toString
 b4=A.ak(d0,c2,c2,c2,c2,c2,c2,c2,c2)
 b5=c1.gAP()
-q=A.c8(A.a([b4,A.aEn(B.mH,A.aD(new A.aq(A.a(["none","tone 1","tone 2"],a4),new A.as1(),a5),!0,a6),new A.b4(d0,r),new A.as2(c1,d5),b5,q)],p),B.B,B.al,B.C)
+q=A.c8(A.a([b4,A.aEn(B.mH,A.aD(new A.aq(A.a(["None","Tone 1","Tone 2"],a4),new A.as1(),a5),!0,a6),new A.b4(d0,r),new A.as2(c1,d5),b5,q)],p),B.B,B.al,B.C)
 b5=A.yC(c2,3)
 a6=A.eL(c2,50,c2)
 A.ai(d8,B.o,d6).toString
