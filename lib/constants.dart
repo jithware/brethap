@@ -41,7 +41,10 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     OK_TEXT = "Ok",
     COLOR_PRIMARY_TEXT = "Primary Color",
     COLOR_BACKGROUND_TEXT = "Background Color",
-    NAME_TEXT = "Name";
+    NAME_TEXT = "Name",
+    AUDIO_NONE = "None",
+    AUDIO_TONE1 = "Tone 1",
+    AUDIO_TONE2 = "Tone 2";
 
 const int SAVED_PREFERENCES = 5;
 
@@ -54,13 +57,11 @@ const int DURATION = 120, //seconds
     EXHALE_HOLD = 0, //milliseconds
     EXHALE_LAST = 0, //milliseconds
     VIBRATE_DURATION = 250, //milliseconds
-    VIBRATE_BREATH = 25, //milliseconds
+    VIBRATE_BREATH = 0, //milliseconds
     COLOR_PRIMARY = 0, //color position
     COLOR_BACKGROUND = 0xfffafafa; //color white
-const bool DURATION_TTS = true, BREATH_TTS = true;
-const String AUDIO_NONE = "none",
-    AUDIO_TONE1 = "tone 1",
-    AUDIO_TONE2 = "tone 2";
+const bool DURATION_TTS = false, BREATH_TTS = false;
+const String INHALE_AUDIO = AUDIO_TONE1, EXHALE_AUDIO = AUDIO_TONE2;
 
 const List<ColorSwatch> COLORS_PRIMARY = const <ColorSwatch>[
   Colors.blue,

@@ -1,0 +1,3 @@
+Release version: 1.5.2+32
+* Update default preferences
+* Minor enhancements

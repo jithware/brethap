@@ -152,7 +152,7 @@ Preference getDefaultPref() {
       breathTts: BREATH_TTS,
       colors: [COLOR_PRIMARY, COLOR_BACKGROUND],
       name: "",
-      audio: [AUDIO_NONE, AUDIO_NONE]);
+      audio: [INHALE_AUDIO, EXHALE_AUDIO]);
   return preference;
 }
 
