@@ -56,5 +56,5 @@
     "preference": "Preference",
     "week": "Week",
     "month": "Month",
-    "restartColors": "If the system is set to dark theme, application restart required for color change to take effect"
+    "colorDisabled": "Color is disabled in dark mode."
 }

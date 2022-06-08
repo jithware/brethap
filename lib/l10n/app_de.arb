@@ -56,5 +56,5 @@
     "preference": "Einstellung",
     "week": "Woche",
     "month": "Monat",
-    "restartColors": "Wenn das System ein dunkles Thema nutzt, muss die Anwendung erneut gestartet werden, damit dieses angewandt wird."
+    "colorDisabled": "Farbe ist im dunklen Modus deaktiviert."
 }

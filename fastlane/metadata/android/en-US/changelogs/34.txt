@@ -1,3 +1,4 @@
 Release version: 1.5.4+34
+* Disable color in dark mode
 * Add German translations
 * Minor enhancements

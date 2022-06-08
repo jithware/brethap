@@ -957,67 +957,82 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 thickness: 3,
               ),
               SizedBox(height: 50),
-              Text(
-                AppLocalizations.of(context)!.restartColors,
+              Visibility(
+                visible: Get.isDarkMode,
+                child: Text(
+                  AppLocalizations.of(context)!.colorDisabled,
+                ),
               ),
               SizedBox(height: 20),
 
               // Primary Color
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.primaryColor,
-                  ),
-                ],
+              Visibility(
+                visible: !Get.isDarkMode,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.primaryColor,
+                    ),
+                  ],
+                ),
               ),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  MaterialColorPicker(
-                      key: Key(COLOR_PRIMARY_TEXT),
-                      colors: COLORS_PRIMARY,
-                      allowShades: false,
-                      onMainColorChange: (ColorSwatch? color) {
-                        _primaryColor = color as MaterialColor;
-                        _changeTheme();
-                        preference.colors[0] =
-                            _getColorPosition(COLORS_PRIMARY, color);
-                        preference.save();
-                        debugPrint("$COLOR_PRIMARY_TEXT: $color");
-                      },
-                      selectedColor: _primaryColor),
-                ],
+              Visibility(
+                visible: !Get.isDarkMode,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    MaterialColorPicker(
+                        key: Key(COLOR_PRIMARY_TEXT),
+                        colors: COLORS_PRIMARY,
+                        allowShades: false,
+                        onMainColorChange: (ColorSwatch? color) {
+                          _primaryColor = color as MaterialColor;
+                          _changeTheme();
+                          preference.colors[0] =
+                              _getColorPosition(COLORS_PRIMARY, color);
+                          preference.save();
+                          debugPrint("$COLOR_PRIMARY_TEXT: $color");
+                        },
+                        selectedColor: _primaryColor),
+                  ],
+                ),
               ),
 
               // Background Color
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.backgroundColor,
-                  ),
-                ],
+              Visibility(
+                visible: !Get.isDarkMode,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.backgroundColor,
+                    ),
+                  ],
+                ),
               ),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  MaterialColorPicker(
-                      key: Key(COLOR_BACKGROUND_TEXT),
-                      colors: COLORS_BACKGROUND,
-                      onBack: () {
-                        _changeTheme();
-                      },
-                      onColorChange: (Color color) {
-                        _backgroundColor = color;
-                        preference.colors[1] = color.value;
-                        preference.save();
-                        debugPrint("$COLOR_BACKGROUND_TEXT: $color");
-                      },
-                      selectedColor: _backgroundColor),
-                ],
+              Visibility(
+                visible: !Get.isDarkMode,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    MaterialColorPicker(
+                        key: Key(COLOR_BACKGROUND_TEXT),
+                        colors: COLORS_BACKGROUND,
+                        onBack: () {
+                          _changeTheme();
+                        },
+                        onColorChange: (Color color) {
+                          _backgroundColor = color;
+                          preference.colors[1] = color.value;
+                          preference.save();
+                          debugPrint("$COLOR_BACKGROUND_TEXT: $color");
+                        },
+                        selectedColor: _backgroundColor),
+                  ],
+                ),
               ),
 
               Divider(
