@@ -67,9 +67,9 @@ DateTime _mockDate([DateTime? firstMoment, DateTime? secondMoment]) {
   Random random = Random(); //Random(DateTime.now().millisecondsSinceEpoch);
   firstMoment ??= DateTime.fromMillisecondsSinceEpoch(0);
   secondMoment ??= DateTime.now();
-  Duration _difference = secondMoment.difference(firstMoment);
+  Duration difference = secondMoment.difference(firstMoment);
   return firstMoment
-      .add(Duration(seconds: random.nextInt(_difference.inSeconds + 1)));
+      .add(Duration(seconds: random.nextInt(difference.inSeconds + 1)));
 }
 
 DateTime firstDateOfWeek(DateTime dateTime) {
@@ -90,17 +90,17 @@ String getStats(
   DateTime start,
   DateTime end,
 ) {
-  Duration totalDuration = Duration(seconds: 0);
+  Duration totalDuration = const Duration(seconds: 0);
   int totalSessions = 0, totalBreaths = 0;
 
-  list.forEach((item) {
+  for (var item in list) {
     if ((item.start.compareTo(start) >= 0 && item.end.compareTo(end) <= 0)) {
       Duration diff = roundDuration(item.end.difference(item.start));
       totalDuration += diff;
       totalBreaths += item.breaths;
       totalSessions += 1;
     }
-  });
+  }
 
   return "${AppLocalizations.of(context)!.sessions}:$totalSessions ${AppLocalizations.of(context)!.duration}:${getDurationString(totalDuration)} ${AppLocalizations.of(context)!.breaths}:$totalBreaths";
 }
@@ -111,7 +111,7 @@ String getStreak(
   DateTime start,
   DateTime end,
 ) {
-  if (list.length == 0) {
+  if (list.isEmpty) {
     return "${AppLocalizations.of(context)!.streak}:0";
   }
   int streak = 1, runningStreak = 1;
@@ -195,15 +195,16 @@ Future<void> createDefaultPref(Box preferences) async {
 
 showAlertDialog(BuildContext context, String title, String content, callback) {
   Widget cancelButton = TextButton(
-    child: Text(AppLocalizations.of(context)!.cancel, key: Key(CANCEL_TEXT)),
+    child:
+        Text(AppLocalizations.of(context)!.cancel, key: const Key(CANCEL_TEXT)),
     onPressed: () {
       Navigator.of(context).pop();
     },
   );
   Widget continueButton = TextButton(
-    key: Key(CONTINUE_TEXT),
-    child: Text(AppLocalizations.of(context)!.cont),
+    key: const Key(CONTINUE_TEXT),
     onPressed: callback,
+    child: Text(AppLocalizations.of(context)!.cont),
   );
 
   AlertDialog alert = AlertDialog(
@@ -226,7 +227,7 @@ showAlertDialog(BuildContext context, String title, String content, callback) {
 
 showInfoDialog(BuildContext context, String title, String content) {
   Widget cancelButton = TextButton(
-    child: Text(AppLocalizations.of(context)!.ok, key: Key(OK_TEXT)),
+    child: Text(AppLocalizations.of(context)!.ok, key: const Key(OK_TEXT)),
     onPressed: () {
       Navigator.of(context).pop();
     },

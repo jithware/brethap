@@ -18,7 +18,7 @@ import 'package:brethap/hive_storage.dart';
 import 'package:brethap/sessions_calendar_widget.dart';
 
 class HomeWidget extends StatefulWidget {
-  HomeWidget(
+  const HomeWidget(
       {Key? key,
       required this.appName,
       required this.version,
@@ -39,7 +39,7 @@ class HomeWidget extends StatefulWidget {
   final Box preferences, sessions;
 
   @override
-  _HomeWidgetState createState() => _HomeWidgetState();
+  State<HomeWidget> createState() => _HomeWidgetState();
 }
 
 class _HomeWidgetState extends State<HomeWidget> {
@@ -56,7 +56,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   @override
   initState() {
-    debugPrint("${this.widget}.initState");
+    debugPrint("$widget.initState");
     _initVibrator();
     _initWakeLock();
     _initSpeak();
@@ -67,7 +67,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   @override
   void dispose() {
-    debugPrint("${this.widget}.dispose");
+    debugPrint("$widget.dispose");
     _player.dispose();
     super.dispose();
   }
@@ -75,7 +75,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   void _init() {
     if (kDebugMode) {
       createRandomSessions(widget.sessions, 200, DateTime(2021, 1),
-          DateTime.now().subtract(Duration(days: 1)));
+          DateTime.now().subtract(const Duration(days: 1)));
     }
     _status = "";
     if (widget.preferences.isEmpty) {
@@ -168,6 +168,7 @@ class _HomeWidgetState extends State<HomeWidget> {
       await _speak(text);
     }
 
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(text),
     ));
@@ -202,7 +203,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   }
 
   void _buttonPressed(context) {
-    debugPrint("${this.widget}._buttonPressed");
+    debugPrint("$widget._buttonPressed");
 
     if (_isRunning) {
       _isRunning = false;
@@ -213,7 +214,7 @@ class _HomeWidgetState extends State<HomeWidget> {
       Session session = Session(start: DateTime.now());
       _wakeLock(true);
 
-      Duration timerSpan = Duration(milliseconds: 100);
+      Duration timerSpan = const Duration(milliseconds: 100);
       int inhale =
           preference.inhale[0] + preference.inhale[1] + preference.inhale[2];
       int exhale =
@@ -399,7 +400,7 @@ $url'''),
                 child: Transform.scale(
                     scale: _scale,
                     child: Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Container(
                         width: 150.0,
                         height: 150.0,
@@ -425,7 +426,7 @@ $url'''),
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image:
                     DecorationImage(image: AssetImage("images/launcher.png")),
               ),
@@ -433,7 +434,7 @@ $url'''),
             ),
             ListTile(
               title: Text(AppLocalizations.of(context)!.preferences),
-              leading: Icon(Icons.settings),
+              leading: const Icon(Icons.settings),
               onTap: () {
                 _isRunning = false;
                 Navigator.push(
@@ -447,7 +448,7 @@ $url'''),
             ),
             ListTile(
               title: Text(AppLocalizations.of(context)!.sessions),
-              leading: Icon(Icons.format_list_numbered_outlined),
+              leading: const Icon(Icons.format_list_numbered_outlined),
               onTap: () {
                 Navigator.push(
                   context,
@@ -459,7 +460,7 @@ $url'''),
             ),
             ListTile(
                 title: Text(AppLocalizations.of(context)!.calendar),
-                leading: Icon(Icons.calendar_today),
+                leading: const Icon(Icons.calendar_today),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -470,7 +471,7 @@ $url'''),
                 }),
             SafeArea(
               child: AboutListTile(
-                icon: Icon(Icons.info_outline),
+                icon: const Icon(Icons.info_outline),
                 applicationIcon: Image.asset('images/animated.webp'),
                 applicationName: widget.appName,
                 applicationVersion: widget.version,
@@ -478,14 +479,14 @@ $url'''),
                 aboutBoxChildren: [
                   ListTile(
                     title: Text(AppLocalizations.of(context)!.help),
-                    leading: Icon(Icons.help),
+                    leading: const Icon(Icons.help),
                     onTap: () {
                       _launchURL(HELP_URL);
                     },
                   ),
                   ListTile(
                     title: Text(AppLocalizations.of(context)!.reportIssue),
-                    leading: Icon(Icons.bug_report),
+                    leading: const Icon(Icons.bug_report),
                     onTap: () {
                       _launchURL(BUGS_URL);
                     },
@@ -503,8 +504,9 @@ $url'''),
         tooltip: _isRunning
             ? AppLocalizations.of(context)!.stop
             : AppLocalizations.of(context)!.start,
-        child:
-            _isRunning ? Icon(Icons.stop_sharp) : Icon(Icons.not_started_sharp),
+        child: _isRunning
+            ? const Icon(Icons.stop_sharp)
+            : const Icon(Icons.not_started_sharp),
       ),
     );
   }

@@ -63,7 +63,7 @@ const int DURATION = 120, //seconds
 const bool DURATION_TTS = false, BREATH_TTS = false;
 const String INHALE_AUDIO = AUDIO_TONE1, EXHALE_AUDIO = AUDIO_TONE2;
 
-const List<ColorSwatch> COLORS_PRIMARY = const <ColorSwatch>[
+const List<ColorSwatch> COLORS_PRIMARY = <ColorSwatch>[
   Colors.blue,
   Colors.red,
   Colors.pink,

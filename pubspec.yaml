@@ -15,10 +15,11 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.5.4+34
+version: 1.5.5+35
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
+  flutter: ^3.0.5
 
 dependencies:
   flutter:
@@ -41,11 +42,13 @@ dependencies:
   get: ^4.6.1
   flutter_material_color_picker: ^1.1.0+2
   just_audio: ^0.9.20
+  hive: ^2.2.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: "^0.9.1"
+  flutter_lints: ^2.0.1
 
   # To build hive adapters run: flutter packages pub run build_runner build --delete-conflicting-outputs
   hive_generator: ^1.1.0

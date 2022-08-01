@@ -39,7 +39,7 @@ Future<void> main() async {
     }
 
     Future<void> tapMenu(WidgetTester tester) async {
-      Finder menu = find.byKey(Key("menu"));
+      Finder menu = find.byKey(const Key("menu"));
       expect(menu, findsOneWidget);
       await tester.tap(menu);
       await tester.pumpAndSettle();
@@ -63,17 +63,17 @@ Future<void> main() async {
       // Drag duration minutes slider
       expect(
           find.textContaining(
-              "${getDurationString(Duration(seconds: DURATION))}"),
+              getDurationString(const Duration(seconds: DURATION))),
           findsOneWidget);
       await tester.drag(
-          find.byKey(Key(DURATION_MINUTES_TEXT)), const Offset(0.0, 0.0));
+          find.byKey(const Key(DURATION_MINUTES_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
       expect(preference.duration, 3600);
       expect(find.bySemanticsLabel(RegExp("1:00:00")), findsOneWidget);
 
       // Drag duration seconds slider
       await tester.drag(
-          find.byKey(Key(DURATION_SECONDS_TEXT)), const Offset(0.0, 0.0));
+          find.byKey(const Key(DURATION_SECONDS_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
       expect(preference.duration, 3629);
       expect(find.bySemanticsLabel(RegExp("1:00:29")), findsOneWidget);
@@ -81,7 +81,7 @@ Future<void> main() async {
       // Drag vibrate duration slider
       expect(find.textContaining("$VIBRATE_DURATION ms"), findsOneWidget);
       await tester.drag(
-          find.byKey(Key(DURATION_VIBRATE_TEXT)), const Offset(0.0, 0.0));
+          find.byKey(const Key(DURATION_VIBRATE_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
       expect(preference.vibrateDuration, 500);
       expect(find.textContaining("500 ms"), findsOneWidget);
@@ -89,12 +89,13 @@ Future<void> main() async {
       // Drag duration tts switch
       expect(preference.durationTts, DURATION_TTS);
       await tester.drag(
-          find.byKey(Key(DURATION_TTS_TEXT)), const Offset(0.0, 0.0));
+          find.byKey(const Key(DURATION_TTS_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
       expect(preference.durationTts, !DURATION_TTS);
 
       // Drag inhale slider
-      Finder inhaleSlider = find.byKey(Key(INHALE_TEXT), skipOffstage: false);
+      Finder inhaleSlider =
+          find.byKey(const Key(INHALE_TEXT), skipOffstage: false);
       await tester.ensureVisible(inhaleSlider);
       await tester.pumpAndSettle();
       expect(
@@ -110,7 +111,7 @@ Future<void> main() async {
               "${(INHALE_HOLD / Duration.millisecondsPerSecond)} s"),
           findsWidgets);
       await tester.drag(
-          find.byKey(Key(INHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
+          find.byKey(const Key(INHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
       expect(preference.inhale, [7800, 5000, INHALE_LAST]);
       expect(find.textContaining("5.0 s"), findsWidgets);
@@ -121,7 +122,7 @@ Future<void> main() async {
               "${(INHALE_LAST / Duration.millisecondsPerSecond)} s"),
           findsWidgets);
       await tester.drag(
-          find.byKey(Key(INHALE_LAST_TEXT)), const Offset(0.0, 0.0));
+          find.byKey(const Key(INHALE_LAST_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
       expect(preference.inhale, [7800, 5000, 5000]);
       expect(find.textContaining("5.0 s"), findsWidgets);
@@ -129,7 +130,7 @@ Future<void> main() async {
       // Inhale audio
       expect(preference.audio, [INHALE_AUDIO, EXHALE_AUDIO]);
       Finder inhaleAudio =
-          find.byKey(Key(INHALE_AUDIO_TEXT), skipOffstage: false);
+          find.byKey(const Key(INHALE_AUDIO_TEXT), skipOffstage: false);
       await tester.ensureVisible(inhaleAudio);
       await tester.tap(inhaleAudio);
       await tester.pumpAndSettle();
@@ -142,7 +143,7 @@ Future<void> main() async {
       expect(preference.audio, [AUDIO_NONE, EXHALE_AUDIO]);
 
       // Drag exhale slider
-      Finder exhale = find.byKey(Key(EXHALE_TEXT), skipOffstage: false);
+      Finder exhale = find.byKey(const Key(EXHALE_TEXT), skipOffstage: false);
       await tester.ensureVisible(exhale);
       await tester.pumpAndSettle();
       await tester.drag(exhale, const Offset(0.0, 0.0));
@@ -155,7 +156,7 @@ Future<void> main() async {
               "${(EXHALE_HOLD / Duration.millisecondsPerSecond)} s"),
           findsWidgets);
       await tester.drag(
-          find.byKey(Key(EXHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
+          find.byKey(const Key(EXHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
       expect(preference.exhale, [7800, 5000, EXHALE_LAST]);
       expect(find.textContaining("5.0 s"), findsWidgets);
@@ -166,7 +167,7 @@ Future<void> main() async {
               "${(EXHALE_LAST / Duration.millisecondsPerSecond)} s"),
           findsWidgets);
       await tester.drag(
-          find.byKey(Key(EXHALE_LAST_TEXT)), const Offset(0.0, 0.0));
+          find.byKey(const Key(EXHALE_LAST_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
       expect(preference.exhale, [7800, 5000, 5000]);
       expect(find.textContaining("5.0 s"), findsWidgets);
@@ -174,7 +175,7 @@ Future<void> main() async {
       // Exhale audio
       expect(preference.audio, [AUDIO_NONE, EXHALE_AUDIO]);
       Finder exhaleAudio =
-          find.byKey(Key(EXHALE_AUDIO_TEXT), skipOffstage: false);
+          find.byKey(const Key(EXHALE_AUDIO_TEXT), skipOffstage: false);
       await tester.ensureVisible(exhaleAudio);
       await tester.tap(exhaleAudio);
       await tester.pumpAndSettle();
@@ -189,7 +190,7 @@ Future<void> main() async {
       // Drag vibrate breath slider
       expect(find.textContaining("$VIBRATE_BREATH ms"), findsOneWidget);
       await tester.drag(
-        find.byKey(Key(BREATH_VIBRATE_TEXT)),
+        find.byKey(const Key(BREATH_VIBRATE_TEXT)),
         const Offset(0.0, 0.0),
       );
       await tester.pumpAndSettle();
@@ -198,17 +199,17 @@ Future<void> main() async {
 
       // Drag breath tts switch
       expect(preference.breathTts, BREATH_TTS);
-      await tester
-          .ensureVisible(find.byKey(Key(BREATH_TTS_TEXT), skipOffstage: false));
+      await tester.ensureVisible(
+          find.byKey(const Key(BREATH_TTS_TEXT), skipOffstage: false));
       await tester.pumpAndSettle();
       await tester.drag(
-          find.byKey(Key(BREATH_TTS_TEXT)), const Offset(0.0, 0.0));
+          find.byKey(const Key(BREATH_TTS_TEXT)), const Offset(0.0, 0.0));
       await tester.pumpAndSettle();
       expect(preference.breathTts, !BREATH_TTS);
 
       // Verify primary color
       expect(preference.colors, [COLOR_PRIMARY, COLOR_BACKGROUND]);
-      Finder primaryColor = find.byKey(Key(COLOR_PRIMARY_TEXT));
+      Finder primaryColor = find.byKey(const Key(COLOR_PRIMARY_TEXT));
       await tester.ensureVisible(primaryColor);
       expect(primaryColor, findsOneWidget);
       Offset center = tester.getCenter(primaryColor);
@@ -217,7 +218,7 @@ Future<void> main() async {
       expect(preference.colors, [5, COLOR_BACKGROUND]);
 
       // Verify background color
-      Finder backgroundColor = find.byKey(Key(COLOR_BACKGROUND_TEXT));
+      Finder backgroundColor = find.byKey(const Key(COLOR_BACKGROUND_TEXT));
       expect(backgroundColor, findsOneWidget);
       center = tester.getCenter(backgroundColor);
       await tester.tapAt(Offset(center.dx, center.dy - 10));
@@ -246,11 +247,11 @@ Future<void> main() async {
       await tapMenu(tester);
 
       // Verify reset all
-      Finder resetAll = find.byKey(Key(RESET_ALL_TEXT));
+      Finder resetAll = find.byKey(const Key(RESET_ALL_TEXT));
       expect(resetAll, findsOneWidget);
       await tester.tap(resetAll);
       await tester.pumpAndSettle();
-      Finder cont = find.byKey(Key(CONTINUE_TEXT));
+      Finder cont = find.byKey(const Key(CONTINUE_TEXT));
       expect(cont, findsOneWidget);
       await tester.tap(cont);
       await tester.pumpAndSettle();
@@ -262,7 +263,7 @@ Future<void> main() async {
       await tapMenu(tester);
 
       // Verify presets
-      Finder presets = find.byKey(Key(PRESETS_TEXT));
+      Finder presets = find.byKey(const Key(PRESETS_TEXT));
       expect(presets, findsOneWidget);
 
       // Verify default preset

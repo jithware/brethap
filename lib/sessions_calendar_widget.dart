@@ -14,7 +14,7 @@ class SessionsCalendarWidget extends StatefulWidget {
   final Box sessions;
 
   @override
-  _SessionsCalendarWidgetState createState() => _SessionsCalendarWidgetState();
+  State<SessionsCalendarWidget> createState() => _SessionsCalendarWidgetState();
 }
 
 class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
@@ -38,20 +38,20 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
 
   @override
   void initState() {
-    debugPrint("${this.widget}.initState");
+    debugPrint("$widget.initState");
     _init();
     super.initState();
   }
 
   @override
   void dispose() {
-    debugPrint("${this.widget}.dispose");
+    debugPrint("$widget.dispose");
     super.dispose();
   }
 
   DateTime _getFirstDate(List<Session> list) {
     DateTime start = DateTime.now();
-    if (list.length > 0) {
+    if (list.isNotEmpty) {
       return list[0].start;
     }
     return start;
@@ -59,22 +59,22 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
 
   List<Session> _getSessionsForDay(DateTime day) {
     List<Session> sessions = <Session>[];
-    _list.forEach((element) {
+    for (var element in _list) {
       if (isSameDay(element.start, day)) {
         sessions.add(element);
       }
-    });
+    }
     return sessions;
   }
 
   List<Session> _getSessionsForDateSpan(DateTime start, DateTime end) {
     List<Session> sessions = <Session>[];
-    _list.forEach((item) {
+    for (var item in _list) {
       if (item.start.millisecondsSinceEpoch >= start.millisecondsSinceEpoch &&
           item.end.millisecondsSinceEpoch <= end.millisecondsSinceEpoch) {
         sessions.add(item);
       }
-    });
+    }
 
     return sessions;
   }
@@ -157,10 +157,12 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
                 height: 16.0,
                 child: Center(
                   child: Text('${events.length}',
-                      style: TextStyle(color: Colors.white, fontSize: 10.0)),
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 10.0)),
                 ),
               );
             }
+            return null;
           }),
         ),
         const SizedBox(height: 8.0),
@@ -192,12 +194,12 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
             });
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text("$stats $streak", key: Key("stats")),
+                content: Text("$stats $streak", key: const Key("stats")),
               ),
             );
           },
           tooltip: AppLocalizations.of(context)!.statistics,
-          child: Icon(Icons.query_stats)),
+          child: const Icon(Icons.query_stats)),
     );
   }
 }

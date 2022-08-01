@@ -58,16 +58,16 @@ class Preference extends HiveObject {
       required this.audio});
 
   void copy(Preference preference) {
-    this.duration = preference.duration;
-    this.inhale = List.from(preference.inhale);
-    this.exhale = List.from(preference.exhale);
-    this.vibrateDuration = preference.vibrateDuration;
-    this.vibrateBreath = preference.vibrateBreath;
-    this.durationTts = preference.durationTts;
-    this.breathTts = preference.breathTts;
-    this.colors = List.from(preference.colors);
-    this.name = preference.name;
-    this.audio = List.from(preference.audio);
+    duration = preference.duration;
+    inhale = List.from(preference.inhale);
+    exhale = List.from(preference.exhale);
+    vibrateDuration = preference.vibrateDuration;
+    vibrateBreath = preference.vibrateBreath;
+    durationTts = preference.durationTts;
+    breathTts = preference.breathTts;
+    colors = List.from(preference.colors);
+    name = preference.name;
+    audio = List.from(preference.audio);
   }
 
   @override

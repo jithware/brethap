@@ -67,7 +67,7 @@ Future<void> main() async {
 }
 
 class MainWidget extends StatelessWidget {
-  MainWidget(
+  const MainWidget(
       {Key? key,
       required this.appName,
       required this.version,
@@ -81,7 +81,7 @@ class MainWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MaterialColor primaryColor = COLORS_PRIMARY[0] as MaterialColor;
-    Color backgroundColor = Color(COLOR_BACKGROUND);
+    Color backgroundColor = const Color(COLOR_BACKGROUND);
     if (preferences.isNotEmpty) {
       Preference preference = preferences.getAt(0);
       primaryColor = COLORS_PRIMARY[preference.colors[0]] as MaterialColor;

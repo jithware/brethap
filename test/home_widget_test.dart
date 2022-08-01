@@ -42,7 +42,7 @@ Future<void> main() async {
       const Duration WAIT = Duration(milliseconds: 500);
       Preference preference = preferences.get(0);
       Duration duration = Duration(seconds: preference.duration),
-          totalTime = Duration(),
+          totalTime = const Duration(),
           inhale = Duration(
               milliseconds: preference.inhale[0] + preference.inhale[1]),
           exhale = Duration(
@@ -53,7 +53,7 @@ Future<void> main() async {
 
       // Open the drawer
       await tester.dragFrom(
-          tester.getTopLeft(find.byType(MaterialApp)), Offset(0, 0));
+          tester.getTopLeft(find.byType(MaterialApp)), const Offset(0, 0));
       await tester.pump();
 
       // Verify app name in drawer header
@@ -72,8 +72,8 @@ Future<void> main() async {
       expect(find.text("About $APP_NAME"), findsOneWidget);
 
       // Close the drawer
-      await tester.flingFrom(
-          tester.getTopLeft(find.byType(MaterialApp)), Offset(-100, 0), 100);
+      await tester.flingFrom(tester.getTopLeft(find.byType(MaterialApp)),
+          const Offset(-100, 0), 100);
       await tester.pump();
 
       // Verify initial status text

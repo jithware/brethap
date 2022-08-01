@@ -9,11 +9,11 @@
 #
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
-# For a list of available language codes, check out
-#     https://docs.fastlane.tools/actions/deliver/#tips
 
 # Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
+update_fastlane
+
+opt_out_usage
 
 default_platform(:android)
 
@@ -26,6 +26,11 @@ platform :android do
     upload_to_play_store(
       track: "internal",
       aab: "build/app/outputs/bundle/release/app-release.aab",
+      skip_upload_aab: false,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: false,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
       validate_only: false
     )
   end

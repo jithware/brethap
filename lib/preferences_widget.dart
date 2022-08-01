@@ -16,10 +16,10 @@ class PreferencesWidget extends StatefulWidget {
       : super(key: key);
 
   final Box preferences;
-  final callback;
+  final dynamic callback;
 
   @override
-  _PreferencesWidgetState createState() => _PreferencesWidgetState();
+  State<PreferencesWidget> createState() => _PreferencesWidgetState();
 }
 
 class _PreferencesWidgetState extends State<PreferencesWidget> {
@@ -38,21 +38,21 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
   final TextEditingController _textEditingController = TextEditingController();
 
   late MaterialColor _primaryColor = COLORS_PRIMARY[0] as MaterialColor;
-  late Color _backgroundColor = Color(COLOR_BACKGROUND);
+  late Color _backgroundColor = const Color(COLOR_BACKGROUND);
 
   late String _audio0 = AUDIO_NONE, _audio1 = AUDIO_NONE;
-  late AudioPlayer _player = AudioPlayer();
+  late final AudioPlayer _player = AudioPlayer();
 
   @override
   initState() {
-    debugPrint("${this.widget}.initState");
+    debugPrint("$widget.initState");
     _init();
     super.initState();
   }
 
   @override
   void dispose() {
-    debugPrint("${this.widget}.dispose");
+    debugPrint("$widget.dispose");
     _player.dispose();
     _textEditingController.dispose();
     super.dispose();
@@ -163,7 +163,6 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     String name = "${AppLocalizations.of(context)!.preference} $position";
 
     return ElevatedButton(
-      child: Text("$position", semanticsLabel: name),
       key: Key(name),
       onLongPress: () {
         debugPrint("onLongPress $name");
@@ -195,6 +194,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
               borderRadius: BorderRadius.circular(20.0),
             ),
           )),
+      child: Text("$position", semanticsLabel: name),
     );
   }
 
@@ -261,8 +261,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
             AppLocalizations.of(context)!.physiologicalSigh, getPhysSighPref()),
         _getPresetOption(AppLocalizations.of(context)!.def, getDefaultPref()),
         TextButton(
-          child:
-              Text(AppLocalizations.of(context)!.cancel, key: Key(CANCEL_TEXT)),
+          child: Text(AppLocalizations.of(context)!.cancel,
+              key: const Key(CANCEL_TEXT)),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -292,7 +292,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           title: Text(AppLocalizations.of(context)!.preferences),
           actions: <Widget>[
             PopupMenuButton<String>(
-              key: Key("menu"),
+              key: const Key("menu"),
               onSelected: (value) {
                 switch (value) {
                   case RESET_ALL_TEXT:
@@ -317,13 +317,13 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
               },
               itemBuilder: (BuildContext context) => [
                 PopupMenuItem<String>(
-                  key: Key(RESET_ALL_TEXT),
+                  key: const Key(RESET_ALL_TEXT),
                   value: RESET_ALL_TEXT,
                   child: Text(AppLocalizations.of(context)!.resetAll),
                 ),
-                PopupMenuDivider(),
+                const PopupMenuDivider(),
                 PopupMenuItem<String>(
-                  key: Key(PRESETS_TEXT),
+                  key: const Key(PRESETS_TEXT),
                   value: PRESETS_TEXT,
                   child: Text(AppLocalizations.of(context)!.presets),
                 ),
@@ -342,7 +342,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     controller: _textEditingController,
                     maxLength: 32,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         hintText: AppLocalizations.of(context)!.enterAName),
                     onChanged: (value) {
                       setState(() {
@@ -363,16 +363,16 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   ),
                   Text(
                       getDurationString(Duration(seconds: preference.duration)),
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                       width: MediaQuery.of(context).size.width - 30,
                       child: Slider(
-                        key: Key(DURATION_MINUTES_TEXT),
+                        key: const Key(DURATION_MINUTES_TEXT),
                         value: _durationMinutes,
                         min: 0,
                         max: 120,
@@ -408,10 +408,10 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                       width: MediaQuery.of(context).size.width - 30,
                       child: Slider(
-                        key: Key(DURATION_SECONDS_TEXT),
+                        key: const Key(DURATION_SECONDS_TEXT),
                         value: _durationSeconds,
                         min: 0,
                         max: 59,
@@ -450,17 +450,17 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   Text(
                     AppLocalizations.of(context)!.durationVibrate,
                   ),
-                  Text(preference.vibrateDuration.toString() + " ms",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text("${preference.vibrateDuration} ms",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                       width: MediaQuery.of(context).size.width - 30,
                       child: Slider(
-                        key: Key(DURATION_VIBRATE_TEXT),
+                        key: const Key(DURATION_VIBRATE_TEXT),
                         value: _vibrateDurationD,
                         min: 0,
                         max: 100,
@@ -493,7 +493,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     AppLocalizations.of(context)!.durationTts,
                   ),
                   Switch(
-                    key: Key(DURATION_TTS_TEXT),
+                    key: const Key(DURATION_TTS_TEXT),
                     value: _durationTts,
                     onChanged: (value) {
                       setState(() {
@@ -508,10 +508,10 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 ],
               ),
 
-              Divider(
+              const Divider(
                 thickness: 3,
               ),
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
 
               // Inhale
               Row(
@@ -521,20 +521,17 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     AppLocalizations.of(context)!.inhale,
                   ),
                   Text(
-                      (preference.inhale[0].toDouble() /
-                                  Duration.millisecondsPerSecond.toDouble())
-                              .toString() +
-                          " s",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                      "${preference.inhale[0].toDouble() / Duration.millisecondsPerSecond.toDouble()} s",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                       width: MediaQuery.of(context).size.width - 30,
                       child: Slider(
-                        key: Key(INHALE_TEXT),
+                        key: const Key(INHALE_TEXT),
                         value: _inhale0,
                         min: MINIMUM_BREATH,
                         max: MAXIMUM_BREATH,
@@ -571,20 +568,17 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     AppLocalizations.of(context)!.inhaleHold,
                   ),
                   Text(
-                      (preference.inhale[1].toDouble() /
-                                  Duration.millisecondsPerSecond.toDouble())
-                              .toString() +
-                          " s",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                      "${preference.inhale[1].toDouble() / Duration.millisecondsPerSecond.toDouble()} s",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                       width: MediaQuery.of(context).size.width - 30,
                       child: Slider(
-                        key: Key(INHALE_HOLD_TEXT),
+                        key: const Key(INHALE_HOLD_TEXT),
                         value: _inhale1,
                         min: 0,
                         max: 100,
@@ -621,20 +615,17 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     AppLocalizations.of(context)!.inhaleLast,
                   ),
                   Text(
-                      (preference.inhale[2].toDouble() /
-                                  Duration.millisecondsPerSecond.toDouble())
-                              .toString() +
-                          " s",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                      "${preference.inhale[2].toDouble() / Duration.millisecondsPerSecond.toDouble()} s",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                       width: MediaQuery.of(context).size.width - 30,
                       child: Slider(
-                        key: Key(INHALE_LAST_TEXT),
+                        key: const Key(INHALE_LAST_TEXT),
                         value: _inhale2,
                         min: 0,
                         max: 100,
@@ -671,7 +662,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     AppLocalizations.of(context)!.inhaleAudio,
                   ),
                   DropdownButton<String>(
-                    key: Key(INHALE_AUDIO_TEXT),
+                    key: const Key(INHALE_AUDIO_TEXT),
                     value: _audio0,
                     icon: const Icon(Icons.arrow_downward),
                     onChanged: (String? value) {
@@ -696,10 +687,10 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 ],
               ),
 
-              Divider(
+              const Divider(
                 thickness: 3,
               ),
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
 
               // Exhale
               Row(
@@ -709,20 +700,17 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     AppLocalizations.of(context)!.exhale,
                   ),
                   Text(
-                      (preference.exhale[0].toDouble() /
-                                  Duration.millisecondsPerSecond.toDouble())
-                              .toString() +
-                          " s",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                      "${preference.exhale[0].toDouble() / Duration.millisecondsPerSecond.toDouble()} s",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                       width: MediaQuery.of(context).size.width - 30,
                       child: Slider(
-                        key: Key(EXHALE_TEXT),
+                        key: const Key(EXHALE_TEXT),
                         value: _exhale0,
                         min: MINIMUM_BREATH,
                         max: MAXIMUM_BREATH,
@@ -759,20 +747,17 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     AppLocalizations.of(context)!.exhaleHold,
                   ),
                   Text(
-                      (preference.exhale[1].toDouble() /
-                                  Duration.millisecondsPerSecond.toDouble())
-                              .toString() +
-                          " s",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                      "${preference.exhale[1].toDouble() / Duration.millisecondsPerSecond.toDouble()} s",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                       width: MediaQuery.of(context).size.width - 30,
                       child: Slider(
-                        key: Key(EXHALE_HOLD_TEXT),
+                        key: const Key(EXHALE_HOLD_TEXT),
                         value: _exhale1,
                         min: 0,
                         max: 100,
@@ -809,20 +794,17 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     AppLocalizations.of(context)!.exhaleLast,
                   ),
                   Text(
-                      (preference.exhale[2].toDouble() /
-                                  Duration.millisecondsPerSecond.toDouble())
-                              .toString() +
-                          " s",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                      "${preference.exhale[2].toDouble() / Duration.millisecondsPerSecond.toDouble()} s",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                       width: MediaQuery.of(context).size.width - 30,
                       child: Slider(
-                        key: Key(EXHALE_LAST_TEXT),
+                        key: const Key(EXHALE_LAST_TEXT),
                         value: _exhale2,
                         min: 0,
                         max: 100,
@@ -859,7 +841,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     AppLocalizations.of(context)!.exhaleAudio,
                   ),
                   DropdownButton<String>(
-                    key: Key(EXHALE_AUDIO_TEXT),
+                    key: const Key(EXHALE_AUDIO_TEXT),
                     value: _audio1,
                     icon: const Icon(Icons.arrow_downward),
                     onChanged: (String? value) {
@@ -884,10 +866,10 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 ],
               ),
 
-              Divider(
+              const Divider(
                 thickness: 3,
               ),
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
 
               // Breath vibrate
               Row(
@@ -896,17 +878,17 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   Text(
                     AppLocalizations.of(context)!.breathVibrate,
                   ),
-                  Text(preference.vibrateBreath.toString() + " ms",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text("${preference.vibrateBreath} ms",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                       width: MediaQuery.of(context).size.width - 30,
                       child: Slider(
-                        key: Key(BREATH_VIBRATE_TEXT),
+                        key: const Key(BREATH_VIBRATE_TEXT),
                         value: _vibrateBreathD,
                         min: 0,
                         max: 100,
@@ -939,7 +921,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     AppLocalizations.of(context)!.breathTts,
                   ),
                   Switch(
-                    key: Key(BREATH_TTS_TEXT),
+                    key: const Key(BREATH_TTS_TEXT),
                     value: _breathTts,
                     onChanged: (value) {
                       setState(() {
@@ -953,17 +935,17 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 ],
               ),
 
-              Divider(
+              const Divider(
                 thickness: 3,
               ),
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
               Visibility(
                 visible: Get.isDarkMode,
                 child: Text(
                   AppLocalizations.of(context)!.colorDisabled,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Primary Color
               Visibility(
@@ -984,7 +966,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     MaterialColorPicker(
-                        key: Key(COLOR_PRIMARY_TEXT),
+                        key: const Key(COLOR_PRIMARY_TEXT),
                         colors: COLORS_PRIMARY,
                         allowShades: false,
                         onMainColorChange: (ColorSwatch? color) {
@@ -1019,7 +1001,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     MaterialColorPicker(
-                        key: Key(COLOR_BACKGROUND_TEXT),
+                        key: const Key(COLOR_BACKGROUND_TEXT),
                         colors: COLORS_BACKGROUND,
                         onBack: () {
                           _changeTheme();
@@ -1035,17 +1017,17 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 ),
               ),
 
-              Divider(
+              const Divider(
                 thickness: 3,
               ),
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
             ],
           ),
         ),
         floatingActionButton: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Padding(padding: EdgeInsets.only(left: 20.0)),
+            const Padding(padding: EdgeInsets.only(left: 20.0)),
             _getPreferenceButton(context, 1),
             _getPreferenceButton(context, 2),
             _getPreferenceButton(context, 3),

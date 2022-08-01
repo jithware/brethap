@@ -14,7 +14,7 @@ class SessionsWidget extends StatefulWidget {
   final Box sessions;
 
   @override
-  _SessionsWidgetState createState() => _SessionsWidgetState();
+  State<SessionsWidget> createState() => _SessionsWidgetState();
 }
 
 class _SessionsWidgetState extends State<SessionsWidget> {
@@ -22,14 +22,14 @@ class _SessionsWidgetState extends State<SessionsWidget> {
 
   @override
   void initState() {
-    debugPrint("${this.widget}.initState");
+    debugPrint("$widget.initState");
     _init();
     super.initState();
   }
 
   @override
   void dispose() {
-    debugPrint("${this.widget}.dispose");
+    debugPrint("$widget.dispose");
     super.dispose();
   }
 
@@ -39,7 +39,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
 
   DateTime _getFirstDate(List<Session> list) {
     DateTime start = DateTime.now();
-    if (list.length > 0) {
+    if (list.isNotEmpty) {
       return list[list.length - 1].start;
     }
     return start;
@@ -73,11 +73,11 @@ class _SessionsWidgetState extends State<SessionsWidget> {
       List<List<dynamic>> rows = [
         ["start", "end", "breaths"]
       ];
-      list.forEach((element) {
+      for (var element in list) {
         added++;
         rows.add([element.start, element.end, element.breaths]);
-      });
-      String csv = ListToCsvConverter().convert(rows);
+      }
+      String csv = const ListToCsvConverter().convert(rows);
       final file = await _getExportFile();
       file.writeAsString(csv);
     } catch (e) {
@@ -92,7 +92,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
     try {
       final file = await _getExportFile();
       final contents = await file.readAsString();
-      List<List<dynamic>> rows = CsvToListConverter().convert(contents);
+      List<List<dynamic>> rows = const CsvToListConverter().convert(contents);
 
       // skip header at 0
       for (int i = 1; i < rows.length; i++) {
@@ -126,9 +126,9 @@ class _SessionsWidgetState extends State<SessionsWidget> {
 
         // clear sessions and add back
         await widget.sessions.clear();
-        _list.forEach((element) async {
+        for (var element in _list) {
           await widget.sessions.add(element);
-        });
+        }
 
         setState(() {
           // sort the list descending for ui
@@ -150,7 +150,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
         title: Text(AppLocalizations.of(context)!.sessions),
         actions: <Widget>[
           PopupMenuButton<String>(
-            key: Key("menu"),
+            key: const Key("menu"),
             onSelected: (value) {
               switch (value) {
                 case CLEAR_ALL_TEXT:
@@ -191,7 +191,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(
                             "$number ${AppLocalizations.of(context)!.sessionsExportedTo}:\n${file.path}"),
-                        duration: Duration(seconds: 5),
+                        duration: const Duration(seconds: 5),
                       ));
                     });
                   });
@@ -201,24 +201,24 @@ class _SessionsWidgetState extends State<SessionsWidget> {
             },
             itemBuilder: (BuildContext context) => [
               PopupMenuItem<String>(
-                key: Key(CLEAR_ALL_TEXT),
+                key: const Key(CLEAR_ALL_TEXT),
                 value: CLEAR_ALL_TEXT,
                 child: Text(AppLocalizations.of(context)!.clearAll),
               ),
-              PopupMenuDivider(),
+              const PopupMenuDivider(),
               PopupMenuItem<String>(
-                key: Key(BACKUP_TEXT),
+                key: const Key(BACKUP_TEXT),
                 value: BACKUP_TEXT,
                 child: Text(AppLocalizations.of(context)!.backup),
               ),
               PopupMenuItem<String>(
-                key: Key(RESTORE_TEXT),
+                key: const Key(RESTORE_TEXT),
                 value: RESTORE_TEXT,
                 child: Text(AppLocalizations.of(context)!.restore),
               ),
-              PopupMenuDivider(),
+              const PopupMenuDivider(),
               PopupMenuItem<String>(
-                key: Key(EXPORT_TEXT),
+                key: const Key(EXPORT_TEXT),
                 value: EXPORT_TEXT,
                 child: Text(AppLocalizations.of(context)!.export),
               ),
@@ -249,12 +249,12 @@ class _SessionsWidgetState extends State<SessionsWidget> {
                 getStreak(context, _list, firstDate, DateTime.now());
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text("$stats $streak", key: Key("stats")),
+                content: Text("$stats $streak", key: const Key("stats")),
               ),
             );
           },
           tooltip: AppLocalizations.of(context)!.statistics,
-          child: Icon(Icons.query_stats)),
+          child: const Icon(Icons.query_stats)),
     );
   }
 }

@@ -22,7 +22,7 @@ Future<void> main() async {
 
   group('Sessions', () {
     const int BREATHS = 10;
-    Duration totalDuration = Duration();
+    Duration totalDuration = const Duration();
     int totalBreaths = 0;
     late Box sessions;
     const Duration WAIT = Duration(milliseconds: 500);
@@ -53,7 +53,7 @@ Future<void> main() async {
 
     tearDown(() async {
       await sessions.clear();
-      totalDuration = Duration();
+      totalDuration = const Duration();
       totalBreaths = 0;
     });
 
@@ -96,26 +96,26 @@ Future<void> main() async {
       expectStats();
 
       // Verify menu items
-      Finder menu = find.byKey(Key("menu"));
+      Finder menu = find.byKey(const Key("menu"));
       expect(menu, findsOneWidget);
       await tester.tap(menu);
       await tester.pumpAndSettle();
 
       // Verify menu
-      Finder clearAll = find.byKey(Key(CLEAR_ALL_TEXT));
+      Finder clearAll = find.byKey(const Key(CLEAR_ALL_TEXT));
       expect(clearAll, findsOneWidget);
-      Finder backup = find.byKey(Key(BACKUP_TEXT));
+      Finder backup = find.byKey(const Key(BACKUP_TEXT));
       expect(backup, findsOneWidget);
-      Finder restore = find.byKey(Key(RESTORE_TEXT));
+      Finder restore = find.byKey(const Key(RESTORE_TEXT));
       expect(restore, findsOneWidget);
-      Finder export = find.byKey(Key(EXPORT_TEXT));
+      Finder export = find.byKey(const Key(EXPORT_TEXT));
       expect(export, findsOneWidget);
 
       // Verify backup
       await tester.tap(backup);
       await tester.pumpAndSettle();
 
-      menu = find.byKey(Key("menu"));
+      menu = find.byKey(const Key("menu"));
       expect(menu, findsOneWidget);
       await tester.tap(menu);
       await tester.pumpAndSettle();
@@ -124,7 +124,7 @@ Future<void> main() async {
       await tester.tap(restore);
       await tester.pumpAndSettle();
 
-      menu = find.byKey(Key("menu"));
+      menu = find.byKey(const Key("menu"));
       expect(menu, findsOneWidget);
       await tester.tap(menu);
       await tester.pumpAndSettle();
@@ -133,7 +133,7 @@ Future<void> main() async {
       await tester.tap(export);
       await tester.pumpAndSettle();
 
-      menu = find.byKey(Key("menu"));
+      menu = find.byKey(const Key("menu"));
       expect(menu, findsOneWidget);
       await tester.tap(menu);
       await tester.pumpAndSettle();
@@ -141,7 +141,7 @@ Future<void> main() async {
       // Verify clear all
       await tester.tap(clearAll);
       await tester.pumpAndSettle();
-      Finder cont = find.byKey(Key(CONTINUE_TEXT));
+      Finder cont = find.byKey(const Key(CONTINUE_TEXT));
       debugPrint("$cont");
       expect(cont, findsOneWidget);
       //await tester.tap(cont);
