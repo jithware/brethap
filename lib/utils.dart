@@ -152,7 +152,12 @@ Preference getDefaultPref() {
       breathTts: BREATH_TTS,
       colors: [COLOR_PRIMARY, COLOR_BACKGROUND],
       name: "",
-      audio: [INHALE_AUDIO, EXHALE_AUDIO]);
+      audio: [
+        INHALE_AUDIO,
+        EXHALE_AUDIO,
+        INHALE_HOLD_AUDIO,
+        EXHALE_HOLD_AUDIO
+      ]);
   return preference;
 }
 
@@ -272,6 +277,12 @@ Future<void> play(AudioPlayer player, String audio) async {
     await player.play();
   } else if (audio == AUDIO_TONE2) {
     await player.setAsset('audio/tone2.oga');
+    await player.play();
+  } else if (audio == AUDIO_TONE3) {
+    await player.setAsset('audio/tone3.oga');
+    await player.play();
+  } else if (audio == AUDIO_TONE4) {
+    await player.setAsset('audio/tone4.oga');
     await player.play();
   }
 }

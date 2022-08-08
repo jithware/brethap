@@ -190,10 +190,22 @@ class _HomeWidgetState extends State<HomeWidget> {
     await play(_player, preference.audio[0]);
   }
 
+  Future<void> _onInhaleHold() async {
+    Preference preference = widget.preferences.get(0);
+
+    await play(_player, preference.audio[2]);
+  }
+
   Future<void> _onExhale() async {
     Preference preference = widget.preferences.get(0);
 
     await play(_player, preference.audio[1]);
+  }
+
+  Future<void> _onExhaleHold() async {
+    Preference preference = widget.preferences.get(0);
+
+    await play(_player, preference.audio[3]);
   }
 
   void _addSession(Session session) {
@@ -260,6 +272,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               text = AppLocalizations.of(context)!.hold;
               _onBreath(text);
               _status = text;
+              _onInhaleHold();
             } else if (preference.inhale[2] > 0 &&
                 cycle == preference.inhale[0] + preference.inhale[1]) {
               inhaling = true;
@@ -282,6 +295,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               text = AppLocalizations.of(context)!.hold;
               _onBreath(text);
               _status = text;
+              _onExhaleHold();
             } else if (preference.exhale[2] > 0 &&
                 cycle == inhale + preference.exhale[0] + preference.exhale[1]) {
               inhaling = false;

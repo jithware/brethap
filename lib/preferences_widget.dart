@@ -40,7 +40,10 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
   late MaterialColor _primaryColor = COLORS_PRIMARY[0] as MaterialColor;
   late Color _backgroundColor = const Color(COLOR_BACKGROUND);
 
-  late String _audio0 = AUDIO_NONE, _audio1 = AUDIO_NONE;
+  late String _audio0 = AUDIO_NONE,
+      _audio1 = AUDIO_NONE,
+      _audio2 = AUDIO_NONE,
+      _audio3 = AUDIO_NONE;
   late final AudioPlayer _player = AudioPlayer();
 
   @override
@@ -91,6 +94,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       _textEditingController.text = preference.name;
       _audio0 = preference.audio[0];
       _audio1 = preference.audio[1];
+      _audio2 = preference.audio[2];
+      _audio3 = preference.audio[3];
     });
 
     debugPrint("preferences (${widget.preferences.length}):");
@@ -677,6 +682,43 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       AUDIO_NONE,
                       AUDIO_TONE1,
                       AUDIO_TONE2,
+                      AUDIO_TONE3,
+                      AUDIO_TONE4,
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+
+              // Inhale hold audio
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.inhaleHoldAudio,
+                  ),
+                  DropdownButton<String>(
+                    key: const Key(INHALE_HOLD_AUDIO_TEXT),
+                    value: _audio2,
+                    icon: const Icon(Icons.arrow_downward),
+                    onChanged: (String? value) {
+                      setState(() {
+                        _audio2 = value!;
+                        preference.audio[2] = _audio2;
+                        preference.save();
+                      });
+                      play(_player, _audio2);
+                    },
+                    items: <String>[
+                      AUDIO_NONE,
+                      AUDIO_TONE1,
+                      AUDIO_TONE2,
+                      AUDIO_TONE3,
+                      AUDIO_TONE4,
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -856,6 +898,43 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       AUDIO_NONE,
                       AUDIO_TONE1,
                       AUDIO_TONE2,
+                      AUDIO_TONE3,
+                      AUDIO_TONE4,
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+
+              // Exhale hold audio
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.exhaleHoldAudio,
+                  ),
+                  DropdownButton<String>(
+                    key: const Key(EXHALE_HOLD_AUDIO_TEXT),
+                    value: _audio3,
+                    icon: const Icon(Icons.arrow_downward),
+                    onChanged: (String? value) {
+                      setState(() {
+                        _audio3 = value!;
+                        preference.audio[3] = _audio3;
+                        preference.save();
+                      });
+                      play(_player, _audio3);
+                    },
+                    items: <String>[
+                      AUDIO_NONE,
+                      AUDIO_TONE1,
+                      AUDIO_TONE2,
+                      AUDIO_TONE3,
+                      AUDIO_TONE4,
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,

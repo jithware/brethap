@@ -128,7 +128,8 @@ Future<void> main() async {
       expect(find.textContaining("5.0 s"), findsWidgets);
 
       // Inhale audio
-      expect(preference.audio, [INHALE_AUDIO, EXHALE_AUDIO]);
+      expect(preference.audio,
+          [INHALE_AUDIO, EXHALE_AUDIO, INHALE_HOLD_AUDIO, EXHALE_HOLD_AUDIO]);
       Finder inhaleAudio =
           find.byKey(const Key(INHALE_AUDIO_TEXT), skipOffstage: false);
       await tester.ensureVisible(inhaleAudio);
@@ -137,10 +138,32 @@ Future<void> main() async {
       expect(find.textContaining(AUDIO_NONE), findsWidgets);
       expect(find.textContaining(AUDIO_TONE1), findsWidgets);
       expect(find.textContaining(AUDIO_TONE2), findsWidgets);
-      Finder tone1 = find.text(AUDIO_NONE).last;
-      await tester.tap(tone1);
+      expect(find.textContaining(AUDIO_TONE3), findsWidgets);
+      expect(find.textContaining(AUDIO_TONE4), findsWidgets);
+      Finder toneNone = find.text(AUDIO_NONE).last;
+      await tester.tap(toneNone);
       await tester.pumpAndSettle();
-      expect(preference.audio, [AUDIO_NONE, EXHALE_AUDIO]);
+      expect(preference.audio,
+          [AUDIO_NONE, EXHALE_AUDIO, INHALE_HOLD_AUDIO, EXHALE_HOLD_AUDIO]);
+
+      // Inhale hold audio
+      expect(preference.audio,
+          [AUDIO_NONE, EXHALE_AUDIO, INHALE_HOLD_AUDIO, EXHALE_HOLD_AUDIO]);
+      Finder inhaleHoldAudio =
+          find.byKey(const Key(INHALE_HOLD_AUDIO_TEXT), skipOffstage: false);
+      await tester.ensureVisible(inhaleHoldAudio);
+      await tester.tap(inhaleHoldAudio);
+      await tester.pumpAndSettle();
+      expect(find.textContaining(AUDIO_NONE), findsWidgets);
+      expect(find.textContaining(AUDIO_TONE1), findsWidgets);
+      expect(find.textContaining(AUDIO_TONE2), findsWidgets);
+      expect(find.textContaining(AUDIO_TONE3), findsWidgets);
+      expect(find.textContaining(AUDIO_TONE4), findsWidgets);
+      toneNone = find.text(AUDIO_NONE).last;
+      await tester.tap(toneNone);
+      await tester.pumpAndSettle();
+      expect(preference.audio,
+          [AUDIO_NONE, EXHALE_AUDIO, AUDIO_NONE, EXHALE_HOLD_AUDIO]);
 
       // Drag exhale slider
       Finder exhale = find.byKey(const Key(EXHALE_TEXT), skipOffstage: false);
@@ -173,7 +196,8 @@ Future<void> main() async {
       expect(find.textContaining("5.0 s"), findsWidgets);
 
       // Exhale audio
-      expect(preference.audio, [AUDIO_NONE, EXHALE_AUDIO]);
+      expect(preference.audio,
+          [AUDIO_NONE, EXHALE_AUDIO, AUDIO_NONE, EXHALE_HOLD_AUDIO]);
       Finder exhaleAudio =
           find.byKey(const Key(EXHALE_AUDIO_TEXT), skipOffstage: false);
       await tester.ensureVisible(exhaleAudio);
@@ -182,10 +206,32 @@ Future<void> main() async {
       expect(find.textContaining(AUDIO_NONE), findsWidgets);
       expect(find.textContaining(AUDIO_TONE1), findsWidgets);
       expect(find.textContaining(AUDIO_TONE2), findsWidgets);
-      Finder tone2 = find.text(AUDIO_NONE).last;
-      await tester.tap(tone2);
+      expect(find.textContaining(AUDIO_TONE3), findsWidgets);
+      expect(find.textContaining(AUDIO_TONE4), findsWidgets);
+      toneNone = find.text(AUDIO_NONE).last;
+      await tester.tap(toneNone);
       await tester.pumpAndSettle();
-      expect(preference.audio, [AUDIO_NONE, AUDIO_NONE]);
+      expect(preference.audio,
+          [AUDIO_NONE, AUDIO_NONE, AUDIO_NONE, EXHALE_HOLD_AUDIO]);
+
+      // Exhale hold audio
+      expect(preference.audio,
+          [AUDIO_NONE, AUDIO_NONE, AUDIO_NONE, EXHALE_HOLD_AUDIO]);
+      Finder exhaleHoldAudio =
+          find.byKey(const Key(EXHALE_HOLD_AUDIO_TEXT), skipOffstage: false);
+      await tester.ensureVisible(exhaleHoldAudio);
+      await tester.tap(exhaleHoldAudio);
+      await tester.pumpAndSettle();
+      expect(find.textContaining(AUDIO_NONE), findsWidgets);
+      expect(find.textContaining(AUDIO_TONE1), findsWidgets);
+      expect(find.textContaining(AUDIO_TONE2), findsWidgets);
+      expect(find.textContaining(AUDIO_TONE3), findsWidgets);
+      expect(find.textContaining(AUDIO_TONE4), findsWidgets);
+      toneNone = find.text(AUDIO_NONE).last;
+      await tester.tap(toneNone);
+      await tester.pumpAndSettle();
+      expect(
+          preference.audio, [AUDIO_NONE, AUDIO_NONE, AUDIO_NONE, AUDIO_NONE]);
 
       // Drag vibrate breath slider
       expect(find.textContaining("$VIBRATE_BREATH ms"), findsOneWidget);

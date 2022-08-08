@@ -18,7 +18,9 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     INHALE_LAST_TEXT = "Inhale Last",
     EXHALE_LAST_TEXT = "Exhale Last",
     INHALE_AUDIO_TEXT = "Inhale Audio",
+    INHALE_HOLD_AUDIO_TEXT = "Inhale Hold Audio",
     EXHALE_AUDIO_TEXT = "Exhale Audio",
+    EXHALE_HOLD_AUDIO_TEXT = "Exhale Hold Audio",
     DURATION_TEXT = "Duration",
     DURATION_MINUTES_TEXT = "Duration Minutes",
     DURATION_SECONDS_TEXT = "Duration Seconds",
@@ -44,7 +46,9 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     NAME_TEXT = "Name",
     AUDIO_NONE = "None",
     AUDIO_TONE1 = "Tone 1",
-    AUDIO_TONE2 = "Tone 2";
+    AUDIO_TONE2 = "Tone 2",
+    AUDIO_TONE3 = "Tone 3",
+    AUDIO_TONE4 = "Tone 4";
 
 const int SAVED_PREFERENCES = 5;
 
@@ -61,7 +65,10 @@ const int DURATION = 120, //seconds
     COLOR_PRIMARY = 0, //color position
     COLOR_BACKGROUND = 0xfffafafa; //color white
 const bool DURATION_TTS = false, BREATH_TTS = false;
-const String INHALE_AUDIO = AUDIO_TONE1, EXHALE_AUDIO = AUDIO_TONE2;
+const String INHALE_AUDIO = AUDIO_TONE1,
+    EXHALE_AUDIO = AUDIO_TONE2,
+    INHALE_HOLD_AUDIO = AUDIO_TONE3,
+    EXHALE_HOLD_AUDIO = AUDIO_TONE4;
 
 const List<ColorSwatch> COLORS_PRIMARY = <ColorSwatch>[
   Colors.blue,
