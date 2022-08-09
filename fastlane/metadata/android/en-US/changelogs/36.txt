@@ -1,3 +1,5 @@
 Release version: 1.6.0+36
 * Audio for breath hold
 * Minor enhancements
+
+This is a minor version update. It will overwrite existing saved preferences.
