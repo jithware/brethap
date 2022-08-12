@@ -7,7 +7,6 @@ import 'package:brethap/main.dart' as app;
 
 import '../test/home_widget_test.dart';
 import '../test/preferences_widget_test.dart';
-import '../test/sessions_widgets_test.dart';
 
 const Duration wait = Duration(milliseconds: 500);
 
