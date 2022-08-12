@@ -38,6 +38,11 @@ class HomeWidget extends StatefulWidget {
   final String appName, version;
   final Box preferences, sessions;
 
+  // These static variables are used with flutter tests
+  static String keyPreferences = "Preferences",
+      keySessions = "Sessions",
+      keyCalendar = "Calendar";
+
   @override
   State<HomeWidget> createState() => _HomeWidgetState();
 }
@@ -447,6 +452,7 @@ $url'''),
               child: Text(widget.appName),
             ),
             ListTile(
+              key: Key(HomeWidget.keyPreferences),
               title: Text(AppLocalizations.of(context)!.preferences),
               leading: const Icon(Icons.settings),
               onTap: () {
@@ -461,6 +467,7 @@ $url'''),
               },
             ),
             ListTile(
+              key: Key(HomeWidget.keySessions),
               title: Text(AppLocalizations.of(context)!.sessions),
               leading: const Icon(Icons.format_list_numbered_outlined),
               onTap: () {
@@ -473,6 +480,7 @@ $url'''),
               },
             ),
             ListTile(
+                key: Key(HomeWidget.keyCalendar),
                 title: Text(AppLocalizations.of(context)!.calendar),
                 leading: const Icon(Icons.calendar_today),
                 onTap: () {

@@ -9,129 +9,152 @@ import 'package:brethap/constants.dart';
 import 'package:brethap/home_widget.dart';
 import 'package:brethap/hive_storage.dart';
 
+const Duration wait = Duration(seconds: 2);
+
+Future<void> openDrawer(WidgetTester tester) async {
+  Finder navigationMenu = find.byType(IconButton);
+  expect(navigationMenu, findsOneWidget);
+  await tester.tap(navigationMenu, warnIfMissed: false);
+  await tester.pump(wait);
+}
+
+Future<void> closeDrawer(WidgetTester tester) async {
+  Size size = tester.getSize(find.byType(Scaffold));
+  await tester.flingFrom(
+      Offset(size.width - 1, size.height / 2), const Offset(-100, 0), 1000);
+  await tester.pump(wait);
+}
+
+Future<void> testHomeWidget(WidgetTester tester) async {
+  const Duration shortWait = Duration(milliseconds: 500);
+  Preference preference = getDefaultPref();
+  Duration duration = Duration(seconds: preference.duration),
+      totalTime = const Duration(),
+      inhale =
+          Duration(milliseconds: preference.inhale[0] + preference.inhale[1]),
+      exhale =
+          Duration(milliseconds: preference.exhale[0] + preference.exhale[1]);
+
+  // Verify app name in title bar
+  expect(find.text(APP_NAME), findsOneWidget);
+
+  // Verify initial status text
+  expect(find.text(PRESS_BUTTON_TEXT), findsOneWidget);
+
+  // Verify initial timer text
+  expect(find.text(getDurationString(duration)), findsOneWidget);
+
+  // Press start button
+  await tester.tap(find.byType(FloatingActionButton));
+
+  // Wait a bit
+  await tester.pump(shortWait);
+  totalTime += shortWait;
+
+  // Verify status text
+  expect(find.text(INHALE_TEXT), findsOneWidget);
+
+  // Forward ahead to exhale
+  await tester.pump(inhale);
+  totalTime += inhale;
+
+  // Wait a bit
+  await tester.pump(shortWait);
+  totalTime += shortWait;
+
+  // Verify status text
+  expect(find.text(EXHALE_TEXT), findsOneWidget);
+
+  // Forward ahead to inhale
+  await tester.pump(exhale);
+  totalTime += exhale;
+
+  // Press stop button
+  await tester.tap(find.byType(FloatingActionButton));
+
+  // Wait a bit
+  await tester.pump(shortWait);
+  totalTime += shortWait;
+
+  // Verify reset status text
+  expect(find.text(PRESS_BUTTON_TEXT), findsOneWidget);
+
+  // Verify reset timer text
+  expect(find.text(getDurationString(duration)), findsOneWidget);
+
+  // Verify session
+  await tester.pump(shortWait);
+  totalTime += shortWait;
+  expect(find.byType(SnackBar), findsOneWidget);
+  debugPrint("Total time: ${getDurationString(totalTime)}");
+
+  // Open the drawer
+  await openDrawer(tester);
+
+  // Verify app name in drawer header
+  expect(find.text(APP_NAME), findsNWidgets(2));
+
+  // Verify preferences
+  expect(find.text(HomeWidget.keyPreferences), findsOneWidget);
+
+  // Verify sessions
+  expect(find.text("Sessions"), findsOneWidget);
+
+  // Verify donate
+  expect(find.text("Calendar"), findsOneWidget);
+
+  // Verify about
+  expect(find.text("About $APP_NAME"), findsOneWidget);
+
+  // Close the drawer
+  await closeDrawer(tester);
+
+  await tester.pumpAndSettle();
+}
+
+class HiveData {
+  Box preferences, sessions;
+  HiveData({
+    required this.preferences,
+    required this.sessions,
+  });
+}
+
+Future<HiveData> setupHive() async {
+  Box preferences, sessions;
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter(Directory.systemTemp.createTempSync().path);
+
+  Hive.registerAdapter(PreferenceAdapter());
+  Hive.registerAdapter(SessionAdapter());
+  preferences = await Hive.openBox('preferences');
+  sessions = await Hive.openBox('sessions');
+
+  return HiveData(preferences: preferences, sessions: sessions);
+}
+
 Future<void> main() async {
-  late Box preferences, sessions;
+  late HiveData hiveData;
   setUpAll((() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Hive.initFlutter(Directory.systemTemp.createTempSync().path);
-    Hive.registerAdapter(PreferenceAdapter());
-    Hive.registerAdapter(SessionAdapter());
-    preferences = await Hive.openBox('preferences');
-    sessions = await Hive.openBox('sessions');
+    hiveData = await setupHive();
   }));
 
   tearDownAll((() async {}));
 
-  group('Home', () {
-    setUp(() async {});
+  testWidgets('HomeWidget', (WidgetTester tester) async {
+    const String APP_VERSION = "1.0.0";
+    await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: HomeWidget(
+          appName: APP_NAME,
+          version: APP_VERSION,
+          preferences: hiveData.preferences,
+          sessions: hiveData.sessions,
+        )));
 
-    tearDown((() async {}));
+    await testHomeWidget(tester);
 
-    testWidgets('HomeWidget', (WidgetTester tester) async {
-      const String APP_VERSION = "1.0.0";
-      await tester.pumpWidget(MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: HomeWidget(
-            appName: APP_NAME,
-            version: APP_VERSION,
-            preferences: preferences,
-            sessions: sessions,
-          )));
-
-      const Duration WAIT = Duration(milliseconds: 500);
-      Preference preference = preferences.get(0);
-      Duration duration = Duration(seconds: preference.duration),
-          totalTime = const Duration(),
-          inhale = Duration(
-              milliseconds: preference.inhale[0] + preference.inhale[1]),
-          exhale = Duration(
-              milliseconds: preference.exhale[0] + preference.exhale[1]);
-
-      // Verify app name in title bar
-      expect(find.text(APP_NAME), findsOneWidget);
-
-      // Open the drawer
-      await tester.dragFrom(
-          tester.getTopLeft(find.byType(MaterialApp)), const Offset(0, 0));
-      await tester.pump();
-
-      // Verify app name in drawer header
-      expect(find.text(APP_NAME), findsNWidgets(2));
-
-      // Verify preferences
-      expect(find.text("Preferences"), findsOneWidget);
-
-      // Verify sessions
-      expect(find.text("Sessions"), findsOneWidget);
-
-      // Verify donate
-      expect(find.text("Calendar"), findsOneWidget);
-
-      // Verify about
-      expect(find.text("About $APP_NAME"), findsOneWidget);
-
-      // Close the drawer
-      await tester.flingFrom(tester.getTopLeft(find.byType(MaterialApp)),
-          const Offset(-100, 0), 100);
-      await tester.pump();
-
-      // Verify initial status text
-      expect(find.text(PRESS_BUTTON_TEXT), findsOneWidget);
-
-      // Verify initial timer text
-      expect(find.text(getDurationString(duration)), findsOneWidget);
-
-      // Press start button
-      DateTime start = DateTime.now();
-      await tester.tap(find.byType(FloatingActionButton));
-
-      // Wait a bit
-      await tester.pump(WAIT);
-      totalTime += WAIT;
-
-      // Verify status text
-      expect(find.text(INHALE_TEXT), findsOneWidget);
-
-      // Forward ahead to exhale
-      await tester.pump(inhale);
-      totalTime += inhale;
-
-      // Wait a bit
-      await tester.pump(WAIT);
-      totalTime += WAIT;
-
-      // Verify status text
-      expect(find.text(EXHALE_TEXT), findsOneWidget);
-
-      // Forward ahead to inhale
-      await tester.pump(exhale);
-      totalTime += exhale;
-
-      // Verify decremented timer text
-      duration -= totalTime;
-      expect(find.text(getDurationString(duration)), findsOneWidget);
-
-      // Press stop button
-      DateTime end = DateTime.now();
-      await tester.tap(find.byType(FloatingActionButton));
-
-      // Wait a bit
-      await tester.pump(WAIT);
-
-      // Verify reset status text
-      expect(find.text(PRESS_BUTTON_TEXT), findsOneWidget);
-
-      // Verify reset timer text
-      duration = Duration(seconds: preference.duration);
-      expect(find.text(getDurationString(duration)), findsOneWidget);
-
-      // Verify session
-      expect(sessions.length, 1);
-      Session session = sessions.get(0);
-      expect(session.start.difference(start).inSeconds, 0);
-      expect(session.end.difference(end).inSeconds, 0);
-      expect(session.breaths, 1);
-    });
+    await tester.pump();
   });
 }

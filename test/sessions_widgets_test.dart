@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -10,17 +9,17 @@ import 'package:brethap/constants.dart';
 import 'package:brethap/sessions_widget.dart';
 import 'package:brethap/sessions_calendar_widget.dart';
 import 'package:brethap/hive_storage.dart';
+import 'home_widget_test.dart';
 
 Future<void> main() async {
+  late HiveData hiveData;
   setUpAll((() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Hive.initFlutter(Directory.systemTemp.createTempSync().path);
-    Hive.registerAdapter(SessionAdapter());
+    hiveData = await setupHive();
   }));
 
   tearDownAll((() async {}));
 
-  group('Sessions', () {
+  group('Sessions Widgets', () {
     const int BREATHS = 10;
     Duration totalDuration = const Duration();
     int totalBreaths = 0;
@@ -35,7 +34,7 @@ Future<void> main() async {
     }
 
     setUp(() async {
-      sessions = await Hive.openBox("sessions");
+      sessions = hiveData.sessions;
       for (int i = 0; i < dates.length; i += 2) {
         Session s = Session(start: dates[i]);
         s.end = dates[i + 1];
