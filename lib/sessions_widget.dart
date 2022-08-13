@@ -13,6 +13,9 @@ class SessionsWidget extends StatefulWidget {
   const SessionsWidget({Key? key, required this.sessions}) : super(key: key);
   final Box sessions;
 
+  // These static variables are used with flutter tests
+  static String keyMenu = "Menu";
+
   @override
   State<SessionsWidget> createState() => _SessionsWidgetState();
 }
@@ -150,7 +153,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
         title: Text(AppLocalizations.of(context)!.sessions),
         actions: <Widget>[
           PopupMenuButton<String>(
-            key: const Key("menu"),
+            key: Key(SessionsWidget.keyMenu),
             onSelected: (value) {
               switch (value) {
                 case CLEAR_ALL_TEXT:

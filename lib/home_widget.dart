@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:vibration/vibration.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -42,6 +42,7 @@ class HomeWidget extends StatefulWidget {
   static String keyPreferences = "Preferences",
       keySessions = "Sessions",
       keyCalendar = "Calendar";
+  static int totalSessions = 200;
 
   @override
   State<HomeWidget> createState() => _HomeWidgetState();
@@ -79,8 +80,8 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   void _init() {
     if (kDebugMode) {
-      createRandomSessions(widget.sessions, 200, DateTime(2021, 1),
-          DateTime.now().subtract(const Duration(days: 1)));
+      createRandomSessions(widget.sessions, HomeWidget.totalSessions,
+          DateTime(2021, 1), DateTime.now().subtract(const Duration(days: 1)));
     }
     _status = "";
     if (widget.preferences.isEmpty) {
@@ -354,9 +355,9 @@ $url'''),
   }
 
   void _launchURL(String url) {
-    canLaunch(url).then((value) {
+    canLaunchUrlString(url).then((value) {
       if (value) {
-        launch(url);
+        launchUrlString(url);
       } else {
         _showWebDialog(url);
         debugPrint("Could not launch url");

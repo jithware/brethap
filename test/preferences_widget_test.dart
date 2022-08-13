@@ -213,10 +213,6 @@ Future<void> testPreferencesWidget(
   await tester.tap(cont);
   await tester.pumpAndSettle();
 
-  //TODO: Verify preferences reset
-  //debugPrint("${preferences.values}");
-  //expect(preferences.length, 1);
-
   await tapMenu(tester);
 
   // Verify presets
