@@ -11,6 +11,7 @@ import 'package:brethap/sessions_calendar_widget.dart';
 import 'home_widget_test.dart';
 
 const Duration WAIT = Duration(milliseconds: 500);
+int totalSessions = HomeWidget.totalSessions + 1;
 
 Future<void> tapMenu(WidgetTester tester) async {
   Finder menu = find.byKey(Key(SessionsWidget.keyMenu));
@@ -19,41 +20,41 @@ Future<void> tapMenu(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> testSnackBar(WidgetTester tester, Key key, String text) async {}
+Future<void> testSnackBar(WidgetTester tester, Key key, String text) async {
+  expect(find.textContaining(text), findsNothing);
+  await tester.tap(find.byKey(key));
+  await tester.pumpAndSettle();
+  expect(find.textContaining(text), findsOneWidget);
+  await tester.tap(find.byKey(const Key(DISMISS_TEXT)));
+  await tester.pumpAndSettle();
+  expect(find.textContaining(text), findsNothing);
+}
+
+Future<void> testStats(WidgetTester tester) async {
+  String text = "Sessions:$totalSessions";
+  expect(find.textContaining(text), findsNothing);
+  await tester.tap(find.byType(FloatingActionButton));
+  await tester.pumpAndSettle();
+  expect(find.textContaining(text), findsOneWidget);
+  await tester.pumpAndSettle();
+}
 
 Future<void> testSessionsWidget(WidgetTester tester) async {
   // Verify menu items
   await tapMenu(tester);
 
   // Verify backup
-  String text = "Sessions backed up";
-  await tester.tap(find.byKey(const Key(BACKUP_TEXT)));
-  expect(find.textContaining(text), findsNothing);
-  await tester.pump();
-  expect(find.textContaining(text), findsOneWidget);
-  await tester.pumpAndSettle();
+  await testSnackBar(tester, const Key(BACKUP_TEXT), "Sessions backed up");
 
   await tapMenu(tester);
 
   // Verify restore
-  text = "Sessions restored";
-  await tester.tap(find.byKey(const Key(RESTORE_TEXT)));
-  //expect(find.textContaining(text), findsNothing);
-  await tester.pump();
-  //expect(find.textContaining(text), findsOneWidget);
-  await tester.pumpAndSettle();
+  await testSnackBar(tester, const Key(RESTORE_TEXT), "Sessions restored");
 
   await tapMenu(tester);
 
   // Verify export
-  text = "Sessions exported";
-  await tester.tap(find.byKey(const Key(RESTORE_TEXT)));
-  //expect(find.textContaining(text), findsNothing);
-  await tester.pump();
-  //expect(find.textContaining(text), findsOneWidget);
-  await tester.pumpAndSettle();
-
-  //await tester.pump(const Duration(seconds: 10));
+  await testSnackBar(tester, const Key(EXPORT_TEXT), "Sessions exported");
 
   await tapMenu(tester);
 
@@ -67,21 +68,17 @@ Future<void> testSessionsWidget(WidgetTester tester) async {
   await tester.tap(cancel);
   await tester.pumpAndSettle();
 
-  // Press the stats button
-  await tester.tap(find.byType(FloatingActionButton));
-  await tester.pump(WAIT);
-
-  await tester.pumpAndSettle();
+  // Verify stats
+  await testStats(tester);
 }
 
 Future<void> testSessionsCalendarWidget(WidgetTester tester) async {
-  // Press the stats button
-  await tester.tap(find.byType(FloatingActionButton));
-
-  await tester.pump(WAIT);
+  //TODO: test something
 }
 
 Future<void> main() async {
+  LiveTestWidgetsFlutterBinding();
+
   late HiveData hiveData;
   setUpAll((() async {
     hiveData = await setupHive();
@@ -94,8 +91,8 @@ Future<void> main() async {
 
     setUp(() async {
       sessions = hiveData.sessions;
-      await createRandomSessions(sessions, HomeWidget.totalSessions,
-          DateTime(2021, 1), DateTime.now().subtract(const Duration(days: 1)));
+      await createRandomSessions(sessions, totalSessions, DateTime(2021, 1),
+          DateTime.now().subtract(const Duration(days: 1)));
     });
 
     tearDown(() async {

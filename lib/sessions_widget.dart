@@ -146,6 +146,20 @@ class _SessionsWidgetState extends State<SessionsWidget> {
     return added;
   }
 
+  _showSnackBar(BuildContext context, String text, Duration duration) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(text),
+      action: SnackBarAction(
+        key: const Key(DISMISS_TEXT),
+        label: AppLocalizations.of(context)!.dismiss,
+        onPressed: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        },
+      ),
+      duration: duration,
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,39 +177,38 @@ class _SessionsWidgetState extends State<SessionsWidget> {
                       AppLocalizations.of(context)!.clearAllSessions, () {
                     _clearAll();
                     Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content:
-                          Text(AppLocalizations.of(context)!.sessionsCleared),
-                    ));
+                    _showSnackBar(
+                        context,
+                        AppLocalizations.of(context)!.sessionsCleared,
+                        const Duration(seconds: 3));
                   });
                   debugPrint(CLEAR_ALL_TEXT);
                   break;
                 case BACKUP_TEXT:
                   _exportCsv(_list).then((value) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                          "$value ${AppLocalizations.of(context)!.sessionsBackedUp}"),
-                    ));
+                    _showSnackBar(
+                        context,
+                        AppLocalizations.of(context)!.sessionsBackedUp,
+                        const Duration(seconds: 3));
                   });
                   debugPrint(BACKUP_TEXT);
                   break;
                 case RESTORE_TEXT:
                   _importCsv().then((value) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                          "$value ${AppLocalizations.of(context)!.sessionsRestored}"),
-                    ));
+                    _showSnackBar(
+                        context,
+                        AppLocalizations.of(context)!.sessionsRestored,
+                        const Duration(seconds: 3));
                   });
                   debugPrint(RESTORE_TEXT);
                   break;
                 case EXPORT_TEXT:
                   _exportCsv(_list).then((number) {
                     _getExportFile().then((file) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                            "$number ${AppLocalizations.of(context)!.sessionsExportedTo}:\n${file.path}"),
-                        duration: const Duration(seconds: 5),
-                      ));
+                      _showSnackBar(
+                          context,
+                          "$number ${AppLocalizations.of(context)!.sessionsExportedTo}:\n${file.path}",
+                          const Duration(seconds: 5));
                     });
                   });
                   debugPrint(EXPORT_TEXT);

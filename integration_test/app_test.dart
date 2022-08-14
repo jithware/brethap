@@ -58,6 +58,6 @@ Future<void> main() async {
 
     await closeDrawer(tester);
 
-    //await tester.pump(const Duration(seconds: 15));
+    //await tester.pump(const Duration(seconds: 10));
   });
 }
