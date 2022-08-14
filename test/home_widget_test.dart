@@ -54,9 +54,15 @@ Future<void> testHomeWidget(WidgetTester tester) async {
   // Verify status text
   expect(find.text(INHALE_TEXT), findsOneWidget);
 
+  // Verify timer
+  expect(find.text(getDurationString(duration - totalTime)), findsOneWidget);
+
   // Forward ahead to exhale
   await tester.pump(inhale);
   totalTime += inhale;
+
+  // Verify timer
+  expect(find.text(getDurationString(duration - totalTime)), findsOneWidget);
 
   // Wait a bit
   await tester.pump(shortWait);
@@ -98,10 +104,10 @@ Future<void> testHomeWidget(WidgetTester tester) async {
   expect(find.text(HomeWidget.keyPreferences), findsOneWidget);
 
   // Verify sessions
-  expect(find.text("Sessions"), findsOneWidget);
+  expect(find.text(HomeWidget.keySessions), findsOneWidget);
 
-  // Verify donate
-  expect(find.text("Calendar"), findsOneWidget);
+  // Verify calendar
+  expect(find.text(HomeWidget.keyCalendar), findsOneWidget);
 
   // Verify about
   expect(find.text("About $APP_NAME"), findsOneWidget);

@@ -36,5 +36,11 @@
             "request": "launch",
             "program": "./test/"
         },
+        {
+            "name": "integration test",
+            "type": "dart",
+            "request": "launch",
+            "program": "./integration_test/"
+        },
     ]
 }

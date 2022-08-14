@@ -18,6 +18,9 @@ class PreferencesWidget extends StatefulWidget {
   final Box preferences;
   final dynamic callback;
 
+  // These static variables are used with flutter tests
+  static String keyTrailName = "Trail Name";
+
   @override
   State<PreferencesWidget> createState() => _PreferencesWidgetState();
 }
@@ -340,10 +343,11 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           padding: const EdgeInsets.all(15),
           child: ListView(
             children: [
-              // Name
+              // Trail Name
               Padding(
                   padding: const EdgeInsets.all(5),
                   child: TextFormField(
+                    key: Key(PreferencesWidget.keyTrailName),
                     controller: _textEditingController,
                     maxLength: 32,
                     decoration: InputDecoration(
