@@ -19,7 +19,7 @@ class PreferencesWidget extends StatefulWidget {
   final dynamic callback;
 
   // These static variables are used with flutter tests
-  static String keyTrailName = "Trail Name";
+  static String keyMenu = "Menu", keyTrailName = "Trail Name", keyDrag = "Drag";
 
   @override
   State<PreferencesWidget> createState() => _PreferencesWidgetState();
@@ -300,7 +300,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           title: Text(AppLocalizations.of(context)!.preferences),
           actions: <Widget>[
             PopupMenuButton<String>(
-              key: const Key("menu"),
+              key: Key(PreferencesWidget.keyMenu),
               onSelected: (value) {
                 switch (value) {
                   case RESET_ALL_TEXT:
@@ -1018,7 +1018,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 ],
               ),
 
-              const Divider(
+              Divider(
+                key: Key(PreferencesWidget.keyDrag),
                 thickness: 3,
               ),
               const SizedBox(height: 50),

@@ -10,15 +10,30 @@ import 'home_widget_test.dart';
 const Duration wait = Duration(milliseconds: 500);
 
 Future<void> tapMenu(WidgetTester tester) async {
-  Finder menu = find.byKey(const Key("menu"));
+  Finder menu = find.byKey(Key(PreferencesWidget.keyMenu));
   expect(menu, findsOneWidget);
   await tester.tap(menu);
   await tester.pumpAndSettle();
 }
 
+Future<void> testSwitch(WidgetTester tester, String key, bool value) async {
+  Finder swit = find.byWidgetPredicate((widget) =>
+      widget is Switch && widget.key == Key(key) && widget.value == value);
+  expect(swit, findsOneWidget);
+  await tester.drag(swit, const Offset(0.0, 0.0));
+  await tester.pumpAndSettle();
+  swit = find.byWidgetPredicate((widget) =>
+      widget is Switch && widget.key == Key(key) && widget.value == !value);
+  expect(swit, findsOneWidget);
+}
+
 Future<void> testPreferencesWidget(
   WidgetTester tester,
 ) async {
+  // Trail Name
+  Finder trailName = find.byKey(Key(PreferencesWidget.keyTrailName));
+  expect(trailName, findsOneWidget);
+
   // Drag duration minutes slider
   expect(
       find.textContaining(getDurationString(const Duration(seconds: DURATION))),
@@ -42,9 +57,7 @@ Future<void> testPreferencesWidget(
   expect(find.textContaining("500 ms"), findsOneWidget);
 
   // Drag duration tts switch
-  await tester.drag(
-      find.byKey(const Key(DURATION_TTS_TEXT)), const Offset(0.0, 0.0));
-  await tester.pumpAndSettle();
+  await testSwitch(tester, DURATION_TTS_TEXT, false);
 
   // Drag inhale slider
   Finder inhaleSlider = find.byKey(const Key(INHALE_TEXT), skipOffstage: false);
@@ -172,12 +185,7 @@ Future<void> testPreferencesWidget(
   expect(find.textContaining("500 ms"), findsOneWidget);
 
   // Drag breath tts switch
-  await tester.ensureVisible(
-      find.byKey(const Key(BREATH_TTS_TEXT), skipOffstage: false));
-  await tester.pumpAndSettle();
-  await tester.drag(
-      find.byKey(const Key(BREATH_TTS_TEXT)), const Offset(0.0, 0.0));
-  await tester.pumpAndSettle();
+  await testSwitch(tester, BREATH_TTS_TEXT, false);
 
   // Verify primary color
   Finder primaryColor = find.byKey(const Key(COLOR_PRIMARY_TEXT));
@@ -194,11 +202,29 @@ Future<void> testPreferencesWidget(
   await tester.tapAt(Offset(center.dx, center.dy - 10));
   await tester.pumpAndSettle();
 
+  // Scroll up.
+  await tester.dragUntilVisible(
+    find.byKey(Key(PreferencesWidget.keyTrailName)),
+    find.byKey(Key(PreferencesWidget.keyDrag)),
+    const Offset(0, 1250),
+  );
+  await tester.pumpAndSettle();
+
+  trailName = find.byKey(Key(PreferencesWidget.keyTrailName));
+  expect(trailName, findsOneWidget);
+
   // Verify saved preferences
   for (int i = 1; i <= SAVED_PREFERENCES; i++) {
-    // Long press preference button
-    await tester.longPress(find.byKey(Key("Preference $i")));
+    String preference = "Preference $i";
+    await tester.enterText(trailName, preference);
+    await tester.longPress(find.byKey(Key(preference)));
     await tester.pumpAndSettle();
+  }
+  for (int i = 1; i <= SAVED_PREFERENCES; i++) {
+    String preference = "Preference $i";
+    await tester.tap(find.byKey(Key(preference)));
+    await tester.pumpAndSettle();
+    expect(find.textContaining(preference), findsOneWidget);
   }
 
   await tapMenu(tester);
