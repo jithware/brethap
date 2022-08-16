@@ -30,17 +30,31 @@ Future<void> testSnackBar(WidgetTester tester, Key key, String text) async {
   expect(find.textContaining(text), findsNothing);
 }
 
-Future<void> testStats(WidgetTester tester) async {
-  String text = "Sessions:$totalSessions";
+Future<void> testStats(WidgetTester tester, String sessions) async {
+  String text = "Sessions:$sessions";
   expect(find.textContaining(text), findsNothing);
   await tester.tap(find.byType(FloatingActionButton));
   await tester.pumpAndSettle();
   expect(find.textContaining(text), findsOneWidget);
+  await tester.pump(const Duration(seconds: 3));
   await tester.pumpAndSettle();
 }
 
 Future<void> testSessionsWidget(WidgetTester tester) async {
   // Verify menu items
+
+  await tapMenu(tester);
+
+  // Verify clear all
+  Finder clearAll = find.byKey(const Key(CLEAR_ALL_TEXT));
+  expect(clearAll, findsOneWidget);
+  await tester.tap(clearAll);
+  await tester.pumpAndSettle();
+  Finder cancel = find.byKey(const Key(CANCEL_TEXT));
+  expect(cancel, findsOneWidget);
+  await tester.tap(cancel);
+  await tester.pumpAndSettle();
+
   await tapMenu(tester);
 
   // Verify backup
@@ -56,24 +70,25 @@ Future<void> testSessionsWidget(WidgetTester tester) async {
   // Verify export
   await testSnackBar(tester, const Key(EXPORT_TEXT), "Sessions exported");
 
-  await tapMenu(tester);
-
-  // Verify clear all
-  Finder clearAll = find.byKey(const Key(CLEAR_ALL_TEXT));
-  expect(clearAll, findsOneWidget);
-  await tester.tap(clearAll);
-  await tester.pumpAndSettle();
-  Finder cancel = find.byKey(const Key(CANCEL_TEXT));
-  expect(cancel, findsOneWidget);
-  await tester.tap(cancel);
-  await tester.pumpAndSettle();
-
   // Verify stats
-  await testStats(tester);
+  await testStats(tester, "$totalSessions");
 }
 
 Future<void> testSessionsCalendarWidget(WidgetTester tester) async {
-  //TODO: test something
+  // Verify week/month
+  Finder button = find.text('Week');
+  expect(button, findsOneWidget);
+  await tester.tap(button);
+  await tester.pumpAndSettle();
+  button = find.text('Month');
+  expect(button, findsOneWidget);
+  await tester.tap(button);
+  await tester.pumpAndSettle();
+  button = find.text('Week');
+  expect(button, findsOneWidget);
+
+  // Verify stats
+  await testStats(tester, "");
 }
 
 Future<void> main() async {

@@ -27,12 +27,29 @@ Future<void> testSwitch(WidgetTester tester, String key, bool value) async {
   expect(swit, findsOneWidget);
 }
 
+Future<void> testAudio(WidgetTester tester, String key) async {
+  Finder audio = find.byKey(Key(key), skipOffstage: false);
+  await tester.ensureVisible(audio);
+  await tester.tap(audio);
+  await tester.pumpAndSettle();
+  expect(find.textContaining(AUDIO_NONE), findsWidgets);
+  expect(find.textContaining(AUDIO_TONE1), findsWidgets);
+  expect(find.textContaining(AUDIO_TONE2), findsWidgets);
+  expect(find.textContaining(AUDIO_TONE3), findsWidgets);
+  expect(find.textContaining(AUDIO_TONE4), findsWidgets);
+  Finder none = find.text(AUDIO_NONE).last;
+  await tester.tap(none);
+  await tester.pumpAndSettle();
+  expect(find.textContaining(AUDIO_NONE), findsWidgets);
+  await tester.pumpAndSettle();
+}
+
 Future<void> testPreferencesWidget(
   WidgetTester tester,
 ) async {
-  // Trail Name
-  Finder trailName = find.byKey(Key(PreferencesWidget.keyTrailName));
-  expect(trailName, findsOneWidget);
+  // Preference Name
+  Finder preferenceName = find.byKey(Key(PreferencesWidget.keyPreferenceName));
+  expect(preferenceName, findsOneWidget);
 
   // Drag duration minutes slider
   expect(
@@ -67,6 +84,7 @@ Future<void> testPreferencesWidget(
       findsWidgets);
   await tester.drag(inhaleSlider, const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
+  expect(find.textContaining("7.8 s", skipOffstage: false), findsOneWidget);
 
   // Drag inhale hold slider
   expect(
@@ -76,7 +94,7 @@ Future<void> testPreferencesWidget(
   await tester.drag(
       find.byKey(const Key(INHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
-  expect(find.textContaining("5.0 s"), findsWidgets);
+  expect(find.textContaining("5.0 s"), findsOneWidget);
 
   // Drag inhale last slider
   expect(
@@ -86,37 +104,13 @@ Future<void> testPreferencesWidget(
   await tester.drag(
       find.byKey(const Key(INHALE_LAST_TEXT)), const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
-  expect(find.textContaining("5.0 s"), findsWidgets);
+  expect(find.textContaining("5.0 s"), findsNWidgets(2));
 
   // Inhale audio
-  Finder inhaleAudio =
-      find.byKey(const Key(INHALE_AUDIO_TEXT), skipOffstage: false);
-  await tester.ensureVisible(inhaleAudio);
-  await tester.tap(inhaleAudio);
-  await tester.pumpAndSettle();
-  expect(find.textContaining(AUDIO_NONE), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE1), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE2), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE3), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE4), findsWidgets);
-  Finder toneNone = find.text(AUDIO_NONE).last;
-  await tester.tap(toneNone);
-  await tester.pumpAndSettle();
+  await testAudio(tester, INHALE_AUDIO_TEXT);
 
   // Inhale hold audio
-  Finder inhaleHoldAudio =
-      find.byKey(const Key(INHALE_HOLD_AUDIO_TEXT), skipOffstage: false);
-  await tester.ensureVisible(inhaleHoldAudio);
-  await tester.tap(inhaleHoldAudio);
-  await tester.pumpAndSettle();
-  expect(find.textContaining(AUDIO_NONE), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE1), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE2), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE3), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE4), findsWidgets);
-  toneNone = find.text(AUDIO_NONE).last;
-  await tester.tap(toneNone);
-  await tester.pumpAndSettle();
+  await testAudio(tester, INHALE_HOLD_AUDIO_TEXT);
 
   // Drag exhale slider
   Finder exhale = find.byKey(const Key(EXHALE_TEXT), skipOffstage: false);
@@ -124,6 +118,7 @@ Future<void> testPreferencesWidget(
   await tester.pumpAndSettle();
   await tester.drag(exhale, const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
+  expect(find.textContaining("7.8 s", skipOffstage: false), findsOneWidget);
 
   // Drag exhale hold slider
   expect(
@@ -133,7 +128,7 @@ Future<void> testPreferencesWidget(
   await tester.drag(
       find.byKey(const Key(EXHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
-  expect(find.textContaining("5.0 s"), findsWidgets);
+  expect(find.textContaining("5.0 s"), findsOneWidget);
 
   // Drag exhale last slider
   expect(
@@ -143,37 +138,13 @@ Future<void> testPreferencesWidget(
   await tester.drag(
       find.byKey(const Key(EXHALE_LAST_TEXT)), const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
-  expect(find.textContaining("5.0 s"), findsWidgets);
+  expect(find.textContaining("5.0 s"), findsNWidgets(2));
 
   // Exhale audio
-  Finder exhaleAudio =
-      find.byKey(const Key(EXHALE_AUDIO_TEXT), skipOffstage: false);
-  await tester.ensureVisible(exhaleAudio);
-  await tester.tap(exhaleAudio);
-  await tester.pumpAndSettle();
-  expect(find.textContaining(AUDIO_NONE), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE1), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE2), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE3), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE4), findsWidgets);
-  toneNone = find.text(AUDIO_NONE).last;
-  await tester.tap(toneNone);
-  await tester.pumpAndSettle();
+  await testAudio(tester, EXHALE_AUDIO_TEXT);
 
   // Exhale hold audio
-  Finder exhaleHoldAudio =
-      find.byKey(const Key(EXHALE_HOLD_AUDIO_TEXT), skipOffstage: false);
-  await tester.ensureVisible(exhaleHoldAudio);
-  await tester.tap(exhaleHoldAudio);
-  await tester.pumpAndSettle();
-  expect(find.textContaining(AUDIO_NONE), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE1), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE2), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE3), findsWidgets);
-  expect(find.textContaining(AUDIO_TONE4), findsWidgets);
-  toneNone = find.text(AUDIO_NONE).last;
-  await tester.tap(toneNone);
-  await tester.pumpAndSettle();
+  await testAudio(tester, EXHALE_HOLD_AUDIO_TEXT);
 
   // Drag vibrate breath slider
   expect(find.textContaining("$VIBRATE_BREATH ms"), findsOneWidget);
@@ -204,25 +175,28 @@ Future<void> testPreferencesWidget(
 
   // Scroll up.
   await tester.dragUntilVisible(
-    find.byKey(Key(PreferencesWidget.keyTrailName)),
+    find.byKey(Key(PreferencesWidget.keyPreferenceName)),
     find.byKey(Key(PreferencesWidget.keyDrag)),
     const Offset(0, 1250),
   );
   await tester.pumpAndSettle();
 
-  trailName = find.byKey(Key(PreferencesWidget.keyTrailName));
-  expect(trailName, findsOneWidget);
+  preferenceName = find.byKey(Key(PreferencesWidget.keyPreferenceName));
+  expect(preferenceName, findsOneWidget);
 
-  // Verify saved preferences
+  // Save preferences
   for (int i = 1; i <= SAVED_PREFERENCES; i++) {
     String preference = "Preference $i";
-    await tester.enterText(trailName, preference);
+    await tester.enterText(preferenceName, preference);
     await tester.longPress(find.byKey(Key(preference)));
     await tester.pumpAndSettle();
   }
+  // Verify saved preferences
   for (int i = 1; i <= SAVED_PREFERENCES; i++) {
     String preference = "Preference $i";
-    await tester.tap(find.byKey(Key(preference)));
+    Finder button = find.byKey(Key(preference));
+    expect(button, findsOneWidget);
+    await tester.tap(button);
     await tester.pumpAndSettle();
     expect(find.textContaining(preference), findsOneWidget);
   }
@@ -238,6 +212,7 @@ Future<void> testPreferencesWidget(
   expect(cont, findsOneWidget);
   await tester.tap(cont);
   await tester.pumpAndSettle();
+  expect(find.textContaining("Preferences reset"), findsOneWidget);
 
   await tapMenu(tester);
 

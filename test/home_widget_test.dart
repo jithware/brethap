@@ -92,7 +92,6 @@ Future<void> testHomeWidget(WidgetTester tester) async {
   await tester.pump(shortWait);
   totalTime += shortWait;
   expect(find.byType(SnackBar), findsOneWidget);
-  debugPrint("Total time: ${getDurationString(totalTime)}");
 
   // Open the drawer
   await openDrawer(tester);
