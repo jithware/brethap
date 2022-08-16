@@ -44,6 +44,20 @@ Future<void> testAudio(WidgetTester tester, String key) async {
   await tester.pumpAndSettle();
 }
 
+Future<void> testPreset(WidgetTester tester, String preset) async {
+  await tapMenu(tester);
+
+  Finder presets = find.byKey(const Key(PRESETS_TEXT));
+  expect(presets, findsOneWidget);
+  await tester.tap(presets);
+  await tester.pumpAndSettle();
+
+  Finder tap = find.textContaining(preset);
+  expect(tap, findsOneWidget);
+  await tester.tap(tap);
+  await tester.pumpAndSettle();
+}
+
 Future<void> testPreferencesWidget(
   WidgetTester tester,
 ) async {
@@ -58,20 +72,28 @@ Future<void> testPreferencesWidget(
   await tester.drag(
       find.byKey(const Key(DURATION_MINUTES_TEXT)), const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
-  expect(find.bySemanticsLabel(RegExp("1:00:00")), findsOneWidget);
+  expect(
+      find.textContaining(getDurationString(
+          Duration(minutes: PreferencesWidget.maxDurationMinutes ~/ 2))),
+      findsOneWidget);
 
   // Drag duration seconds slider
   await tester.drag(
       find.byKey(const Key(DURATION_SECONDS_TEXT)), const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
-  expect(find.bySemanticsLabel(RegExp("1:00:29")), findsOneWidget);
+  expect(
+      find.textContaining(getDurationString(Duration(
+          minutes: PreferencesWidget.maxDurationMinutes ~/ 2,
+          seconds: PreferencesWidget.maxDurationSeconds ~/ 2))),
+      findsOneWidget);
 
   // Drag vibrate duration slider
   expect(find.textContaining("$VIBRATE_DURATION ms"), findsOneWidget);
   await tester.drag(
       find.byKey(const Key(DURATION_VIBRATE_TEXT)), const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
-  expect(find.textContaining("500 ms"), findsOneWidget);
+  expect(find.textContaining("${PreferencesWidget.maxVibration * 10 ~/ 2} ms"),
+      findsOneWidget);
 
   // Drag duration tts switch
   await testSwitch(tester, DURATION_TTS_TEXT, false);
@@ -94,7 +116,8 @@ Future<void> testPreferencesWidget(
   await tester.drag(
       find.byKey(const Key(INHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
-  expect(find.textContaining("5.0 s"), findsOneWidget);
+  expect(find.textContaining("${PreferencesWidget.maxHold / 10 / 2} s"),
+      findsOneWidget);
 
   // Drag inhale last slider
   expect(
@@ -104,7 +127,8 @@ Future<void> testPreferencesWidget(
   await tester.drag(
       find.byKey(const Key(INHALE_LAST_TEXT)), const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
-  expect(find.textContaining("5.0 s"), findsNWidgets(2));
+  expect(find.textContaining("${PreferencesWidget.maxHold / 10 / 2} s"),
+      findsNWidgets(2));
 
   // Inhale audio
   await testAudio(tester, INHALE_AUDIO_TEXT);
@@ -128,7 +152,8 @@ Future<void> testPreferencesWidget(
   await tester.drag(
       find.byKey(const Key(EXHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
-  expect(find.textContaining("5.0 s"), findsOneWidget);
+  expect(find.textContaining("${PreferencesWidget.maxHold / 10 / 2} s"),
+      findsOneWidget);
 
   // Drag exhale last slider
   expect(
@@ -138,7 +163,8 @@ Future<void> testPreferencesWidget(
   await tester.drag(
       find.byKey(const Key(EXHALE_LAST_TEXT)), const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
-  expect(find.textContaining("5.0 s"), findsNWidgets(2));
+  expect(find.textContaining("${PreferencesWidget.maxHold / 10 / 2} s"),
+      findsNWidgets(2));
 
   // Exhale audio
   await testAudio(tester, EXHALE_AUDIO_TEXT);
@@ -153,7 +179,8 @@ Future<void> testPreferencesWidget(
     const Offset(0.0, 0.0),
   );
   await tester.pumpAndSettle();
-  expect(find.textContaining("500 ms"), findsOneWidget);
+  expect(find.textContaining("${PreferencesWidget.maxVibration * 10 ~/ 2} ms"),
+      findsOneWidget);
 
   // Drag breath tts switch
   await testSwitch(tester, BREATH_TTS_TEXT, false);
@@ -214,46 +241,35 @@ Future<void> testPreferencesWidget(
   await tester.pumpAndSettle();
   expect(find.textContaining("Preferences reset"), findsOneWidget);
 
-  await tapMenu(tester);
-
-  // Verify presets
-  Finder presets = find.byKey(const Key(PRESETS_TEXT));
-  expect(presets, findsOneWidget);
-
   // Verify default preset
-  await tester.tap(presets);
-  await tester.pumpAndSettle();
-  Finder defalt = find.textContaining(DEFAULT_TEXT);
-  expect(defalt, findsOneWidget);
-  await tester.tap(defalt);
-  await tester.pumpAndSettle();
+  await testPreset(tester, DEFAULT_TEXT);
+  expect(
+      find.textContaining(getDurationString(const Duration(seconds: DURATION))),
+      findsOneWidget);
 
   // Verify physiological sigh preset
-  await tapMenu(tester);
-  await tester.tap(presets);
-  await tester.pumpAndSettle();
-  Finder physsigh = find.textContaining(PHYS_SIGH_TEXT);
-  expect(physsigh, findsOneWidget);
-  await tester.tap(physsigh);
-  await tester.pumpAndSettle();
+  await testPreset(tester, PHYS_SIGH_TEXT);
+  expect(find.textContaining(PHYS_SIGH_TEXT), findsOneWidget);
+  expect(
+      find.textContaining(
+          getDurationString(const Duration(seconds: DURATION_PS))),
+      findsOneWidget);
 
   // Verify 4-7-8 preset
-  await tapMenu(tester);
-  await tester.tap(presets);
-  await tester.pumpAndSettle();
-  Finder preset478 = find.textContaining(PRESET_478_TEXT);
-  expect(preset478, findsOneWidget);
-  await tester.tap(preset478);
-  await tester.pumpAndSettle();
+  await testPreset(tester, PRESET_478_TEXT);
+  expect(find.textContaining(PRESET_478_TEXT), findsOneWidget);
+  expect(
+      find.textContaining(
+          getDurationString(const Duration(seconds: DURATION_478))),
+      findsOneWidget);
 
   // Verify Box preset
-  await tapMenu(tester);
-  await tester.tap(presets);
-  await tester.pumpAndSettle();
-  Finder presetBox = find.textContaining(BOX_TEXT);
-  expect(presetBox, findsOneWidget);
-  await tester.tap(presetBox);
-  await tester.pumpAndSettle();
+  await testPreset(tester, BOX_TEXT);
+  expect(find.textContaining(BOX_TEXT), findsOneWidget);
+  expect(
+      find.textContaining(
+          getDurationString(const Duration(seconds: DURATION_BOX))),
+      findsOneWidget);
 
   // debugDumpApp();
 }

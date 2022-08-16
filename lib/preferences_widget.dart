@@ -19,6 +19,12 @@ class PreferencesWidget extends StatefulWidget {
   final dynamic callback;
 
   // These static variables are used with flutter tests
+  static int maxDurationMinutes = 120,
+      maxDurationSeconds = 59,
+      maxVibration = 100,
+      minBreath = 5,
+      maxBreath = 150,
+      maxHold = 100;
   static String keyMenu = "Menu",
       keyPreferenceName = "Preference Name",
       keyDrag = "Drag";
@@ -28,13 +34,12 @@ class PreferencesWidget extends StatefulWidget {
 }
 
 class _PreferencesWidgetState extends State<PreferencesWidget> {
-  static const double MINIMUM_BREATH = 5.0, MAXIMUM_BREATH = 150.0;
   late double _durationMinutes = 0.0,
       _durationSeconds = 0.0,
-      _inhale0 = MINIMUM_BREATH,
+      _inhale0 = PreferencesWidget.minBreath.toDouble(),
       _inhale1 = 0.0,
       _inhale2 = 0.0,
-      _exhale0 = MINIMUM_BREATH,
+      _exhale0 = PreferencesWidget.minBreath.toDouble(),
       _exhale1 = 0.0,
       _exhale2 = 0.0,
       _vibrateDurationD = 0.0,
@@ -386,8 +391,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         key: const Key(DURATION_MINUTES_TEXT),
                         value: _durationMinutes,
                         min: 0,
-                        max: 120,
-                        divisions: 121,
+                        max: PreferencesWidget.maxDurationMinutes.toDouble(),
+                        divisions: PreferencesWidget.maxDurationMinutes + 1,
                         onChanged: (double value) {
                           setState(() {
                             _durationMinutes = value;
@@ -425,8 +430,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         key: const Key(DURATION_SECONDS_TEXT),
                         value: _durationSeconds,
                         min: 0,
-                        max: 59,
-                        divisions: 60,
+                        max: PreferencesWidget.maxDurationSeconds.toDouble(),
+                        divisions: PreferencesWidget.maxDurationSeconds + 1,
                         onChanged: (double value) {
                           setState(() {
                             _durationSeconds = value;
@@ -474,8 +479,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         key: const Key(DURATION_VIBRATE_TEXT),
                         value: _vibrateDurationD,
                         min: 0,
-                        max: 100,
-                        divisions: 100,
+                        max: PreferencesWidget.maxVibration.toDouble(),
+                        divisions: PreferencesWidget.maxVibration + 1,
                         onChanged: (double value) {
                           setState(() {
                             _vibrateDurationD = value;
@@ -544,10 +549,11 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       child: Slider(
                         key: const Key(INHALE_TEXT),
                         value: _inhale0,
-                        min: MINIMUM_BREATH,
-                        max: MAXIMUM_BREATH,
-                        divisions:
-                            MAXIMUM_BREATH.toInt() - MINIMUM_BREATH.toInt(),
+                        min: PreferencesWidget.minBreath.toDouble(),
+                        max: PreferencesWidget.maxBreath.toDouble(),
+                        divisions: PreferencesWidget.maxBreath -
+                            PreferencesWidget.minBreath +
+                            1,
                         onChanged: (double value) {
                           setState(() {
                             _inhale0 = value;
@@ -592,8 +598,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         key: const Key(INHALE_HOLD_TEXT),
                         value: _inhale1,
                         min: 0,
-                        max: 100,
-                        divisions: 100,
+                        max: PreferencesWidget.maxHold.toDouble(),
+                        divisions: PreferencesWidget.maxHold + 1,
                         onChanged: (double value) {
                           setState(() {
                             _inhale1 = value;
@@ -639,8 +645,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         key: const Key(INHALE_LAST_TEXT),
                         value: _inhale2,
                         min: 0,
-                        max: 100,
-                        divisions: 100,
+                        max: PreferencesWidget.maxHold.toDouble(),
+                        divisions: PreferencesWidget.maxHold + 1,
                         onChanged: (double value) {
                           setState(() {
                             _inhale2 = value;
@@ -760,10 +766,11 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       child: Slider(
                         key: const Key(EXHALE_TEXT),
                         value: _exhale0,
-                        min: MINIMUM_BREATH,
-                        max: MAXIMUM_BREATH,
-                        divisions:
-                            MAXIMUM_BREATH.toInt() - MINIMUM_BREATH.toInt(),
+                        min: PreferencesWidget.minBreath.toDouble(),
+                        max: PreferencesWidget.maxBreath.toDouble(),
+                        divisions: PreferencesWidget.maxBreath.toInt() -
+                            PreferencesWidget.minBreath.toInt() +
+                            1,
                         onChanged: (double value) {
                           setState(() {
                             _exhale0 = value;
@@ -808,8 +815,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         key: const Key(EXHALE_HOLD_TEXT),
                         value: _exhale1,
                         min: 0,
-                        max: 100,
-                        divisions: 100,
+                        max: PreferencesWidget.maxHold.toDouble(),
+                        divisions: PreferencesWidget.maxHold + 1,
                         onChanged: (double value) {
                           setState(() {
                             _exhale1 = value;
@@ -855,8 +862,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         key: const Key(EXHALE_LAST_TEXT),
                         value: _exhale2,
                         min: 0,
-                        max: 100,
-                        divisions: 100,
+                        max: PreferencesWidget.maxHold.toDouble(),
+                        divisions: PreferencesWidget.maxHold + 1,
                         onChanged: (double value) {
                           setState(() {
                             _exhale2 = value;
@@ -976,8 +983,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         key: const Key(BREATH_VIBRATE_TEXT),
                         value: _vibrateBreathD,
                         min: 0,
-                        max: 100,
-                        divisions: 100,
+                        max: PreferencesWidget.maxVibration.toDouble(),
+                        divisions: PreferencesWidget.maxVibration + 1,
                         onChanged: (double value) {
                           setState(() {
                             _vibrateBreathD = value;
