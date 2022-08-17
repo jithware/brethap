@@ -231,6 +231,7 @@ Future<void> testPreferencesWidget(
     await tester.longPress(find.byKey(Key(preference)));
     await tester.pumpAndSettle();
   }
+
   // Verify saved preferences
   for (int i = 1; i <= SAVED_PREFERENCES; i++) {
     String preference = "Preference $i";
@@ -239,6 +240,10 @@ Future<void> testPreferencesWidget(
     await tester.tap(button);
     await tester.pumpAndSettle();
     expect(find.textContaining(preference), findsOneWidget);
+
+    //TODO: verify button color
+    // expect((tester.widget(find.byType(Material).at(1)) as Material).color,
+    //     Colors.blue);
   }
 
   await tapMenu(tester);

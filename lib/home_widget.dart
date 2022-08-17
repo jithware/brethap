@@ -80,8 +80,11 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   void _init() {
     if (kDebugMode) {
-      createRandomSessions(widget.sessions, HomeWidget.totalSessions,
-          DateTime(2021, 1), DateTime.now().subtract(const Duration(days: 1)));
+      createRandomSessions(
+          widget.sessions,
+          HomeWidget.totalSessions,
+          DateTime.now().subtract(const Duration(days: 180)),
+          DateTime.now().subtract(const Duration(days: 1)));
     }
     _status = "";
     if (widget.preferences.isEmpty) {

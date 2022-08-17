@@ -106,7 +106,10 @@ Future<void> main() async {
 
     setUp(() async {
       sessions = hiveData.sessions;
-      await createRandomSessions(sessions, totalSessions, DateTime(2021, 1),
+      await createRandomSessions(
+          sessions,
+          totalSessions,
+          DateTime.now().subtract(const Duration(days: 180)),
           DateTime.now().subtract(const Duration(days: 1)));
     });
 

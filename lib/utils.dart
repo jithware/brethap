@@ -52,7 +52,10 @@ Future<void> createRandomSessions(
         mockStart, mockStart.add(Duration(seconds: random.nextInt(120 * 60))));
     session = Session(start: mockStart);
     session.end = mockEnd;
-    session.breaths = (random.nextInt(1000) + 1);
+    int breaths =
+        (mockEnd.millisecondsSinceEpoch - mockStart.millisecondsSinceEpoch) ~/
+            Duration.millisecondsPerSecond;
+    session.breaths = breaths ~/ (random.nextInt(10) + 1);
     list.add(session);
   }
   list.sort((a, b) =>
