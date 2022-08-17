@@ -197,7 +197,7 @@ Future<void> testPreferencesWidget(
   Finder primaryColor = find.byKey(const Key(COLOR_PRIMARY_TEXT));
   await tester.ensureVisible(primaryColor);
   expect(primaryColor, findsOneWidget);
-  Offset offset = const Offset(65.0, 540.0); // dark blue
+  Offset offset = const Offset(65.0, 540.0); // Colors.indigo;
   await tester.tapAt(offset);
   await tester.pumpAndSettle();
 
@@ -206,7 +206,7 @@ Future<void> testPreferencesWidget(
   expect(backgroundColor, findsOneWidget);
   await tester.tapAt(offset);
   await tester.pumpAndSettle();
-  offset = const Offset(175.0, 545.0); // light blue
+  offset = const Offset(175.0, 545.0); // Colors.indigo.shade100;
   await tester.tapAt(offset);
   await tester.pumpAndSettle();
   offset = const Offset(65.0, 535.0); // back
@@ -241,9 +241,12 @@ Future<void> testPreferencesWidget(
     await tester.pumpAndSettle();
     expect(find.textContaining(preference), findsOneWidget);
 
-    //TODO: verify button color
-    // expect((tester.widget(find.byType(Material).at(1)) as Material).color,
-    //     Colors.blue);
+    // expect(
+    //     (tester.widget(button) as ElevatedButton)
+    //         .style
+    //         ?.backgroundColor
+    //         ?.resolve(<MaterialState>{}),
+    //     Colors.indigo);
   }
 
   await tapMenu(tester);
