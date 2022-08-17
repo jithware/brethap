@@ -44,7 +44,7 @@ Future<void> testAudio(WidgetTester tester, String key) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> testPreset(WidgetTester tester, String preset) async {
+Future<void> tapPreset(WidgetTester tester, String preset) async {
   await tapMenu(tester);
 
   Finder presets = find.byKey(const Key(PRESETS_TEXT));
@@ -106,7 +106,11 @@ Future<void> testPreferencesWidget(
       findsWidgets);
   await tester.drag(inhaleSlider, const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
-  expect(find.textContaining("7.8 s", skipOffstage: false), findsOneWidget);
+  expect(
+      find.textContaining(
+          "${((PreferencesWidget.maxBreath + PreferencesWidget.minBreath) / 10 / 2).toStringAsFixed(1)} s",
+          skipOffstage: false),
+      findsOneWidget);
 
   // Drag inhale hold slider
   expect(
@@ -142,7 +146,11 @@ Future<void> testPreferencesWidget(
   await tester.pumpAndSettle();
   await tester.drag(exhale, const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
-  expect(find.textContaining("7.8 s", skipOffstage: false), findsOneWidget);
+  expect(
+      find.textContaining(
+          "${((PreferencesWidget.maxBreath + PreferencesWidget.minBreath) / 10 / 2).toStringAsFixed(1)} s",
+          skipOffstage: false),
+      findsOneWidget);
 
   // Drag exhale hold slider
   expect(
@@ -189,15 +197,20 @@ Future<void> testPreferencesWidget(
   Finder primaryColor = find.byKey(const Key(COLOR_PRIMARY_TEXT));
   await tester.ensureVisible(primaryColor);
   expect(primaryColor, findsOneWidget);
-  Offset center = tester.getCenter(primaryColor);
-  await tester.tapAt(Offset(center.dx, center.dy - 10));
+  Offset offset = const Offset(65.0, 540.0); // dark blue
+  await tester.tapAt(offset);
   await tester.pumpAndSettle();
 
   // Verify background color
   Finder backgroundColor = find.byKey(const Key(COLOR_BACKGROUND_TEXT));
   expect(backgroundColor, findsOneWidget);
-  center = tester.getCenter(backgroundColor);
-  await tester.tapAt(Offset(center.dx, center.dy - 10));
+  await tester.tapAt(offset);
+  await tester.pumpAndSettle();
+  offset = const Offset(175.0, 545.0); // light blue
+  await tester.tapAt(offset);
+  await tester.pumpAndSettle();
+  offset = const Offset(65.0, 535.0); // back
+  await tester.tapAt(offset);
   await tester.pumpAndSettle();
 
   // Scroll up.
@@ -242,13 +255,13 @@ Future<void> testPreferencesWidget(
   expect(find.textContaining("Preferences reset"), findsOneWidget);
 
   // Verify default preset
-  await testPreset(tester, DEFAULT_TEXT);
+  await tapPreset(tester, DEFAULT_TEXT);
   expect(
       find.textContaining(getDurationString(const Duration(seconds: DURATION))),
       findsOneWidget);
 
   // Verify physiological sigh preset
-  await testPreset(tester, PHYS_SIGH_TEXT);
+  await tapPreset(tester, PHYS_SIGH_TEXT);
   expect(find.textContaining(PHYS_SIGH_TEXT), findsOneWidget);
   expect(
       find.textContaining(
@@ -256,7 +269,7 @@ Future<void> testPreferencesWidget(
       findsOneWidget);
 
   // Verify 4-7-8 preset
-  await testPreset(tester, PRESET_478_TEXT);
+  await tapPreset(tester, PRESET_478_TEXT);
   expect(find.textContaining(PRESET_478_TEXT), findsOneWidget);
   expect(
       find.textContaining(
@@ -264,7 +277,7 @@ Future<void> testPreferencesWidget(
       findsOneWidget);
 
   // Verify Box preset
-  await testPreset(tester, BOX_TEXT);
+  await tapPreset(tester, BOX_TEXT);
   expect(find.textContaining(BOX_TEXT), findsOneWidget);
   expect(
       find.textContaining(
