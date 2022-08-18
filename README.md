@@ -11,6 +11,8 @@ Brethap is yet another meditation app (yama). Including a timer for meditation, 
 [<img src="./images/get-it-on.png"
      alt="Get it on The Web"
      height="80">](https://jithware.github.io/brethap)
+     
+*Note iPhone users can only use the web version at this time.*
 
 ## Screenshots
 
