@@ -8,18 +8,21 @@
             "name": "debug",
             "request": "launch",
             "type": "dart",
+            "program": "./lib/main.dart",
             "flutterMode": "debug"
         },
         {
             "name": "profile",
             "request": "launch",
             "type": "dart",
+            "program": "./lib/main.dart",
             "flutterMode": "profile"
         },
         {
             "name": "release",
             "request": "launch",
             "type": "dart",
+            "program": "./lib/main.dart",
             "flutterMode": "release"
         },
         {
@@ -27,6 +30,7 @@
             "request": "launch",
             "type": "dart",
             "deviceId": "chrome",
+            "program": "./lib/main.dart",
             "flutterMode": "debug",
             "args": ["--web-port", "8000"], // retains hive storage on restart
         },
@@ -40,7 +44,15 @@
             "name": "integration test",
             "type": "dart",
             "request": "launch",
-            "program": "./integration_test/"
+            "program": "./integration_test/app_test.dart",
+            "flutterMode": "debug",
+        },
+        {
+            "name": "demo",
+            "type": "dart",
+            "request": "launch",
+            "program": "./integration_test/demo_test.dart",
+            "flutterMode": "debug",
         },
     ]
 }

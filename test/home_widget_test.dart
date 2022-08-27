@@ -15,14 +15,16 @@ Future<void> openDrawer(WidgetTester tester) async {
   Finder navigationMenu = find.byType(IconButton);
   expect(navigationMenu, findsOneWidget);
   await tester.tap(navigationMenu, warnIfMissed: false);
-  await tester.pump(wait);
+  await tester.pump(wait * .5);
+  await tester.pump(wait * .5);
 }
 
 Future<void> closeDrawer(WidgetTester tester) async {
   Size size = tester.getSize(find.byType(Scaffold));
   await tester.flingFrom(
       Offset(size.width - 1, size.height / 2), const Offset(-100, 0), 1000);
-  await tester.pump(wait);
+  await tester.pump(wait * .5);
+  await tester.pump(wait * .5);
 }
 
 Future<void> testHomeWidget(WidgetTester tester) async {
