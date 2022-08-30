@@ -1,6 +1,9 @@
 // To execute test run:
 // flutter test integration_test/demo_test.dart
 
+import 'package:brethap/sessions_calendar_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:brethap/constants.dart';
 import 'package:brethap/home_widget.dart';
 import 'package:brethap/preferences_widget.dart';
@@ -41,15 +44,17 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('Demo', (WidgetTester tester) async {
-    app.main();
-    await tester.pump(wait);
+    await app.main();
 
-    String envVars = "";
     Stopwatch stopwatch = Stopwatch()..start();
+    String envVars = "";
+
+    await tester.pump(wait);
+    envVars += "HOME_SNAP=${stopwatch.elapsed - wait}\n";
 
     // Running
     if (demoRunning) {
-      debugPrint("Demo Running...");
+      debugPrint("Demo Running(${stopwatch.elapsed})...");
       await tester.pump(wait);
 
       // tap start
@@ -57,6 +62,8 @@ Future<void> main() async {
       expect(finder, findsOneWidget);
       await tester.tap(finder);
       await tester.pump(wait);
+
+      envVars += "INHALE_SNAP=${stopwatch.elapsed + wait}\n";
 
       // running
       for (int i = 0; i < 100; i++) {
@@ -74,25 +81,33 @@ Future<void> main() async {
 
       await tester.pump(wait);
 
-      envVars += "RUNNING_END=${stopwatch.elapsed}\n";
+      envVars += "RUNNING_END=${stopwatch.elapsed - wait}\n";
     }
 
     // Sessions
     if (demoSessions) {
-      debugPrint("Demo Sessions...");
+      debugPrint("Demo Sessions(${stopwatch.elapsed})...");
       await tester.pump(wait);
 
       // open drawer
       await openDrawer(tester);
+      envVars += "DRAWER_SNAP=${stopwatch.elapsed - wait}\n";
+      await tester.pump(wait);
 
       // tap sessions
       await tapItem(tester, HomeWidget.keySessions);
+      await tester.pump(wait);
+
+      envVars += "SESSIONS_SNAP=${stopwatch.elapsed - wait}\n";
 
       // tap stats
+      await tester.pump(wait);
       Finder finder = find.byType(FloatingActionButton);
       expect(finder, findsOneWidget);
       await tester.tap(finder);
       await tester.pump(wait);
+
+      envVars += "STATS_SNAP=${stopwatch.elapsed - wait}\n";
 
       // snack bar close
       await tester.pump(snackbar);
@@ -119,14 +134,19 @@ Future<void> main() async {
 
     // Calendar
     if (demoCalendar) {
-      debugPrint("Demo Calendar...");
+      debugPrint("Demo Calendar(${stopwatch.elapsed})...");
+
       await tester.pump(wait);
 
       // open drawer
       await openDrawer(tester);
+      await tester.pump(wait);
 
       // tap calendar
       await tapItem(tester, HomeWidget.keyCalendar);
+      await tester.pump(wait);
+
+      envVars += "CALENDAR_SNAP=${stopwatch.elapsed - wait}\n";
 
       // tap stats
       Finder finder = find.byType(FloatingActionButton);
@@ -138,14 +158,19 @@ Future<void> main() async {
       await tester.pump(snackbar);
       await tester.pump(wait);
 
+      await tester.pump(wait * 20);
+
+      BuildContext context =
+          tester.element(find.byType(SessionsCalendarWidget));
+
       // tap week
-      finder = find.text('Week');
+      finder = find.text(AppLocalizations.of(context)!.week);
       expect(finder, findsOneWidget);
       await tester.tap(finder);
       await tester.pump(wait * 2);
 
       // tap month
-      finder = find.text('Month');
+      finder = find.text(AppLocalizations.of(context)!.month);
       expect(finder, findsOneWidget);
       await tester.tap(finder);
       await tester.pump(wait * 2);
@@ -163,14 +188,18 @@ Future<void> main() async {
 
     // Preferences
     if (demoPreferences) {
-      debugPrint("Demo Preferences...");
+      debugPrint("Demo Preferences(${stopwatch.elapsed})...");
       await tester.pump(wait);
 
       // open drawer
       await openDrawer(tester);
+      await tester.pump(wait);
 
       // tap preferences
       await tapItem(tester, HomeWidget.keyPreferences);
+      await tester.pump(wait);
+
+      envVars += "PREFERENCES_SNAP=${stopwatch.elapsed - wait}\n";
 
       // drag minutes
       int drag = 20;
@@ -210,41 +239,45 @@ Future<void> main() async {
       await tester.pump(wait);
 
       // scroll to primary color
-      finder = find.text(COLOR_PRIMARY_TEXT, skipOffstage: false);
+      finder = find.byKey(const Key(COLOR_PRIMARY_TEXT), skipOffstage: false);
       expect(finder, findsOneWidget);
       await tester.ensureVisible(finder);
       await tester.pump(wait);
 
       // tap primary color
       await tester.pump(wait);
-      finder = find.text(COLOR_PRIMARY_TEXT);
+      finder = find.byKey(const Key(COLOR_PRIMARY_TEXT));
       expect(finder, findsOneWidget);
       topLeft = tester.getTopLeft(finder);
       await tester.tapAt(Offset(topLeft.dx + 40, topLeft.dy + 120));
       await tester.pump(wait * 2);
 
       // scroll to background color
-      finder = find.text(COLOR_BACKGROUND_TEXT);
+      finder = find.byKey(const Key(COLOR_BACKGROUND_TEXT));
       expect(finder, findsOneWidget);
       await tester.ensureVisible(finder);
       await tester.pump(wait);
 
       // tap background color
       await tester.pump(wait);
-      finder = find.text(COLOR_BACKGROUND_TEXT);
+      finder = find.byKey(const Key(COLOR_BACKGROUND_TEXT));
       expect(finder, findsOneWidget);
       topLeft = tester.getTopLeft(finder);
       await tester.tapAt(Offset(topLeft.dx + 40, topLeft.dy + 120));
       await tester.pump(wait * 2);
-      finder = find.text(COLOR_BACKGROUND_TEXT);
+      finder = find.byKey(const Key(COLOR_BACKGROUND_TEXT));
       expect(finder, findsOneWidget);
       topLeft = tester.getTopLeft(finder);
       await tester.tapAt(Offset(topLeft.dx + 100, topLeft.dy + 60));
       await tester.pump(wait * 2);
-      finder = find.text(COLOR_BACKGROUND_TEXT);
+      finder = find.byKey(const Key(COLOR_BACKGROUND_TEXT));
       expect(finder, findsOneWidget);
       topLeft = tester.getTopLeft(finder);
       await tester.tapAt(Offset(topLeft.dx + 40, topLeft.dy + 60));
+      await tester.pump(wait);
+
+      envVars += "COLORS_SNAP=${stopwatch.elapsed - wait}\n";
+
       await tester.pump(wait * 2);
 
       // Scroll up.
@@ -256,11 +289,10 @@ Future<void> main() async {
       await tester.pump(wait);
 
       // enter preference name
-      Finder preferenceName =
-          find.byKey(Key(PreferencesWidget.keyPreferenceName));
-      expect(preferenceName, findsOneWidget);
-      String preference = "Preference 1";
-      await tester.enterText(preferenceName, preference);
+      String preference = "${PreferencesWidget.keyPreference} 1";
+      finder = find.byKey(Key(PreferencesWidget.keyPreferenceName));
+      expect(finder, findsOneWidget);
+      await tester.enterText(finder, preference);
       await tester.pump(wait * 2);
 
       // save preference
@@ -282,27 +314,27 @@ Future<void> main() async {
       await tester.pump(wait);
 
       // tap preset
-      finder = find.textContaining(DEFAULT_TEXT);
+      finder = find.byKey(const Key(DEFAULT_TEXT));
       expect(finder, findsOneWidget);
       await tester.tap(finder);
       await tester.pump(wait);
 
       // save preset
-      preference = "Preference 2";
+      preference = "${PreferencesWidget.keyPreference} 2";
       finder = find.byKey(Key(preference));
       expect(finder, findsOneWidget);
       await tester.longPress(finder);
       await tester.pump(wait);
 
       // tap preset
-      preference = "Preference 1";
+      preference = "${PreferencesWidget.keyPreference} 1";
       finder = find.byKey(Key(preference));
       expect(finder, findsOneWidget);
       await tester.tap(finder);
       await tester.pump(wait * 2);
 
       // tap preset
-      preference = "Preference 2";
+      preference = "${PreferencesWidget.keyPreference} 2";
       finder = find.byKey(Key(preference));
       expect(finder, findsOneWidget);
       await tester.tap(finder);
@@ -322,7 +354,7 @@ Future<void> main() async {
     await tester.pump(wait);
     envVars += "DEMO_END=${stopwatch.elapsed}\n";
 
-    debugPrint("\nCopy these variables to demo.sh script:");
+    debugPrint("\nVariables for demo.sh script:");
     debugPrint(envVars);
 
     //await tester.pump(wait * 20);

@@ -26,6 +26,7 @@ class PreferencesWidget extends StatefulWidget {
       maxBreath = 150,
       maxHold = 100;
   static String keyMenu = "Menu",
+      keyPreference = "Preference",
       keyPreferenceName = "Preference Name",
       keyDrag = "Drag";
 
@@ -175,7 +176,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
   }
 
   ElevatedButton _getPreferenceButton(context, int position) {
-    String name = "${AppLocalizations.of(context)!.preference} $position";
+    String name = "${PreferencesWidget.keyPreference} $position";
 
     return ElevatedButton(
       key: Key(name),
@@ -222,28 +223,18 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     _init();
   }
 
-  _getPresetOption(String text, Preference pref) {
+  _getPresetOption(String key, String text, Preference pref) {
     return SimpleDialogOption(
       onPressed: () {
-        switch (pref.name) {
-          case PHYS_SIGH_TEXT:
+        switch (key) {
+          case DEFAULT_TEXT:
             {
-              pref.name = AppLocalizations.of(context)!.physiologicalSigh;
-            }
-            break;
-          case PRESET_478_TEXT:
-            {
-              pref.name = AppLocalizations.of(context)!.breathing478;
-            }
-            break;
-          case BOX_TEXT:
-            {
-              pref.name = AppLocalizations.of(context)!.boxBreathing;
+              pref.name = "";
             }
             break;
           default:
             {
-              pref.name = "";
+              pref.name = text;
             }
             break;
         }
@@ -255,10 +246,11 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
         _init();
         _setColors(0);
         Navigator.of(context).pop();
-        debugPrint("$text preference set");
+        debugPrint("$key preference set");
       },
       child: Text(
         text,
+        key: Key(key),
         textScaleFactor: 1.5,
       ),
     );
@@ -268,13 +260,14 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     SimpleDialog dialog = SimpleDialog(
       title: Text(AppLocalizations.of(context)!.selectAPreset),
       children: <Widget>[
-        _getPresetOption(
+        _getPresetOption(PRESET_478_TEXT,
             AppLocalizations.of(context)!.breathing478, get478Pref()),
         _getPresetOption(
-            AppLocalizations.of(context)!.boxBreathing, getBoxPref()),
-        _getPresetOption(
+            BOX_TEXT, AppLocalizations.of(context)!.boxBreathing, getBoxPref()),
+        _getPresetOption(PHYS_SIGH_TEXT,
             AppLocalizations.of(context)!.physiologicalSigh, getPhysSighPref()),
-        _getPresetOption(AppLocalizations.of(context)!.def, getDefaultPref()),
+        _getPresetOption(
+            DEFAULT_TEXT, AppLocalizations.of(context)!.def, getDefaultPref()),
         TextButton(
           child: Text(AppLocalizations.of(context)!.cancel,
               key: const Key(CANCEL_TEXT)),

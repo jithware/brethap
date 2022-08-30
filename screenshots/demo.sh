@@ -1,42 +1,93 @@
 #!/bin/bash
 # Requires: https://github.com/Genymobile/scrcpy#get-the-app  https://ffmpeg.org/download.html
 
-# Copied from log output of demo run
-RUNNING_END=0:00:20.487143
-SESSIONS_END=0:00:33.636169
-CALENDAR_END=0:00:47.480229
-PREFERENCES_END=0:01:14.415715
-DEMO_END=0:01:15.443365
-
 DIR="$(dirname $0)/android"
 mkdir -p "$DIR"
-DEMO_LEN="$DEMO_END"
-DEMO="$DIR/demo.mp4"
-TMPFILE="$(mktemp).mp4"
-scrcpy --record "$TMPFILE" --max-fps 10 &
-flutter test integration_test/demo_test.dart 
+DEMOMP4="$DIR/demo.mp4"
+TMPMP4="$(mktemp).mp4"
+ENVFILE="$(dirname $0)/.env"
+VARS="RUNNING_END|SESSIONS_END|CALENDAR_END|PREFERENCES_END|DEMO_END|HOME_SNAP|INHALE_SNAP|DRAWER_SNAP|PREFERENCES_SNAP|COLORS_SNAP|SESSIONS_SNAP|STATS_SNAP|CALENDAR_SNAP"
+scrcpy --record "$TMPMP4" --max-fps 10 &
+flutter test integration_test/demo_test.dart | tee /dev/stderr | grep -P "$VARS" > "$ENVFILE"
+source "$ENVFILE"
 
 if [ $? -eq 1 ]; then
   echo "Flutter demo failed!"
-  pkill -kill scrcpy
-  rm "$TMPFILE"
+  pkill -kill scrcpy;
+  rm "$TMPMP4"
   exit 1
 fi
 
-pkill scrcpy
-
-RECORD_LEN="$(ffprobe -v error -select_streams v:0 -show_entries stream=duration -of default=noprint_wrappers=1:nokey=1 -sexagesimal $TMPFILE)"
-DIFF="$(( $(date -d "$RECORD_LEN" "+%s%6N") - $(date -d "$DEMO_LEN" "+%s%6N") ))"
-START="0:00:${DIFF:0:2}.${DIFF:2:6}"
+pkill -term scrcpy 
+sleep 3
+RECORD_LEN="$(ffprobe -v error -select_streams v:0 -show_entries stream=duration -of default=noprint_wrappers=1:nokey=1 -sexagesimal $TMPMP4)"
+DIFF="$(( $(date -d "$RECORD_LEN" "+%s%6N") - $(date -d "$DEMO_END" "+%s%6N") ))"
+SECS="${DIFF:0:2}.${DIFF:2:6}"
+START="$(printf '%02d:%02d:%02f' $(echo -e "$SECS/3600\n$SECS%3600/60\n$SECS%60"| bc))" 
 END="$RECORD_LEN"
-echo "START:$START END:$END FILE:$DEMO" 
-ffmpeg -y -ss "$START" -to "$END" -i "$TMPFILE" -c copy "$DEMO" &>/dev/null
-rm "$TMPFILE"
-#ffplay -autoexit "$DEMO" &>/dev/null
+echo "START:$START END:$END FILE:$DEMOMP4" 
+ffmpeg -y -ss "$START" -to "$END" -i "$TMPMP4" -c copy "$DEMOMP4" &>/dev/null
+rm "$TMPMP4"
+#ffplay -autoexit "$DEMOMP4" &>/dev/null
+
+snap () { 
+    echo "START:$START FILE:$SNAP" 
+    ffmpeg -y -ss "$START" -i $DEMOMP4 -frames:v 1 -q:v 5 "$SNAP" &>/dev/null; 
+}
+
+if [ -n "$HOME_SNAP" ]; then
+  SNAP="$DIR/1_home.png"
+  START="$HOME_SNAP"
+  snap
+fi
+
+if [ -n "$INHALE_SNAP" ]; then
+  SNAP="$DIR/2_inhale.png"
+  START="$INHALE_SNAP"
+  snap
+fi
+
+if [ -n "$DRAWER_SNAP" ]; then
+  SNAP="$DIR/3_drawer.png"
+  START="$DRAWER_SNAP"
+  snap
+fi
+
+if [ -n "$PREFERENCES_SNAP" ]; then
+  SNAP="$DIR/4_preferences.png"
+  START="$PREFERENCES_SNAP"
+  snap
+fi
+
+if [ -n "$COLORS_SNAP" ]; then
+  SNAP="$DIR/5_colors.png"
+  START="$COLORS_SNAP"
+  snap
+fi
+
+if [ -n "$SESSIONS_SNAP" ]; then
+  SNAP="$DIR/6_sessions.png"
+  START="$SESSIONS_SNAP"
+  snap
+fi
+
+if [ -n "$STATS_SNAP" ]; then
+  SNAP="$DIR/7_stats.png"
+  START="$STATS_SNAP"
+  snap
+fi
+
+if [ -n "$CALENDAR_SNAP" ]; then
+  SNAP="$DIR/8_calendar.png"
+  START="$CALENDAR_SNAP"
+  snap
+fi
+
+exit 0
 
 clip () { 
     echo "START:$START END:$END FILE:$WEBP" 
-    ffmpeg -y -ss "$START" -to "$END" -i $DEMO -vcodec libwebp -filter:v fps=10 -lossless 0 -compression_level 3 -q:v 70 -loop 1 -preset picture -an -vsync 0 "$WEBP" &>/dev/null; 
+    ffmpeg -y -ss "$START" -to "$END" -i $DEMOMP4 -vcodec libwebp -filter:v fps=10 -lossless 0 -compression_level 3 -q:v 70 -loop 1 -preset picture -an -vsync 0 "$WEBP" &>/dev/null; 
 }
 
 END="0:00:00.000000"
@@ -67,5 +118,7 @@ if [ -n "$PREFERENCES_END" ]; then
   END="$PREFERENCES_END"
   clip
 fi
+
+
 
 echo "Done!"
