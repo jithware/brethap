@@ -1,15 +1,14 @@
 // To execute test run:
 // flutter test integration_test/demo_test.dart
 
-import 'package:brethap/sessions_calendar_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:brethap/constants.dart';
 import 'package:brethap/home_widget.dart';
 import 'package:brethap/preferences_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:table_calendar/src/widgets/format_button.dart';
 
 import 'package:brethap/main.dart' as app;
 
@@ -158,19 +157,14 @@ Future<void> main() async {
       await tester.pump(snackbar);
       await tester.pump(wait);
 
-      await tester.pump(wait * 20);
-
-      BuildContext context =
-          tester.element(find.byType(SessionsCalendarWidget));
-
       // tap week
-      finder = find.text(AppLocalizations.of(context)!.week);
+      finder = find.byType(FormatButton);
       expect(finder, findsOneWidget);
       await tester.tap(finder);
       await tester.pump(wait * 2);
 
       // tap month
-      finder = find.text(AppLocalizations.of(context)!.month);
+      finder = find.byType(FormatButton);
       expect(finder, findsOneWidget);
       await tester.tap(finder);
       await tester.pump(wait * 2);
@@ -246,11 +240,10 @@ Future<void> main() async {
 
       // tap primary color
       await tester.pump(wait);
-      finder = find.byKey(const Key(COLOR_PRIMARY_TEXT));
-      expect(finder, findsOneWidget);
-      topLeft = tester.getTopLeft(finder);
-      await tester.tapAt(Offset(topLeft.dx + 40, topLeft.dy + 120));
-      await tester.pump(wait * 2);
+      finder = find.byType(CircleColor);
+      expect(finder, findsWidgets);
+      await tester.tap(finder.at(5));
+      await tester.pump(wait);
 
       // scroll to background color
       finder = find.byKey(const Key(COLOR_BACKGROUND_TEXT));
@@ -260,20 +253,23 @@ Future<void> main() async {
 
       // tap background color
       await tester.pump(wait);
-      finder = find.byKey(const Key(COLOR_BACKGROUND_TEXT));
-      expect(finder, findsOneWidget);
-      topLeft = tester.getTopLeft(finder);
-      await tester.tapAt(Offset(topLeft.dx + 40, topLeft.dy + 120));
-      await tester.pump(wait * 2);
-      finder = find.byKey(const Key(COLOR_BACKGROUND_TEXT));
-      expect(finder, findsOneWidget);
-      topLeft = tester.getTopLeft(finder);
-      await tester.tapAt(Offset(topLeft.dx + 100, topLeft.dy + 60));
-      await tester.pump(wait * 2);
-      finder = find.byKey(const Key(COLOR_BACKGROUND_TEXT));
-      expect(finder, findsOneWidget);
-      topLeft = tester.getTopLeft(finder);
-      await tester.tapAt(Offset(topLeft.dx + 40, topLeft.dy + 60));
+      finder = find.byType(CircleColor);
+      expect(finder, findsWidgets);
+      await tester.tap(finder.at(24));
+      await tester.pump(wait);
+
+      // tap shade
+      await tester.pump(wait);
+      finder = find.byType(CircleColor);
+      expect(finder, findsWidgets);
+      await tester.tap(finder.at(19));
+      await tester.pump(wait);
+
+      // tap back
+      await tester.pump(wait);
+      finder = find.byIcon(Icons.arrow_back);
+      expect(finder, findsWidgets);
+      await tester.tap(finder.at(0));
       await tester.pump(wait);
 
       envVars += "COLORS_SNAP=${stopwatch.elapsed - wait}\n";

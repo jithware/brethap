@@ -9,17 +9,18 @@ ENVFILE="$(dirname $0)/.env"
 VARS="RUNNING_END|SESSIONS_END|CALENDAR_END|PREFERENCES_END|DEMO_END|HOME_SNAP|INHALE_SNAP|DRAWER_SNAP|PREFERENCES_SNAP|COLORS_SNAP|SESSIONS_SNAP|STATS_SNAP|CALENDAR_SNAP"
 scrcpy --record "$TMPMP4" --max-fps 10 &
 flutter test integration_test/demo_test.dart | tee /dev/stderr | grep -P "$VARS" > "$ENVFILE"
-source "$ENVFILE"
 
 if [ $? -eq 1 ]; then
   echo "Flutter demo failed!"
   pkill -kill scrcpy;
   rm "$TMPMP4"
   exit 1
+else
+  pkill -term scrcpy 
+  sleep 3
 fi
 
-pkill -term scrcpy 
-sleep 3
+source "$ENVFILE"
 RECORD_LEN="$(ffprobe -v error -select_streams v:0 -show_entries stream=duration -of default=noprint_wrappers=1:nokey=1 -sexagesimal $TMPMP4)"
 DIFF="$(( $(date -d "$RECORD_LEN" "+%s%6N") - $(date -d "$DEMO_END" "+%s%6N") ))"
 SECS="${DIFF:0:2}.${DIFF:2:6}"
@@ -31,54 +32,54 @@ rm "$TMPMP4"
 #ffplay -autoexit "$DEMOMP4" &>/dev/null
 
 snap () { 
-    echo "START:$START FILE:$SNAP" 
-    ffmpeg -y -ss "$START" -i $DEMOMP4 -frames:v 1 -q:v 5 "$SNAP" &>/dev/null; 
+    echo "START:$START FILE:$PNG" 
+    ffmpeg -y -ss "$START" -i $DEMOMP4 -frames:v 1 -q:v 5 "$PNG" &>/dev/null; 
 }
 
 if [ -n "$HOME_SNAP" ]; then
-  SNAP="$DIR/1_home.png"
+  PNG="$DIR/1_home.png"
   START="$HOME_SNAP"
   snap
 fi
 
 if [ -n "$INHALE_SNAP" ]; then
-  SNAP="$DIR/2_inhale.png"
+  PNG="$DIR/2_inhale.png"
   START="$INHALE_SNAP"
   snap
 fi
 
 if [ -n "$DRAWER_SNAP" ]; then
-  SNAP="$DIR/3_drawer.png"
+  PNG="$DIR/3_drawer.png"
   START="$DRAWER_SNAP"
   snap
 fi
 
 if [ -n "$PREFERENCES_SNAP" ]; then
-  SNAP="$DIR/4_preferences.png"
+  PNG="$DIR/4_preferences.png"
   START="$PREFERENCES_SNAP"
   snap
 fi
 
 if [ -n "$COLORS_SNAP" ]; then
-  SNAP="$DIR/5_colors.png"
+  PNG="$DIR/5_colors.png"
   START="$COLORS_SNAP"
   snap
 fi
 
 if [ -n "$SESSIONS_SNAP" ]; then
-  SNAP="$DIR/6_sessions.png"
+  PNG="$DIR/6_sessions.png"
   START="$SESSIONS_SNAP"
   snap
 fi
 
 if [ -n "$STATS_SNAP" ]; then
-  SNAP="$DIR/7_stats.png"
+  PNG="$DIR/7_stats.png"
   START="$STATS_SNAP"
   snap
 fi
 
 if [ -n "$CALENDAR_SNAP" ]; then
-  SNAP="$DIR/8_calendar.png"
+  PNG="$DIR/8_calendar.png"
   START="$CALENDAR_SNAP"
   snap
 fi
