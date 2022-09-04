@@ -9,6 +9,7 @@ import 'package:wakelock/wakelock.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:watch_connectivity/watch_connectivity.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
@@ -59,6 +60,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   late FlutterTts _tts;
   double _scale = 0.0;
   late AudioPlayer _player;
+  late WatchConnectivity _watch;
 
   @override
   initState() {
@@ -67,6 +69,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     _initWakeLock();
     _initSpeak();
     _initAudio();
+    _initWear();
     _init();
     super.initState();
   }
@@ -117,19 +120,33 @@ class _HomeWidgetState extends State<HomeWidget> {
     _player = AudioPlayer();
   }
 
-  Future _speak(String text) async {
-    if (_hasSpeak) {
-      await _tts.speak(text);
-      debugPrint("spoke: $text");
-    }
-  }
-
   Future<void> _initWakeLock() async {
     try {
       await Wakelock.enabled;
       _hasWakelock = true;
     } catch (e) {
       debugPrint(e.toString());
+    }
+  }
+
+  void _initWear() {
+    _watch = WatchConnectivity();
+    _watch.messageStream.listen((message) => setState(() {
+          debugPrint('Received message: $message');
+          try {
+            Session session = Session.fromJson(message);
+            _addSession(session);
+            _onDuration(session);
+          } catch (e) {
+            debugPrint(e.toString());
+          }
+        }));
+  }
+
+  Future _speak(String text) async {
+    if (_hasSpeak) {
+      await _tts.speak(text);
+      debugPrint("spoke: $text");
     }
   }
 

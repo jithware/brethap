@@ -16,6 +16,17 @@ class Session extends HiveObject {
 
   Session({required this.start});
 
+  factory Session.fromJson(Map<String, dynamic> data) {
+    final start = data['start'] as int;
+    final end = data['end'] as int;
+    final breaths = data['breaths'] as int;
+    Session session =
+        Session(start: DateTime.fromMillisecondsSinceEpoch(start));
+    session.end = DateTime.fromMillisecondsSinceEpoch(end);
+    session.breaths = breaths;
+    return session;
+  }
+
   @override
   String toString() {
     return "{start: $start, end: $end, breaths: $breaths}";
