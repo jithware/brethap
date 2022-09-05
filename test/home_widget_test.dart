@@ -29,7 +29,7 @@ Future<void> closeDrawer(WidgetTester tester) async {
 
 Future<void> testHomeWidget(WidgetTester tester) async {
   const Duration shortWait = Duration(milliseconds: 500);
-  Preference preference = getDefaultPref();
+  Preference preference = Preference.getDefaultPref();
   Duration duration = Duration(seconds: preference.duration),
       totalTime = const Duration(),
       inhale =

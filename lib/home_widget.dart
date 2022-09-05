@@ -129,18 +129,41 @@ class _HomeWidgetState extends State<HomeWidget> {
     }
   }
 
+  // For phone pairing see:
+  // https://developer.android.com/training/wearables/get-started/creating#pair-phone-with-avd
   void _initWear() {
     _watch = WatchConnectivity();
     _watch.messageStream.listen((message) => setState(() {
           debugPrint('Received message: $message');
-          try {
+
+          // Send a preference
+          int? index = message['preference'] as int?;
+          if (index != null) {
+            Preference preference;
+            if (index < widget.preferences.length) {
+              preference = widget.preferences.get(index);
+            } else {
+              preference = widget.preferences.get(0);
+            }
+            send(preference.toJson());
+          }
+          // Received a session
+          if (Session.isSession(message)) {
             Session session = Session.fromJson(message);
             _addSession(session);
             _onDuration(session);
-          } catch (e) {
-            debugPrint(e.toString());
           }
         }));
+
+    if (widget.preferences.isNotEmpty) {
+      Preference preference = widget.preferences.get(0);
+      send(preference.toJson());
+    }
+  }
+
+  void send(message) {
+    debugPrint("Sent message: $message");
+    _watch.sendMessage(message);
   }
 
   Future _speak(String text) async {
@@ -393,6 +416,7 @@ $url'''),
       _duration = Duration(seconds: preference.duration);
       _appName = preference.name.isEmpty ? APP_NAME : preference.name;
     });
+    send(preference.toJson());
   }
 
   @override

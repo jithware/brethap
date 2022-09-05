@@ -144,58 +144,8 @@ String getStreak(
   return "${AppLocalizations.of(context)!.streak}:$streak";
 }
 
-Preference getDefaultPref() {
-  Preference preference = Preference(
-      duration: DURATION,
-      inhale: [INHALE, INHALE_HOLD, INHALE_LAST],
-      exhale: [EXHALE, EXHALE_HOLD, EXHALE_LAST],
-      vibrateDuration: VIBRATE_DURATION,
-      vibrateBreath: VIBRATE_BREATH,
-      durationTts: DURATION_TTS,
-      breathTts: BREATH_TTS,
-      colors: [COLOR_PRIMARY, COLOR_BACKGROUND],
-      name: "",
-      audio: [
-        INHALE_AUDIO,
-        EXHALE_AUDIO,
-        INHALE_HOLD_AUDIO,
-        EXHALE_HOLD_AUDIO
-      ]);
-  return preference;
-}
-
-Preference getPhysSighPref() {
-  Preference preference = getDefaultPref();
-  preference.duration = DURATION_PS;
-  preference.inhale = [INHALE_PS, INHALE_HOLD_PS, INHALE_LAST_PS];
-  preference.exhale[0] = EXHALE_PS;
-  preference.name = PHYS_SIGH_TEXT;
-  return preference;
-}
-
-Preference get478Pref() {
-  Preference preference = getDefaultPref();
-  preference.duration = DURATION_478;
-  preference.inhale[0] = INHALE_478;
-  preference.inhale[1] = INHALE_HOLD_478;
-  preference.exhale[0] = EXHALE_478;
-  preference.name = PRESET_478_TEXT;
-  return preference;
-}
-
-Preference getBoxPref() {
-  Preference preference = getDefaultPref();
-  preference.duration = DURATION_BOX;
-  preference.inhale[0] = INHALE_BOX;
-  preference.inhale[1] = INHALE_HOLD_BOX;
-  preference.exhale[0] = EXHALE_BOX;
-  preference.exhale[1] = EXHALE_HOLD_BOX;
-  preference.name = BOX_TEXT;
-  return preference;
-}
-
 Future<void> createDefaultPref(Box preferences) async {
-  Preference preference = getDefaultPref();
+  Preference preference = Preference.getDefaultPref();
   await preferences.add(preference);
 
   debugPrint("created default preference: $preference");

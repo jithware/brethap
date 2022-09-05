@@ -261,13 +261,13 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       title: Text(AppLocalizations.of(context)!.selectAPreset),
       children: <Widget>[
         _getPresetOption(PRESET_478_TEXT,
-            AppLocalizations.of(context)!.breathing478, get478Pref()),
+            AppLocalizations.of(context)!.breathing478, Preference.get478Pref()),
         _getPresetOption(
-            BOX_TEXT, AppLocalizations.of(context)!.boxBreathing, getBoxPref()),
+            BOX_TEXT, AppLocalizations.of(context)!.boxBreathing, Preference.getBoxPref()),
         _getPresetOption(PHYS_SIGH_TEXT,
-            AppLocalizations.of(context)!.physiologicalSigh, getPhysSighPref()),
+            AppLocalizations.of(context)!.physiologicalSigh, Preference.getPhysSighPref()),
         _getPresetOption(
-            DEFAULT_TEXT, AppLocalizations.of(context)!.def, getDefaultPref()),
+            DEFAULT_TEXT, AppLocalizations.of(context)!.def, Preference.getDefaultPref()),
         TextButton(
           child: Text(AppLocalizations.of(context)!.cancel,
               key: const Key(CANCEL_TEXT)),

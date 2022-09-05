@@ -62,7 +62,7 @@ const int DURATION = 120, //seconds
     EXHALE_HOLD = 0, //milliseconds
     EXHALE_LAST = 0, //milliseconds
     VIBRATE_DURATION = 250, //milliseconds
-    VIBRATE_BREATH = 0, //milliseconds
+    VIBRATE_BREATH = 50, //milliseconds
     COLOR_PRIMARY = 0, //color position
     COLOR_BACKGROUND = 0xfffafafa; //color white
 const bool DURATION_TTS = false, BREATH_TTS = false;
