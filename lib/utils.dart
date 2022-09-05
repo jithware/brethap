@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:hive/hive.dart';
@@ -238,4 +239,12 @@ Future<void> play(AudioPlayer player, String audio) async {
     await player.setAsset('audio/tone4.oga');
     await player.play();
   }
+}
+
+bool isPhone() {
+  bool phone = false;
+  if (!kIsWeb) {
+    phone = Platform.isAndroid || Platform.isIOS;
+  }
+  return phone;
 }

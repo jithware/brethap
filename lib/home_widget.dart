@@ -145,7 +145,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             } else {
               preference = widget.preferences.get(0);
             }
-            send(preference.toJson());
+            _send(preference.toJson());
           }
           // Received a session
           if (Session.isSession(message)) {
@@ -157,13 +157,15 @@ class _HomeWidgetState extends State<HomeWidget> {
 
     if (widget.preferences.isNotEmpty) {
       Preference preference = widget.preferences.get(0);
-      send(preference.toJson());
+      _send(preference.toJson());
     }
   }
 
-  void send(message) {
-    debugPrint("Sent message: $message");
-    _watch.sendMessage(message);
+  void _send(message) {
+    if (isPhone()) {
+      debugPrint("Sent message: $message");
+      _watch.sendMessage(message);
+    }
   }
 
   Future _speak(String text) async {
@@ -416,7 +418,7 @@ $url'''),
       _duration = Duration(seconds: preference.duration);
       _appName = preference.name.isEmpty ? APP_NAME : preference.name;
     });
-    send(preference.toJson());
+    _send(preference.toJson());
   }
 
   @override
