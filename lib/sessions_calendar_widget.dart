@@ -95,7 +95,7 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.calendar),
+        title: Text(AppLocalizations.of(context).calendar),
       ),
       body: Column(children: [
         TableCalendar<Session>(
@@ -105,8 +105,8 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
           calendarFormat: _calendarFormat,
           eventLoader: _getSessionsForDay,
           availableCalendarFormats: {
-            CalendarFormat.month: AppLocalizations.of(context)!.month,
-            CalendarFormat.week: AppLocalizations.of(context)!.week,
+            CalendarFormat.month: AppLocalizations.of(context).month,
+            CalendarFormat.week: AppLocalizations.of(context).week,
           },
           selectedDayPredicate: (day) {
             return isSameDay(_selectedDay, day);
@@ -198,7 +198,7 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
               ),
             );
           },
-          tooltip: AppLocalizations.of(context)!.statistics,
+          tooltip: AppLocalizations.of(context).statistics,
           child: const Icon(Icons.query_stats)),
     );
   }

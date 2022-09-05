@@ -151,7 +151,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
       content: Text(text),
       action: SnackBarAction(
         key: const Key(DISMISS_TEXT),
-        label: AppLocalizations.of(context)!.dismiss,
+        label: AppLocalizations.of(context).dismiss,
         onPressed: () {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
         },
@@ -164,7 +164,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.sessions),
+        title: Text(AppLocalizations.of(context).sessions),
         actions: <Widget>[
           PopupMenuButton<String>(
             key: Key(SessionsWidget.keyMenu),
@@ -173,13 +173,13 @@ class _SessionsWidgetState extends State<SessionsWidget> {
                 case CLEAR_ALL_TEXT:
                   showAlertDialog(
                       context,
-                      AppLocalizations.of(context)!.clearAll,
-                      AppLocalizations.of(context)!.clearAllSessions, () {
+                      AppLocalizations.of(context).clearAll,
+                      AppLocalizations.of(context).clearAllSessions, () {
                     _clearAll();
                     Navigator.of(context).pop();
                     _showSnackBar(
                         context,
-                        AppLocalizations.of(context)!.sessionsCleared,
+                        AppLocalizations.of(context).sessionsCleared,
                         const Duration(seconds: 3));
                   });
                   debugPrint(CLEAR_ALL_TEXT);
@@ -188,7 +188,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
                   _exportCsv(_list).then((value) {
                     _showSnackBar(
                         context,
-                        AppLocalizations.of(context)!.sessionsBackedUp,
+                        AppLocalizations.of(context).sessionsBackedUp,
                         const Duration(seconds: 3));
                   });
                   debugPrint(BACKUP_TEXT);
@@ -197,7 +197,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
                   _importCsv().then((value) {
                     _showSnackBar(
                         context,
-                        AppLocalizations.of(context)!.sessionsRestored,
+                        AppLocalizations.of(context).sessionsRestored,
                         const Duration(seconds: 3));
                   });
                   debugPrint(RESTORE_TEXT);
@@ -207,7 +207,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
                     _getExportFile().then((file) {
                       _showSnackBar(
                           context,
-                          "$number ${AppLocalizations.of(context)!.sessionsExportedTo}:\n${file.path}",
+                          "$number ${AppLocalizations.of(context).sessionsExportedTo}:\n${file.path}",
                           const Duration(seconds: 5));
                     });
                   });
@@ -219,24 +219,24 @@ class _SessionsWidgetState extends State<SessionsWidget> {
               PopupMenuItem<String>(
                 key: const Key(CLEAR_ALL_TEXT),
                 value: CLEAR_ALL_TEXT,
-                child: Text(AppLocalizations.of(context)!.clearAll),
+                child: Text(AppLocalizations.of(context).clearAll),
               ),
               const PopupMenuDivider(),
               PopupMenuItem<String>(
                 key: const Key(BACKUP_TEXT),
                 value: BACKUP_TEXT,
-                child: Text(AppLocalizations.of(context)!.backup),
+                child: Text(AppLocalizations.of(context).backup),
               ),
               PopupMenuItem<String>(
                 key: const Key(RESTORE_TEXT),
                 value: RESTORE_TEXT,
-                child: Text(AppLocalizations.of(context)!.restore),
+                child: Text(AppLocalizations.of(context).restore),
               ),
               const PopupMenuDivider(),
               PopupMenuItem<String>(
                 key: const Key(EXPORT_TEXT),
                 value: EXPORT_TEXT,
-                child: Text(AppLocalizations.of(context)!.export),
+                child: Text(AppLocalizations.of(context).export),
               ),
             ],
           ),
@@ -269,7 +269,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
               ),
             );
           },
-          tooltip: AppLocalizations.of(context)!.statistics,
+          tooltip: AppLocalizations.of(context).statistics,
           child: const Icon(Icons.query_stats)),
     );
   }

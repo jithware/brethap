@@ -34,7 +34,7 @@ Card getSessionCard(context, Session session,
     },
     title: Text(DateFormat(dateFormat).format(session.start)),
     subtitle: Text(
-        "${AppLocalizations.of(context)!.duration}:${getDurationString(diff)}  ${AppLocalizations.of(context)!.breaths}:${session.breaths}"),
+        "${AppLocalizations.of(context).duration}:${getDurationString(diff)}  ${AppLocalizations.of(context).breaths}:${session.breaths}"),
   ));
 }
 
@@ -105,7 +105,7 @@ String getStats(
     }
   }
 
-  return "${AppLocalizations.of(context)!.sessions}:$totalSessions ${AppLocalizations.of(context)!.duration}:${getDurationString(totalDuration)} ${AppLocalizations.of(context)!.breaths}:$totalBreaths";
+  return "${AppLocalizations.of(context).sessions}:$totalSessions ${AppLocalizations.of(context).duration}:${getDurationString(totalDuration)} ${AppLocalizations.of(context).breaths}:$totalBreaths";
 }
 
 String getStreak(
@@ -115,7 +115,7 @@ String getStreak(
   DateTime end,
 ) {
   if (list.isEmpty) {
-    return "${AppLocalizations.of(context)!.streak}:0";
+    return "${AppLocalizations.of(context).streak}:0";
   }
   int streak = 1, runningStreak = 1;
   for (int i = 0; i < list.length - 1; i++) {
@@ -141,7 +141,7 @@ String getStreak(
       }
     }
   }
-  return "${AppLocalizations.of(context)!.streak}:$streak";
+  return "${AppLocalizations.of(context).streak}:$streak";
 }
 
 Future<void> createDefaultPref(Box preferences) async {
@@ -154,7 +154,7 @@ Future<void> createDefaultPref(Box preferences) async {
 showAlertDialog(BuildContext context, String title, String content, callback) {
   Widget cancelButton = TextButton(
     child:
-        Text(AppLocalizations.of(context)!.cancel, key: const Key(CANCEL_TEXT)),
+        Text(AppLocalizations.of(context).cancel, key: const Key(CANCEL_TEXT)),
     onPressed: () {
       Navigator.of(context).pop();
     },
@@ -162,7 +162,7 @@ showAlertDialog(BuildContext context, String title, String content, callback) {
   Widget continueButton = TextButton(
     key: const Key(CONTINUE_TEXT),
     onPressed: callback,
-    child: Text(AppLocalizations.of(context)!.cont),
+    child: Text(AppLocalizations.of(context).cont),
   );
 
   AlertDialog alert = AlertDialog(
@@ -185,7 +185,7 @@ showAlertDialog(BuildContext context, String title, String content, callback) {
 
 showInfoDialog(BuildContext context, String title, String content) {
   Widget cancelButton = TextButton(
-    child: Text(AppLocalizations.of(context)!.ok, key: const Key(OK_TEXT)),
+    child: Text(AppLocalizations.of(context).ok, key: const Key(OK_TEXT)),
     onPressed: () {
       Navigator.of(context).pop();
     },

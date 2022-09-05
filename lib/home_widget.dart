@@ -206,11 +206,11 @@ class _HomeWidgetState extends State<HomeWidget> {
     Duration diff = roundDuration(session.end.difference(session.start));
     String duration = getDurationString(diff);
     int breaths = session.breaths;
-    String text = "$duration ${AppLocalizations.of(context)!.session}";
+    String text = "$duration ${AppLocalizations.of(context).session}";
     if (breaths == 1) {
-      text += ", $breaths ${AppLocalizations.of(context)!.breath}";
+      text += ", $breaths ${AppLocalizations.of(context).breath}";
     } else {
-      text += ", $breaths ${AppLocalizations.of(context)!.breaths}";
+      text += ", $breaths ${AppLocalizations.of(context).breaths}";
     }
 
     if (preference.durationTts) {
@@ -291,7 +291,7 @@ class _HomeWidgetState extends State<HomeWidget> {
       Timer.periodic(timerSpan, (Timer timer) {
         if (!_isRunning || (_duration.inSeconds <= 0 && cycle <= 0)) {
           setState(() {
-            _status = AppLocalizations.of(context)!.pressStart;
+            _status = AppLocalizations.of(context).pressStart;
             _isRunning = false;
             session.end = DateTime.now();
             session.breaths = (preference.duration - _duration.inSeconds) ~/
@@ -309,7 +309,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             if (cycle == 0) {
               inhaling = true;
               exhaling = false;
-              text = AppLocalizations.of(context)!.inhale;
+              text = AppLocalizations.of(context).inhale;
               _scale = 0.0;
               _onBreath(text);
               _status = text;
@@ -318,7 +318,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                 cycle == preference.inhale[0]) {
               inhaling = false;
               exhaling = false;
-              text = AppLocalizations.of(context)!.hold;
+              text = AppLocalizations.of(context).hold;
               _onBreath(text);
               _status = text;
               _onInhaleHold();
@@ -326,13 +326,13 @@ class _HomeWidgetState extends State<HomeWidget> {
                 cycle == preference.inhale[0] + preference.inhale[1]) {
               inhaling = true;
               exhaling = false;
-              text = AppLocalizations.of(context)!.inhale;
+              text = AppLocalizations.of(context).inhale;
               _onBreath(text);
               _status = text;
             } else if (cycle == inhale) {
               inhaling = false;
               exhaling = true;
-              text = AppLocalizations.of(context)!.exhale;
+              text = AppLocalizations.of(context).exhale;
               _scale = 1.0;
               _onBreath(text);
               _status = text;
@@ -341,7 +341,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                 cycle == inhale + preference.exhale[0]) {
               inhaling = false;
               exhaling = false;
-              text = AppLocalizations.of(context)!.hold;
+              text = AppLocalizations.of(context).hold;
               _onBreath(text);
               _status = text;
               _onExhaleHold();
@@ -349,7 +349,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                 cycle == inhale + preference.exhale[0] + preference.exhale[1]) {
               inhaling = false;
               exhaling = true;
-              text = AppLocalizations.of(context)!.exhale;
+              text = AppLocalizations.of(context).exhale;
               _onBreath(text);
               _status = text;
             }
@@ -387,9 +387,9 @@ class _HomeWidgetState extends State<HomeWidget> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.couldNotLaunch),
+          title: Text(AppLocalizations.of(context).couldNotLaunch),
           content: Text('''
-${AppLocalizations.of(context)!.openBrowser}: 
+${AppLocalizations.of(context).openBrowser}: 
 
 $url'''),
         );
@@ -427,7 +427,7 @@ $url'''),
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     if (_status.isEmpty) {
-      _status = AppLocalizations.of(context)!.pressStart;
+      _status = AppLocalizations.of(context).pressStart;
     }
 
     return Scaffold(
@@ -498,7 +498,7 @@ $url'''),
             ),
             ListTile(
               key: Key(HomeWidget.keyPreferences),
-              title: Text(AppLocalizations.of(context)!.preferences),
+              title: Text(AppLocalizations.of(context).preferences),
               leading: const Icon(Icons.settings),
               onTap: () {
                 _isRunning = false;
@@ -513,7 +513,7 @@ $url'''),
             ),
             ListTile(
               key: Key(HomeWidget.keySessions),
-              title: Text(AppLocalizations.of(context)!.sessions),
+              title: Text(AppLocalizations.of(context).sessions),
               leading: const Icon(Icons.format_list_numbered_outlined),
               onTap: () {
                 Navigator.push(
@@ -526,7 +526,7 @@ $url'''),
             ),
             ListTile(
                 key: Key(HomeWidget.keyCalendar),
-                title: Text(AppLocalizations.of(context)!.calendar),
+                title: Text(AppLocalizations.of(context).calendar),
                 leading: const Icon(Icons.calendar_today),
                 onTap: () {
                   Navigator.push(
@@ -545,14 +545,14 @@ $url'''),
                 applicationLegalese: COPYRIGHT,
                 aboutBoxChildren: [
                   ListTile(
-                    title: Text(AppLocalizations.of(context)!.help),
+                    title: Text(AppLocalizations.of(context).help),
                     leading: const Icon(Icons.help),
                     onTap: () {
                       _launchURL(HELP_URL);
                     },
                   ),
                   ListTile(
-                    title: Text(AppLocalizations.of(context)!.reportIssue),
+                    title: Text(AppLocalizations.of(context).reportIssue),
                     leading: const Icon(Icons.bug_report),
                     onTap: () {
                       _launchURL(BUGS_URL);
@@ -569,8 +569,8 @@ $url'''),
           _buttonPressed(context);
         },
         tooltip: _isRunning
-            ? AppLocalizations.of(context)!.stop
-            : AppLocalizations.of(context)!.start,
+            ? AppLocalizations.of(context).stop
+            : AppLocalizations.of(context).start,
         child: _isRunning
             ? const Icon(Icons.stop_sharp)
             : const Icon(Icons.not_started_sharp),
