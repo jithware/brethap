@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -14,7 +15,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:brethap/constants.dart';
 import 'package:brethap/hive_storage.dart';
 import 'package:brethap/wear.dart';
-
 
 Card getSessionCard(context, Session session,
     {String dateFormat = DATE_FORMAT}) {
@@ -233,9 +233,25 @@ Future<void> play(AudioPlayer player, String audio) async {
 }
 
 bool isPhone() {
-  bool phone = false;
   if (!kIsWeb) {
-    phone = Platform.isAndroid || Platform.isIOS;
+    return Platform.isAndroid || Platform.isIOS;
   }
-  return phone;
+  return false;
+}
+
+Future<bool> isPhysicalPhone() async {
+  if (!isPhone()) {
+    return false;
+  }
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  if (Platform.isAndroid) {
+    AndroidDeviceInfo info = await deviceInfo.androidInfo;
+    return info.isPhysicalDevice ?? false;
+  }
+  if (Platform.isIOS) {
+    IosDeviceInfo info = await deviceInfo.iosInfo;
+    return info.isPhysicalDevice;
+  }
+
+  return false;
 }

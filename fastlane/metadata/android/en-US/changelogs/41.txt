@@ -1,4 +1,6 @@
-Phone release version: 1.6.3+41
+Phone release version: 1.7.0+41
 * Add Italian translations
 * Add communication between Wear OS and Phone
 * Minor enhancements
+
+This update increases the minimum Android SDK version. Some devices will no longer be supported. This is a minor version update. It will overwrite existing saved preferences.
