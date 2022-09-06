@@ -4,11 +4,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:get/get.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:just_audio/just_audio.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
 import 'package:brethap/hive_storage.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:brethap/wear.dart';
 
 class PreferencesWidget extends StatefulWidget {
   const PreferencesWidget(
@@ -188,8 +189,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
         debugPrint("onPressed $name");
         if (widget.preferences.length <= position) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content:
-                Text(AppLocalizations.of(context).longPressSavePreference),
+            content: Text(AppLocalizations.of(context).longPressSavePreference),
           ));
         } else {
           _setPreference(position);
@@ -262,12 +262,14 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
       children: <Widget>[
         _getPresetOption(PRESET_478_TEXT,
             AppLocalizations.of(context).breathing478, Preference.get478Pref()),
+        _getPresetOption(BOX_TEXT, AppLocalizations.of(context).boxBreathing,
+            Preference.getBoxPref()),
         _getPresetOption(
-            BOX_TEXT, AppLocalizations.of(context).boxBreathing, Preference.getBoxPref()),
-        _getPresetOption(PHYS_SIGH_TEXT,
-            AppLocalizations.of(context).physiologicalSigh, Preference.getPhysSighPref()),
-        _getPresetOption(
-            DEFAULT_TEXT, AppLocalizations.of(context).def, Preference.getDefaultPref()),
+            PHYS_SIGH_TEXT,
+            AppLocalizations.of(context).physiologicalSigh,
+            Preference.getPhysSighPref()),
+        _getPresetOption(DEFAULT_TEXT, AppLocalizations.of(context).def,
+            Preference.getDefaultPref()),
         TextButton(
           child: Text(AppLocalizations.of(context).cancel,
               key: const Key(CANCEL_TEXT)),
@@ -311,8 +313,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       _deleteAll();
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                            AppLocalizations.of(context).preferencesReset),
+                        content:
+                            Text(AppLocalizations.of(context).preferencesReset),
                       ));
                     });
                     debugPrint(RESET_ALL_TEXT);

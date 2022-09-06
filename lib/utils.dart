@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,18 +13,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:brethap/constants.dart';
 import 'package:brethap/hive_storage.dart';
+import 'package:brethap/wear.dart';
 
-String getDurationString(Duration duration) {
-  String dur = duration.toString();
-  return dur.substring(0, dur.indexOf('.'));
-}
-
-Duration roundDuration(Duration duration) {
-  if (duration.inMilliseconds / 1000 == duration.inSeconds) {
-    return duration;
-  }
-  return Duration(seconds: duration.inSeconds + 1);
-}
 
 Card getSessionCard(context, Session session,
     {String dateFormat = DATE_FORMAT}) {

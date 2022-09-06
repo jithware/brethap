@@ -17,6 +17,7 @@ import 'package:brethap/preferences_widget.dart';
 import 'package:brethap/sessions_widget.dart';
 import 'package:brethap/hive_storage.dart';
 import 'package:brethap/sessions_calendar_widget.dart';
+import 'package:brethap/wear.dart';
 
 class HomeWidget extends StatefulWidget {
   const HomeWidget(
