@@ -1,0 +1,3 @@
+Brethap è l'ennesima app per la meditazione (yama). Include un timer per la meditazione e consente anche di configurare un modello di respirazione da seguire. Le sessioni vengono salvate, consentendo di monitorare e visualizzare le statistiche sui propri progressi in un elenco o in un calendario. La durata, il respiro e altre opzioni sono configurabili attraverso le preferenze. Le tecniche di respirazione preimpostate includono 4-7-8, sospiro fisiologico e altre.
+
+È disponibile anche una versione ridotta per gli utenti di Wear OS.
