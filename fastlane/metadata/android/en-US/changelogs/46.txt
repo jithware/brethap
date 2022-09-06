@@ -1,4 +1,4 @@
-Phone release version: 1.7.0+41
+Phone release version: 1.7.0+46
 * Add Italian translations
 * Add communication between Wear OS and Phone
 * Minor enhancements
