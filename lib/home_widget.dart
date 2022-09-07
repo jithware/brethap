@@ -56,13 +56,13 @@ class _HomeWidgetState extends State<HomeWidget> {
       _hasCustomVibrate = false,
       _hasWakelock = false,
       _hasSpeak = false,
-      _hasWear = false;
+      _hasWear = false; // REMOVE FROM FDROID BUILD
   late Duration _duration;
   late String _status, _appName;
   late FlutterTts _tts;
   double _scale = 0.0;
   late AudioPlayer _player;
-  late WatchConnectivity _watch;
+  late WatchConnectivity _watch; // REMOVE FROM FDROID BUILD
 
   @override
   initState() {
@@ -71,7 +71,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     _initWakeLock();
     _initSpeak();
     _initAudio();
-    _initWear();
+    _initWear(); // REMOVE FROM FDROID BUILD
     _init();
     super.initState();
   }
@@ -131,8 +131,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     }
   }
 
-  // For phone pairing see:
-  // https://developer.android.com/training/wearables/get-started/creating#pair-phone-with-avd
+  // REMOVE FROM FDROID BUILD
   Future<void> _initWear() async {
     _hasWear = await isPhysicalPhone();
 
@@ -167,6 +166,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     }
   }
 
+  // REMOVE FROM FDROID BUILD
   void _send(message) {
     if (_hasWear) {
       _watch.sendMessage(message);
@@ -424,7 +424,7 @@ $url'''),
       _duration = Duration(seconds: preference.duration);
       _appName = preference.name.isEmpty ? APP_NAME : preference.name;
     });
-    _send(preference.toJson());
+    _send(preference.toJson()); // REMOVE FROM FDROID BUILD
   }
 
   @override
