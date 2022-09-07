@@ -1,0 +1,5 @@
+Phone release version: 1.7.0+47
+* Add Italian translations
+* Minor enhancements
+
+This update increases the minimum Android SDK version. Some devices will no longer be supported. This is a minor version update. It will overwrite existing saved preferences.

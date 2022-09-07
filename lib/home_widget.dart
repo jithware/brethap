@@ -9,7 +9,6 @@ import 'package:wakelock/wakelock.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:watch_connectivity/watch_connectivity.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
@@ -55,14 +54,12 @@ class _HomeWidgetState extends State<HomeWidget> {
       _hasVibrator = false,
       _hasCustomVibrate = false,
       _hasWakelock = false,
-      _hasSpeak = false,
-      _hasWear = false;
+      _hasSpeak = false;
   late Duration _duration;
   late String _status, _appName;
   late FlutterTts _tts;
   double _scale = 0.0;
   late AudioPlayer _player;
-  late WatchConnectivity _watch;
 
   @override
   initState() {
@@ -71,7 +68,6 @@ class _HomeWidgetState extends State<HomeWidget> {
     _initWakeLock();
     _initSpeak();
     _initAudio();
-    _initWear();
     _init();
     super.initState();
   }
@@ -128,49 +124,6 @@ class _HomeWidgetState extends State<HomeWidget> {
       _hasWakelock = true;
     } catch (e) {
       debugPrint(e.toString());
-    }
-  }
-
-  // For phone pairing see:
-  // https://developer.android.com/training/wearables/get-started/creating#pair-phone-with-avd
-  Future<void> _initWear() async {
-    _hasWear = await isPhysicalPhone();
-
-    if (_hasWear) {
-      _watch = WatchConnectivity();
-      _watch.messageStream.listen((message) => setState(() {
-            debugPrint('Received message: $message');
-
-            // Send a preference
-            int? index = message['preference'] as int?;
-            if (index != null) {
-              Preference preference;
-              if (index < widget.preferences.length) {
-                preference = widget.preferences.get(index);
-              } else {
-                preference = widget.preferences.get(0);
-              }
-              _send(preference.toJson());
-            }
-            // Received a session
-            if (Session.isSession(message)) {
-              Session session = Session.fromJson(message);
-              _addSession(session);
-              _onDuration(session);
-            }
-          }));
-
-      if (widget.preferences.isNotEmpty) {
-        Preference preference = widget.preferences.get(0);
-        _send(preference.toJson());
-      }
-    }
-  }
-
-  void _send(message) {
-    if (_hasWear) {
-      _watch.sendMessage(message);
-      debugPrint("Sent message: $message");
     }
   }
 
@@ -424,7 +377,6 @@ $url'''),
       _duration = Duration(seconds: preference.duration);
       _appName = preference.name.isEmpty ? APP_NAME : preference.name;
     });
-    _send(preference.toJson());
   }
 
   @override
