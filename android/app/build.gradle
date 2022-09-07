@@ -40,11 +40,11 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+    // https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration
     defaultConfig {
-        // Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.jithware.brethap"
         minSdkVersion 23
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

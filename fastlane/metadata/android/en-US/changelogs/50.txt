@@ -1,0 +1,5 @@
+Release version: 1.7.0+50
+* Multi APK support added for Wear OS
+* Minor enhancements
+
+This update increases the target Android SDK version. Some devices may no longer be supported.

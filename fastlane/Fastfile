@@ -25,7 +25,8 @@ platform :android do
 
     # See http://docs.fastlane.tools/actions/upload_to_play_store/
     upload_to_play_store(
-      track: "alpha",
+      track: "internal",
+      release_status: "draft",
       aab: "build/app/outputs/bundle/release/app-release.aab",
       skip_upload_aab: false,
       skip_upload_metadata: true,
