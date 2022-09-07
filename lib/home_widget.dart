@@ -56,7 +56,8 @@ class _HomeWidgetState extends State<HomeWidget> {
       _hasCustomVibrate = false,
       _hasWakelock = false,
       _hasSpeak = false,
-      _hasWear = false; // REMOVE FROM FDROID BUILD
+      // ignore: unused_field, prefer_final_fields
+      _hasWear = false;
   late Duration _duration;
   late String _status, _appName;
   late FlutterTts _tts;
