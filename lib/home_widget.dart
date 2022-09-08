@@ -141,6 +141,8 @@ class _HomeWidgetState extends State<HomeWidget> {
       _watch.messageStream.listen((message) => setState(() {
             debugPrint('Received message: $message');
 
+            Map<String, dynamic> response = {"received": true};
+
             // Send a preference
             int? index = message['preference'] as int?;
             if (index != null) {
@@ -150,14 +152,17 @@ class _HomeWidgetState extends State<HomeWidget> {
               } else {
                 preference = widget.preferences.get(0);
               }
-              _send(preference.toJson());
+              response = preference.toJson();
             }
+
             // Received a session
             if (Session.isSession(message)) {
               Session session = Session.fromJson(message);
               _addSession(session);
               _onDuration(session);
             }
+
+            _send(response);
           }));
 
       if (widget.preferences.isNotEmpty) {
