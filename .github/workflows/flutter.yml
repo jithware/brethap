@@ -2,9 +2,9 @@ name: Flutter Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, fdroid ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, fdroid ]
 
 jobs:
   build:
