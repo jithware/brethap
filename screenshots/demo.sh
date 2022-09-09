@@ -1,14 +1,23 @@
 #!/bin/bash
 # Requires: https://github.com/Genymobile/scrcpy#get-the-app  https://ffmpeg.org/download.html
+#
+# Run from top level: ./screenshots/demo.sh [device id]
 
-DIR="$(dirname $0)/android"
+DIR="screenshots/android"
 mkdir -p "$DIR"
 DEMOMP4="$DIR/demo.mp4"
 TMPMP4="$(mktemp).mp4"
-ENVFILE="$(dirname $0)/.env"
-VARS="RUNNING_END|SESSIONS_END|CALENDAR_END|PREFERENCES_END|DEMO_END|HOME_SNAP|INHALE_SNAP|DRAWER_SNAP|PREFERENCES_SNAP|COLORS_SNAP|SESSIONS_SNAP|STATS_SNAP|CALENDAR_SNAP"
-scrcpy --record "$TMPMP4" --max-fps 10 &
-flutter test integration_test/demo_test.dart | tee /dev/stderr | grep -P "$VARS" > "$ENVFILE"
+ENVFILE="screenshots/.env"
+VARS="RUNNING_END|SESSIONS_END|CALENDAR_END|PREFERENCES_END|DEMO_END|HOME_SNAP|INHALE_SNAP|DRAWER_SNAP|PREFERENCES_SNAP|COLORS_SNAP|SESSIONS_SNAP|STATS_SNAP|CALENDAR_SNAP|DURATION_SNAP|PRESET1_SNAP|PRESET2_SNAP|CUSTOM_SNAP|PRESETS_END|CUSTOM_END"
+
+# if device is passed as argument (adb devices)
+if [ -n "$1" ]; then
+  scrcpy --record "$TMPMP4" --serial "$1" --max-fps 10 --always-on-top &
+  flutter test integration_test/demo_test.dart -d "$1" | tee /dev/stderr | grep -P "$VARS" > "$ENVFILE"
+else
+  scrcpy --record "$TMPMP4" --max-fps 10 --always-on-top &
+  flutter test integration_test/demo_test.dart | tee /dev/stderr | grep -P "$VARS" > "$ENVFILE"
+fi
 
 if [ $? -eq 1 ]; then
   echo "Flutter demo failed!"
@@ -84,6 +93,37 @@ if [ -n "$CALENDAR_SNAP" ]; then
   snap
 fi
 
+# Wear specific
+if [ -n "$DURATION_SNAP" ]; then
+  PNG="$DIR/3_duration.png"
+  START="$DURATION_SNAP"
+  snap
+fi
+
+if [ -n "$PRESET1_SNAP" ]; then
+  PNG="$DIR/4_preset.png"
+  START="$PRESET1_SNAP"
+  snap
+fi
+
+if [ -n "$PRESET2_SNAP" ]; then
+  PNG="$DIR/5_preset.png"
+  START="$PRESET2_SNAP"
+  snap
+fi
+
+if [ -n "$CUSTOM_SNAP" ]; then
+  PNG="$DIR/6_custom.png"
+  START="$CUSTOM_SNAP"
+  snap
+fi
+
+if [ -n "$HOME_SNAP" ]; then
+  PNG="$DIR/7_dark.png"
+  START="$HOME_SNAP"
+  snap
+fi
+
 exit 0
 
 clip () { 
@@ -120,6 +160,19 @@ if [ -n "$PREFERENCES_END" ]; then
   clip
 fi
 
+# Wear specific
+if [ -n "$PRESETS_END" ]; then
+  WEBP="$DIR/presets.webp"
+  START="$END"
+  END="$PRESETS_END"
+  clip
+fi
 
+if [ -n "$CUSTOM_END" ]; then
+  WEBP="$DIR/custom.webp"
+  START="$END"
+  END="$CUSTOM_END"
+  clip
+fi
 
 echo "Done!"
