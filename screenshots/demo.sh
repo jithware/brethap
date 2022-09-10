@@ -1,14 +1,25 @@
 #!/bin/bash
 # Requires: https://github.com/Genymobile/scrcpy#get-the-app  https://ffmpeg.org/download.html
+#
+# Run from top level: ./screenshots/demo.sh [device id]
 
-DIR="$(dirname $0)/android"
+DIR="screenshots/android"
 mkdir -p "$DIR"
 DEMOMP4="$DIR/demo.mp4"
 TMPMP4="$(mktemp).mp4"
-ENVFILE="$(dirname $0)/.env"
-VARS="RUNNING_END|SESSIONS_END|CALENDAR_END|PREFERENCES_END|DEMO_END|HOME_SNAP|INHALE_SNAP|DRAWER_SNAP|PREFERENCES_SNAP|COLORS_SNAP|SESSIONS_SNAP|STATS_SNAP|CALENDAR_SNAP"
-scrcpy --record "$TMPMP4" --max-fps 10 &
-flutter test integration_test/demo_test.dart | tee /dev/stderr | grep -P "$VARS" > "$ENVFILE"
+ENVFILE="screenshots/.env"
+VARS="RUNNING_END|SESSIONS_END|CALENDAR_END|PREFERENCES_END|DEMO_END|PRESETS_END|CUSTOM_END"
+
+rm -v "$DEMOMP4"
+
+# if device is passed as argument (adb devices)
+if [ -n "$1" ]; then
+  scrcpy --record "$TMPMP4" --serial "$1" --max-fps 10 --always-on-top &
+  flutter test integration_test/demo_test.dart -d "$1" | tee /dev/stderr | grep -P "$VARS" > "$ENVFILE"
+else
+  scrcpy --record "$TMPMP4" --max-fps 10 --always-on-top &
+  flutter test integration_test/demo_test.dart | tee /dev/stderr | grep -P "$VARS" > "$ENVFILE"
+fi
 
 if [ $? -eq 1 ]; then
   echo "Flutter demo failed!"
@@ -30,61 +41,6 @@ echo "START:$START END:$END FILE:$DEMOMP4"
 ffmpeg -y -ss "$START" -to "$END" -i "$TMPMP4" -c copy "$DEMOMP4" &>/dev/null
 rm "$TMPMP4"
 #ffplay -autoexit "$DEMOMP4" &>/dev/null
-
-snap () { 
-    echo "START:$START FILE:$PNG" 
-    ffmpeg -y -ss "$START" -i $DEMOMP4 -frames:v 1 -q:v 5 "$PNG" &>/dev/null; 
-}
-
-if [ -n "$HOME_SNAP" ]; then
-  PNG="$DIR/1_home.png"
-  START="$HOME_SNAP"
-  snap
-fi
-
-if [ -n "$INHALE_SNAP" ]; then
-  PNG="$DIR/2_inhale.png"
-  START="$INHALE_SNAP"
-  snap
-fi
-
-if [ -n "$DRAWER_SNAP" ]; then
-  PNG="$DIR/3_drawer.png"
-  START="$DRAWER_SNAP"
-  snap
-fi
-
-if [ -n "$PREFERENCES_SNAP" ]; then
-  PNG="$DIR/4_preferences.png"
-  START="$PREFERENCES_SNAP"
-  snap
-fi
-
-if [ -n "$COLORS_SNAP" ]; then
-  PNG="$DIR/5_colors.png"
-  START="$COLORS_SNAP"
-  snap
-fi
-
-if [ -n "$SESSIONS_SNAP" ]; then
-  PNG="$DIR/6_sessions.png"
-  START="$SESSIONS_SNAP"
-  snap
-fi
-
-if [ -n "$STATS_SNAP" ]; then
-  PNG="$DIR/7_stats.png"
-  START="$STATS_SNAP"
-  snap
-fi
-
-if [ -n "$CALENDAR_SNAP" ]; then
-  PNG="$DIR/8_calendar.png"
-  START="$CALENDAR_SNAP"
-  snap
-fi
-
-exit 0
 
 clip () { 
     echo "START:$START END:$END FILE:$WEBP" 
@@ -120,6 +76,19 @@ if [ -n "$PREFERENCES_END" ]; then
   clip
 fi
 
+# Wear specific
+if [ -n "$PRESETS_END" ]; then
+  WEBP="$DIR/presets.webp"
+  START="$END"
+  END="$PRESETS_END"
+  clip
+fi
 
+if [ -n "$CUSTOM_END" ]; then
+  WEBP="$DIR/custom.webp"
+  START="$END"
+  END="$CUSTOM_END"
+  clip
+fi
 
 echo "Done!"

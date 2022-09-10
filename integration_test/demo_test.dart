@@ -1,5 +1,7 @@
-// To execute test run:
+// To execute demo run:
 // flutter test integration_test/demo_test.dart
+// To execute demo with screenshots saved run:
+// flutter drive --no-pub --driver=integration_test/driver.dart --target=integration_test/demo_test.dart
 
 import 'package:brethap/constants.dart';
 import 'package:brethap/home_widget.dart';
@@ -11,8 +13,8 @@ import 'package:integration_test/integration_test.dart';
 import 'package:table_calendar/src/widgets/format_button.dart';
 
 import 'package:brethap/main.dart' as app;
-
 import '../test/home_widget_test.dart';
+import 'screenshot.dart';
 
 // ignore_for_file: dead_code
 const bool demoRunning = true,
@@ -39,17 +41,18 @@ Future<void> goBack(WidgetTester tester) async {
 }
 
 Future<void> main() async {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   WidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('Demo', (WidgetTester tester) async {
     await app.main();
+    await tester.pumpAndSettle();
 
     Stopwatch stopwatch = Stopwatch()..start();
     String envVars = "";
 
     await tester.pump(wait);
-    envVars += "HOME_SNAP=${stopwatch.elapsed - wait}\n";
+    takeScreenshot(binding, "1_home.png");
 
     // Running
     if (demoRunning) {
@@ -62,10 +65,11 @@ Future<void> main() async {
       await tester.tap(finder);
       await tester.pump(wait);
 
-      envVars += "INHALE_SNAP=${stopwatch.elapsed + wait}\n";
-
       // running
       for (int i = 0; i < 100; i++) {
+        if (i == 20) {
+          takeScreenshot(binding, "2_inhale.png");
+        }
         await tester.pump(const Duration(milliseconds: 100));
       }
 
@@ -77,9 +81,9 @@ Future<void> main() async {
 
       // snack bar close
       await tester.pump(snackbar);
+      await tester.pumpAndSettle();
 
       await tester.pump(wait);
-
       envVars += "RUNNING_END=${stopwatch.elapsed - wait}\n";
     }
 
@@ -90,23 +94,25 @@ Future<void> main() async {
 
       // open drawer
       await openDrawer(tester);
-      envVars += "DRAWER_SNAP=${stopwatch.elapsed - wait}\n";
-      await tester.pump(wait);
+
+      await tester.pumpAndSettle();
+      takeScreenshot(binding, "3_drawer.png");
 
       // tap sessions
-      await tapItem(tester, HomeWidget.keySessions);
       await tester.pump(wait);
+      await tapItem(tester, HomeWidget.keySessions);
 
-      envVars += "SESSIONS_SNAP=${stopwatch.elapsed - wait}\n";
+      await tester.pumpAndSettle();
+      takeScreenshot(binding, "6_sessions.png");
 
       // tap stats
       await tester.pump(wait);
       Finder finder = find.byType(FloatingActionButton);
       expect(finder, findsOneWidget);
       await tester.tap(finder);
-      await tester.pump(wait);
 
-      envVars += "STATS_SNAP=${stopwatch.elapsed - wait}\n";
+      await tester.pumpAndSettle();
+      takeScreenshot(binding, "7_stats.png");
 
       // snack bar close
       await tester.pump(snackbar);
@@ -127,7 +133,6 @@ Future<void> main() async {
       await closeDrawer(tester);
 
       await tester.pump(wait);
-
       envVars += "SESSIONS_END=${stopwatch.elapsed - wait}\n";
     }
 
@@ -143,9 +148,9 @@ Future<void> main() async {
 
       // tap calendar
       await tapItem(tester, HomeWidget.keyCalendar);
-      await tester.pump(wait);
 
-      envVars += "CALENDAR_SNAP=${stopwatch.elapsed - wait}\n";
+      await tester.pumpAndSettle();
+      takeScreenshot(binding, "8_calendar.png");
 
       // tap stats
       Finder finder = find.byType(FloatingActionButton);
@@ -176,7 +181,6 @@ Future<void> main() async {
       await closeDrawer(tester);
 
       await tester.pump(wait);
-
       envVars += "CALENDAR_END=${stopwatch.elapsed - wait}\n";
     }
 
@@ -191,9 +195,9 @@ Future<void> main() async {
 
       // tap preferences
       await tapItem(tester, HomeWidget.keyPreferences);
-      await tester.pump(wait);
 
-      envVars += "PREFERENCES_SNAP=${stopwatch.elapsed - wait}\n";
+      await tester.pumpAndSettle();
+      takeScreenshot(binding, "4_preferences.png");
 
       // drag minutes
       int drag = 20;
@@ -270,9 +274,9 @@ Future<void> main() async {
       finder = find.byIcon(Icons.arrow_back);
       expect(finder, findsWidgets);
       await tester.tap(finder.at(0));
-      await tester.pump(wait);
 
-      envVars += "COLORS_SNAP=${stopwatch.elapsed - wait}\n";
+      await tester.pumpAndSettle();
+      takeScreenshot(binding, "5_colors.png");
 
       await tester.pump(wait * 2);
 
@@ -343,7 +347,6 @@ Future<void> main() async {
       await closeDrawer(tester);
 
       await tester.pump(wait);
-
       envVars += "PREFERENCES_END=${stopwatch.elapsed - wait}\n";
     }
 
