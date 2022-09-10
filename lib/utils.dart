@@ -21,6 +21,9 @@ Card getSessionCard(context, Session session,
   Duration diff = roundDuration(session.end.difference(session.start));
   return Card(
       child: ListTile(
+    onTap: () {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    },
     onLongPress: () {
       debugPrint("session: ${session.toString()}");
     },
