@@ -8,7 +8,9 @@ mkdir -p "$DIR"
 DEMOMP4="$DIR/demo.mp4"
 TMPMP4="$(mktemp).mp4"
 ENVFILE="screenshots/.env"
-VARS="RUNNING_END|SESSIONS_END|CALENDAR_END|PREFERENCES_END|DEMO_END|HOME_SNAP|INHALE_SNAP|DRAWER_SNAP|PREFERENCES_SNAP|COLORS_SNAP|SESSIONS_SNAP|STATS_SNAP|CALENDAR_SNAP|DURATION_SNAP|PRESET1_SNAP|PRESET2_SNAP|CUSTOM_SNAP|PRESETS_END|CUSTOM_END"
+VARS="RUNNING_END|SESSIONS_END|CALENDAR_END|PREFERENCES_END|DEMO_END|PRESETS_END|CUSTOM_END"
+
+rm -v "$DEMOMP4"
 
 # if device is passed as argument (adb devices)
 if [ -n "$1" ]; then
@@ -39,92 +41,6 @@ echo "START:$START END:$END FILE:$DEMOMP4"
 ffmpeg -y -ss "$START" -to "$END" -i "$TMPMP4" -c copy "$DEMOMP4" &>/dev/null
 rm "$TMPMP4"
 #ffplay -autoexit "$DEMOMP4" &>/dev/null
-
-snap () { 
-    echo "START:$START FILE:$PNG" 
-    ffmpeg -y -ss "$START" -i $DEMOMP4 -frames:v 1 -q:v 5 "$PNG" &>/dev/null; 
-}
-
-if [ -n "$HOME_SNAP" ]; then
-  PNG="$DIR/1_home.png"
-  START="$HOME_SNAP"
-  snap
-fi
-
-if [ -n "$INHALE_SNAP" ]; then
-  PNG="$DIR/2_inhale.png"
-  START="$INHALE_SNAP"
-  snap
-fi
-
-if [ -n "$DRAWER_SNAP" ]; then
-  PNG="$DIR/3_drawer.png"
-  START="$DRAWER_SNAP"
-  snap
-fi
-
-if [ -n "$PREFERENCES_SNAP" ]; then
-  PNG="$DIR/4_preferences.png"
-  START="$PREFERENCES_SNAP"
-  snap
-fi
-
-if [ -n "$COLORS_SNAP" ]; then
-  PNG="$DIR/5_colors.png"
-  START="$COLORS_SNAP"
-  snap
-fi
-
-if [ -n "$SESSIONS_SNAP" ]; then
-  PNG="$DIR/6_sessions.png"
-  START="$SESSIONS_SNAP"
-  snap
-fi
-
-if [ -n "$STATS_SNAP" ]; then
-  PNG="$DIR/7_stats.png"
-  START="$STATS_SNAP"
-  snap
-fi
-
-if [ -n "$CALENDAR_SNAP" ]; then
-  PNG="$DIR/8_calendar.png"
-  START="$CALENDAR_SNAP"
-  snap
-fi
-
-# Wear specific
-if [ -n "$DURATION_SNAP" ]; then
-  PNG="$DIR/3_duration.png"
-  START="$DURATION_SNAP"
-  snap
-fi
-
-if [ -n "$PRESET1_SNAP" ]; then
-  PNG="$DIR/4_preset.png"
-  START="$PRESET1_SNAP"
-  snap
-fi
-
-if [ -n "$PRESET2_SNAP" ]; then
-  PNG="$DIR/5_preset.png"
-  START="$PRESET2_SNAP"
-  snap
-fi
-
-if [ -n "$CUSTOM_SNAP" ]; then
-  PNG="$DIR/6_custom.png"
-  START="$CUSTOM_SNAP"
-  snap
-fi
-
-if [ -n "$HOME_SNAP" ]; then
-  PNG="$DIR/7_dark.png"
-  START="$HOME_SNAP"
-  snap
-fi
-
-exit 0
 
 clip () { 
     echo "START:$START END:$END FILE:$WEBP" 
