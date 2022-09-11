@@ -149,13 +149,6 @@ class _SessionsWidgetState extends State<SessionsWidget> {
   _showSnackBar(BuildContext context, String text, Duration duration) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(text),
-      action: SnackBarAction(
-        key: const Key(DISMISS_TEXT),
-        label: AppLocalizations.of(context).dismiss,
-        onPressed: () {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        },
-      ),
       duration: duration,
     ));
   }
@@ -169,6 +162,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
           PopupMenuButton<String>(
             key: Key(SessionsWidget.keyMenu),
             onSelected: (value) {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
               switch (value) {
                 case CLEAR_ALL_TEXT:
                   showAlertDialog(
@@ -259,6 +253,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
             DateTime firstDate = _getFirstDate(_list);
             String stats = getStats(context, _list, firstDate, DateTime.now());
             String streak =

@@ -23,11 +23,8 @@ Future<void> tapMenu(WidgetTester tester) async {
 Future<void> testSnackBar(WidgetTester tester, Key key, String text) async {
   expect(find.textContaining(text), findsNothing);
   await tester.tap(find.byKey(key));
-  await tester.pumpAndSettle();
+  await tester.pumpAndSettle(WAIT);
   expect(find.textContaining(text), findsOneWidget);
-  await tester.tap(find.byKey(const Key(DISMISS_TEXT)));
-  await tester.pumpAndSettle();
-  expect(find.textContaining(text), findsNothing);
 }
 
 Future<void> testStats(WidgetTester tester, String sessions) async {

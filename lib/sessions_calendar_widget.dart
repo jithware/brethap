@@ -183,6 +183,7 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
       ]),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
             String stats =
                 getStats(context, _list, _statFirstDay, _statLastDay);
             String streak =

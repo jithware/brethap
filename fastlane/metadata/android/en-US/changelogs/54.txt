@@ -1,0 +1,5 @@
+Release version: 1.7.1+54
+* Replace session duration and breaths with icons
+* Remove button color in dark mode
+* Ability to dismiss snackbars
+* Minor enhancements
