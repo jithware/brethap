@@ -23,7 +23,7 @@ const bool demoRunning = true,
     demoPreferences = true;
 
 const Duration wait = Duration(milliseconds: 500);
-const Duration snackbar = Duration(milliseconds: 3500);
+const Duration snackbar = Duration(milliseconds: 4000);
 
 Future<void> tapItem(WidgetTester tester, String key) async {
   Finder item = find.byKey(Key(key));
@@ -48,11 +48,11 @@ Future<void> main() async {
     await app.main();
     await tester.pumpAndSettle();
 
+    takeScreenshot(binding, "1_home.png");
+    await Future.delayed(const Duration(seconds: 1));
+
     Stopwatch stopwatch = Stopwatch()..start();
     String envVars = "";
-
-    await tester.pump(wait);
-    takeScreenshot(binding, "1_home.png");
 
     // Running
     if (demoRunning) {
@@ -85,6 +85,8 @@ Future<void> main() async {
 
       await tester.pump(wait);
       envVars += "RUNNING_END=${stopwatch.elapsed - wait}\n";
+
+      await Future.delayed(const Duration(seconds: 1));
     }
 
     // Sessions
@@ -134,6 +136,8 @@ Future<void> main() async {
 
       await tester.pump(wait);
       envVars += "SESSIONS_END=${stopwatch.elapsed - wait}\n";
+
+      await Future.delayed(const Duration(seconds: 1));
     }
 
     // Calendar
@@ -149,10 +153,8 @@ Future<void> main() async {
       // tap calendar
       await tapItem(tester, HomeWidget.keyCalendar);
 
-      await tester.pumpAndSettle();
-      takeScreenshot(binding, "8_calendar.png");
-
       // tap stats
+      await tester.pump(wait);
       Finder finder = find.byType(FloatingActionButton);
       expect(finder, findsOneWidget);
       await tester.tap(finder);
@@ -162,7 +164,11 @@ Future<void> main() async {
       await tester.pump(snackbar);
       await tester.pump(wait);
 
+      await tester.pumpAndSettle();
+      takeScreenshot(binding, "8_calendar.png");
+
       // tap week
+      await tester.pump(wait);
       finder = find.byType(FormatButton);
       expect(finder, findsOneWidget);
       await tester.tap(finder);
@@ -182,6 +188,8 @@ Future<void> main() async {
 
       await tester.pump(wait);
       envVars += "CALENDAR_END=${stopwatch.elapsed - wait}\n";
+
+      await Future.delayed(const Duration(seconds: 1));
     }
 
     // Preferences
@@ -348,6 +356,8 @@ Future<void> main() async {
 
       await tester.pump(wait);
       envVars += "PREFERENCES_END=${stopwatch.elapsed - wait}\n";
+
+      await Future.delayed(const Duration(seconds: 1));
     }
 
     await tester.pump(wait);

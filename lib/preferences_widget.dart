@@ -202,6 +202,9 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
             if (widget.preferences.length <= position) {
               return Theme.of(context).disabledColor;
             }
+            if (Get.isDarkMode) {
+              return Theme.of(context).primaryColor;
+            }
             Preference preference = widget.preferences.getAt(position);
             return COLORS_PRIMARY[preference.colors[0]];
           }),

@@ -28,8 +28,17 @@ Card getSessionCard(context, Session session,
       debugPrint("session: ${session.toString()}");
     },
     title: Text(DateFormat(dateFormat).format(session.start)),
-    subtitle: Text(
-        "${AppLocalizations.of(context).duration}:${getDurationString(diff)}  ${AppLocalizations.of(context).breaths}:${session.breaths}"),
+    subtitle: Row(children: [
+      Padding(
+          padding: const EdgeInsets.all(1.0),
+          child: Icon(Icons.timer, color: Theme.of(context).primaryColor)),
+      Text(getDurationString(diff)),
+      const SizedBox(width: 10.0),
+      Padding(
+          padding: const EdgeInsets.all(1.0),
+          child: Icon(Icons.air, color: Theme.of(context).primaryColor)),
+      Text("${session.breaths}"),
+    ]),
   ));
 }
 
