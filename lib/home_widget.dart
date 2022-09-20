@@ -72,7 +72,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     _initWakeLock();
     _initSpeak();
     _initAudio();
-    _initWear(); // REMOVE FROM FDROID BUILD
+    _initWear();
     _init();
     super.initState();
   }
@@ -132,8 +132,8 @@ class _HomeWidgetState extends State<HomeWidget> {
     }
   }
 
-  // REMOVE FROM FDROID BUILD
   Future<void> _initWear() async {
+    // REMOVE FROM FDROID BUILD
     _hasWear = await isPhysicalPhone();
 
     if (_hasWear) {
