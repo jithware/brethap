@@ -70,6 +70,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     _initWakeLock();
     _initSpeak();
     _initAudio();
+    _initWear();
     _init();
     super.initState();
   }
@@ -127,6 +128,10 @@ class _HomeWidgetState extends State<HomeWidget> {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  Future<void> _initWear() async {
+    debugPrint("Wear OS integration is removed from fdroid build!");
   }
 
   Future _speak(String text) async {
