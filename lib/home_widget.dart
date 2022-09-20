@@ -9,6 +9,7 @@ import 'package:wakelock/wakelock.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:watch_connectivity/watch_connectivity.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
@@ -62,6 +63,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   late FlutterTts _tts;
   double _scale = 0.0;
   late AudioPlayer _player;
+  late WatchConnectivity _watch; // REMOVE FROM FDROID BUILD
 
   @override
   initState() {
@@ -131,7 +133,51 @@ class _HomeWidgetState extends State<HomeWidget> {
   }
 
   Future<void> _initWear() async {
-    debugPrint("Wear OS integration is removed from fdroid build!");
+    // REMOVE FROM FDROID BUILD
+    _hasWear = await isPhysicalPhone();
+
+    if (_hasWear) {
+      _watch = WatchConnectivity();
+      _watch.messageStream.listen((message) => setState(() {
+            debugPrint('Received message: $message');
+
+            Map<String, dynamic> response = {"received": true};
+
+            // Send a preference
+            int? index = message['preference'] as int?;
+            if (index != null) {
+              Preference preference;
+              if (index < widget.preferences.length) {
+                preference = widget.preferences.get(index);
+              } else {
+                preference = widget.preferences.get(0);
+              }
+              response = preference.toJson();
+            }
+
+            // Received a session
+            if (Session.isSession(message)) {
+              Session session = Session.fromJson(message);
+              _addSession(session);
+              _onDuration(session);
+            }
+
+            _send(response);
+          }));
+
+      if (widget.preferences.isNotEmpty) {
+        Preference preference = widget.preferences.get(0);
+        _send(preference.toJson());
+      }
+    }
+  }
+
+  // REMOVE FROM FDROID BUILD
+  void _send(message) {
+    if (_hasWear) {
+      _watch.sendMessage(message);
+      debugPrint("Sent message: $message");
+    }
   }
 
   Future _speak(String text) async {
