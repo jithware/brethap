@@ -15,19 +15,25 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.7.1+54
+version: 1.7.2+55
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
-  flutter: ^3.0.5
+  flutter: ^3.3.2
 
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
     sdk: flutter
 
   flutter_localizations: 
     sdk: flutter         
-  vibration: ^1.7.4-nullsafety.0
+  vibration: ^1.7.5
   package_info_plus: ^1.4.1
   hive_flutter: ^1.1.0
   path_provider: ^2.0.9
@@ -51,7 +57,7 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
-  flutter_launcher_icons: "^0.9.1"
+  flutter_launcher_icons: ^0.10.0
   flutter_lints: ^2.0.1
 
   # To build hive adapters run: flutter packages pub run build_runner build --delete-conflicting-outputs

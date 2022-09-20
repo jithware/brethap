@@ -262,20 +262,6 @@ Future<void> testPreferencesWidget(
   await tester.pumpAndSettle();
   expect(find.textContaining("Preferences reset"), findsOneWidget);
 
-  // Verify default preset
-  await tapPreset(tester, DEFAULT_TEXT);
-  expect(
-      find.textContaining(getDurationString(const Duration(seconds: DURATION))),
-      findsOneWidget);
-
-  // Verify physiological sigh preset
-  await tapPreset(tester, PHYS_SIGH_TEXT);
-  expect(find.textContaining(PHYS_SIGH_TEXT), findsOneWidget);
-  expect(
-      find.textContaining(
-          getDurationString(const Duration(seconds: DURATION_PS))),
-      findsOneWidget);
-
   // Verify 4-7-8 preset
   await tapPreset(tester, PRESET_478_TEXT);
   expect(find.textContaining(PRESET_478_TEXT), findsOneWidget);
@@ -290,6 +276,20 @@ Future<void> testPreferencesWidget(
   expect(
       find.textContaining(
           getDurationString(const Duration(seconds: DURATION_BOX))),
+      findsOneWidget);
+
+  // Verify physiological sigh preset
+  await tapPreset(tester, PHYS_SIGH_TEXT);
+  expect(find.textContaining(PHYS_SIGH_TEXT), findsOneWidget);
+  expect(
+      find.textContaining(
+          getDurationString(const Duration(seconds: DURATION_PS))),
+      findsOneWidget);
+
+  // Verify default preset
+  await tapPreset(tester, DEFAULT_TEXT);
+  expect(
+      find.textContaining(getDurationString(const Duration(seconds: DURATION))),
       findsOneWidget);
 
   // debugDumpApp();
