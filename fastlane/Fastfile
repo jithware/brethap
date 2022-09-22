@@ -21,6 +21,7 @@ platform :android do
 
   desc "Deploy appbundle to Google Play Internal Testing"
   lane :deploy do
+    sh("git", "checkout", "master")
     sh("flutter", "build", "appbundle")
 
     # See http://docs.fastlane.tools/actions/upload_to_play_store/

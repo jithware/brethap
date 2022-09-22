@@ -13,6 +13,6 @@ To merge master into fdroid run:
 git checkout master
 git pull
 git checkout fdroid
-git merge master  # resolve any conflicts here
+git merge --no-ff --no-commit master  # resolve any conflicts here
 git push
 ```
