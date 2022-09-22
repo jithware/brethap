@@ -1,0 +1,3 @@
+Release version: 1.7.3+56
+* Fix not launching Help and Report and Issue in release mode
+* Minor enhancements
