@@ -1,2 +1,0 @@
-Wear OS release version: 1.0.1+53
-* Initial release
