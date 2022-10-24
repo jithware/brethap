@@ -20,19 +20,22 @@ class SessionAdapter extends TypeAdapter<Session> {
       start: fields[0] as DateTime,
     )
       ..end = fields[1] as DateTime
-      ..breaths = fields[2] as int;
+      ..breaths = fields[2] as int
+      ..heartrates = (fields[3] as List?)?.cast<double>();
   }
 
   @override
   void write(BinaryWriter writer, Session obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.start)
       ..writeByte(1)
       ..write(obj.end)
       ..writeByte(2)
-      ..write(obj.breaths);
+      ..write(obj.breaths)
+      ..writeByte(3)
+      ..write(obj.heartrates);
   }
 
   @override

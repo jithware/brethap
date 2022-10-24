@@ -1,0 +1,3 @@
+Release version: 1.7.4+60
+* Support heart rate
+* Minor enhancements
