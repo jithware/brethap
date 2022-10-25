@@ -17,7 +17,7 @@ fi
 # if device is passed as argument (adb devices)
 if [ -n "$1" ]; then
   scrcpy --record "$TMPMP4" --serial "$1" --max-fps 10 --always-on-top &
-  flutter test integration_test/demo_test.dart -d "$1" | tee /dev/stderr | grep -P "$VARS" > "$ENVFILE"
+  flutter drive --no-pub --driver=integration_test/driver.dart --target=integration_test/demo_test.dart -d "$1" | tee /dev/stderr | grep -P "$VARS" | sed 's/^[^:]*[:] //' > "$ENVFILE"
 else
   scrcpy --record "$TMPMP4" --max-fps 10 --always-on-top &
   flutter test integration_test/demo_test.dart | tee /dev/stderr | grep -P "$VARS" > "$ENVFILE"
