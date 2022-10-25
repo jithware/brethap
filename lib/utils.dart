@@ -49,16 +49,16 @@ Card getSessionCard(context, Session session,
       average > 0
           ? Padding(
               padding: const EdgeInsets.all(1.0),
-              child: Icon(Icons.monitor_heart,
-                  color: Theme.of(context).primaryColor))
+              child:
+                  Icon(Icons.favorite, color: Theme.of(context).primaryColor))
           : const SizedBox.shrink(),
       average > 0 ? Text("$average") : const SizedBox.shrink(),
       const SizedBox(width: 10.0),
       reduced != 0
           ? Padding(
               padding: const EdgeInsets.all(1.0),
-              child:
-                  Icon(Icons.favorite, color: Theme.of(context).primaryColor))
+              child: Icon(Icons.monitor_heart,
+                  color: Theme.of(context).primaryColor))
           : const SizedBox.shrink(),
       reduced != 0 ? Text("$reduced") : const SizedBox.shrink(),
     ]),
@@ -73,7 +73,7 @@ Future<void> createRandomSessions(
   Session session;
   List<Session> list = sessions.values.toList().cast<Session>();
 
-  while (list.length < length) {
+  while (list.length < length - 1) {
     mockStart = _mockDate(start, end);
     mockEnd = _mockDate(
         mockStart, mockStart.add(Duration(seconds: random.nextInt(120 * 60))));
@@ -85,6 +85,16 @@ Future<void> createRandomSessions(
     session.breaths = breaths ~/ (random.nextInt(10) + 1);
     list.add(session);
   }
+
+  // Add heartrate session
+  if (list.length < length) {
+    session = Session(start: DateTime.now());
+    session.end = session.start.add(const Duration(seconds: 60));
+    session.breaths = 10;
+    session.heartrates = [70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60];
+    list.add(session);
+  }
+
   list.sort((a, b) =>
       a.start.millisecondsSinceEpoch.compareTo(b.start.millisecondsSinceEpoch));
   await sessions.clear();
