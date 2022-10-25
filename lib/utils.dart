@@ -73,7 +73,7 @@ Future<void> createRandomSessions(
   Session session;
   List<Session> list = sessions.values.toList().cast<Session>();
 
-  while (list.length < length - 1) {
+  while (list.length < length) {
     mockStart = _mockDate(start, end);
     mockEnd = _mockDate(
         mockStart, mockStart.add(Duration(seconds: random.nextInt(120 * 60))));
@@ -87,13 +87,11 @@ Future<void> createRandomSessions(
   }
 
   // Add heartrate session
-  if (list.length < length) {
-    session = Session(start: DateTime.now());
-    session.end = session.start.add(const Duration(seconds: 60));
-    session.breaths = 10;
-    session.heartrates = [70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60];
-    list.add(session);
-  }
+  session = Session(start: DateTime.now());
+  session.end = session.start.add(const Duration(seconds: 60));
+  session.breaths = 10;
+  session.heartrates = [70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60];
+  list.add(session);
 
   list.sort((a, b) =>
       a.start.millisecondsSinceEpoch.compareTo(b.start.millisecondsSinceEpoch));
