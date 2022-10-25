@@ -10,7 +10,9 @@ TMPMP4="$(mktemp).mp4"
 ENVFILE="screenshots/.env"
 VARS="RUNNING_END|SESSIONS_END|CALENDAR_END|PREFERENCES_END|DEMO_END|PRESETS_END|CUSTOM_END"
 
-rm -v "$DEMOMP4"
+if test -f "$DEMOMP4"; then
+    rm -v "$DEMOMP4"
+fi
 
 # if device is passed as argument (adb devices)
 if [ -n "$1" ]; then

@@ -11,6 +11,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:collection/collection.dart';
 
 import 'package:brethap/constants.dart';
 import 'package:brethap/hive_storage.dart';
@@ -19,6 +20,12 @@ import 'package:brethap/wear.dart';
 Card getSessionCard(context, Session session,
     {String dateFormat = DATE_FORMAT}) {
   Duration diff = roundDuration(session.end.difference(session.start));
+  List<double>? heartrates = session.heartrates;
+  int average = 0, reduced = 0;
+  if (heartrates != null) {
+    average = heartrates.average.toInt();
+    reduced = (heartrates.last - heartrates.first).toInt();
+  }
   return Card(
       child: ListTile(
     onTap: () {
@@ -38,6 +45,22 @@ Card getSessionCard(context, Session session,
           padding: const EdgeInsets.all(1.0),
           child: Icon(Icons.air, color: Theme.of(context).primaryColor)),
       Text("${session.breaths}"),
+      const SizedBox(width: 10.0),
+      average > 0
+          ? Padding(
+              padding: const EdgeInsets.all(1.0),
+              child:
+                  Icon(Icons.favorite, color: Theme.of(context).primaryColor))
+          : const SizedBox.shrink(),
+      average > 0 ? Text("$average") : const SizedBox.shrink(),
+      const SizedBox(width: 10.0),
+      reduced != 0
+          ? Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Icon(Icons.monitor_heart,
+                  color: Theme.of(context).primaryColor))
+          : const SizedBox.shrink(),
+      reduced != 0 ? Text("$reduced") : const SizedBox.shrink(),
     ]),
   ));
 }
@@ -62,6 +85,14 @@ Future<void> createRandomSessions(
     session.breaths = breaths ~/ (random.nextInt(10) + 1);
     list.add(session);
   }
+
+  // Add heartrate session
+  session = Session(start: DateTime.now());
+  session.end = session.start.add(const Duration(seconds: 60));
+  session.breaths = 10;
+  session.heartrates = [70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60];
+  list.add(session);
+
   list.sort((a, b) =>
       a.start.millisecondsSinceEpoch.compareTo(b.start.millisecondsSinceEpoch));
   await sessions.clear();
