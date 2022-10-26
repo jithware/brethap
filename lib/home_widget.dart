@@ -9,6 +9,7 @@ import 'package:wakelock/wakelock.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:collection/collection.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
@@ -179,6 +180,12 @@ class _HomeWidgetState extends State<HomeWidget> {
       text += ", $breaths ${AppLocalizations.of(context).breath}";
     } else {
       text += ", $breaths ${AppLocalizations.of(context).breaths}";
+    }
+    if (session.heartrates != null) {
+      int average = session.heartrates!.average.toInt();
+      if (average > 0) {
+        text += ", $average ${AppLocalizations.of(context).heartrate}";
+      }
     }
 
     if (preference.durationTts) {

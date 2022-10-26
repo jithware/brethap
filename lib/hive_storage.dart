@@ -14,6 +14,8 @@ class Session extends HiveObject {
   late final DateTime end;
   @HiveField(2)
   late int breaths;
+  @HiveField(3)
+  List<double>? heartrates;
 
   Session({required this.start});
 
@@ -21,10 +23,13 @@ class Session extends HiveObject {
     final start = data['start'] as int;
     final end = data['end'] as int;
     final breaths = data['breaths'] as int;
+    List<double>? heartrates =
+        data['heartrates'] != null ? List.from(data['heartrates']) : null;
     Session session =
         Session(start: DateTime.fromMillisecondsSinceEpoch(start));
     session.end = DateTime.fromMillisecondsSinceEpoch(end);
     session.breaths = breaths;
+    session.heartrates = heartrates;
     return session;
   }
 
@@ -32,7 +37,8 @@ class Session extends HiveObject {
     return {
       'start': start.millisecondsSinceEpoch,
       'end': end.millisecondsSinceEpoch,
-      'breaths': breaths
+      'breaths': breaths,
+      'heartrates': heartrates,
     };
   }
 
@@ -47,7 +53,7 @@ class Session extends HiveObject {
 
   @override
   String toString() {
-    return "{start: $start, end: $end, breaths: $breaths}";
+    return toJson().toString();
   }
 }
 
@@ -200,6 +206,6 @@ class Preference extends HiveObject {
 
   @override
   String toString() {
-    return "{name: $name, duration: $duration, inhale: ${inhale.toString()}, exhale: ${exhale.toString()}, vibrateDuration: $vibrateDuration, vibrateBreath: $vibrateBreath, durationTts: $durationTts, breathTts: $breathTts, colors: ${colors.toString()}, audio: ${audio.toString()}";
+    return toJson().toString();
   }
 }

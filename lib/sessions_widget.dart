@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:collection/collection.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
@@ -74,11 +75,14 @@ class _SessionsWidgetState extends State<SessionsWidget> {
     int added = 0;
     try {
       List<List<dynamic>> rows = [
-        ["start", "end", "breaths"]
+        ["start", "end", "breaths", "heartrate"]
       ];
       for (var element in list) {
+        List<double>? heartrates = element.heartrates;
+        heartrates ??= [0.0];
+        rows.add(
+            [element.start, element.end, element.breaths, heartrates.average]);
         added++;
-        rows.add([element.start, element.end, element.breaths]);
       }
       String csv = const ListToCsvConverter().convert(rows);
       final file = await _getExportFile();
@@ -115,6 +119,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
           Session session = Session(start: start);
           session.end = DateTime.parse(row[1]);
           session.breaths = row[2];
+          session.heartrates = [row[3]];
           _list.add(session);
           await widget.sessions.add(session);
           added++;

@@ -11,6 +11,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:collection/collection.dart';
 
 import 'package:brethap/constants.dart';
 import 'package:brethap/hive_storage.dart';
@@ -19,6 +20,12 @@ import 'package:brethap/wear.dart';
 Card getSessionCard(context, Session session,
     {String dateFormat = DATE_FORMAT}) {
   Duration diff = roundDuration(session.end.difference(session.start));
+  List<double>? heartrates = session.heartrates;
+  int average = 0, reduced = 0;
+  if (heartrates != null) {
+    average = heartrates.average.toInt();
+    reduced = (heartrates.last - heartrates.first).toInt();
+  }
   return Card(
       child: ListTile(
     onTap: () {
@@ -38,6 +45,22 @@ Card getSessionCard(context, Session session,
           padding: const EdgeInsets.all(1.0),
           child: Icon(Icons.air, color: Theme.of(context).primaryColor)),
       Text("${session.breaths}"),
+      const SizedBox(width: 10.0),
+      average > 0
+          ? Padding(
+              padding: const EdgeInsets.all(1.0),
+              child:
+                  Icon(Icons.favorite, color: Theme.of(context).primaryColor))
+          : const SizedBox.shrink(),
+      average > 0 ? Text("$average") : const SizedBox.shrink(),
+      const SizedBox(width: 10.0),
+      reduced != 0
+          ? Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Icon(Icons.monitor_heart,
+                  color: Theme.of(context).primaryColor))
+          : const SizedBox.shrink(),
+      reduced != 0 ? Text("$reduced") : const SizedBox.shrink(),
     ]),
   ));
 }
@@ -50,7 +73,7 @@ Future<void> createRandomSessions(
   Session session;
   List<Session> list = sessions.values.toList().cast<Session>();
 
-  while (list.length < length) {
+  while (list.length < length - 1) {
     mockStart = _mockDate(start, end);
     mockEnd = _mockDate(
         mockStart, mockStart.add(Duration(seconds: random.nextInt(120 * 60))));
@@ -62,6 +85,17 @@ Future<void> createRandomSessions(
     session.breaths = breaths ~/ (random.nextInt(10) + 1);
     list.add(session);
   }
+
+  // Add heartrate session
+  if (list.length < length) {
+    session =
+        Session(start: DateTime.now().subtract(const Duration(minutes: 60)));
+    session.end = session.start.add(const Duration(seconds: 60));
+    session.breaths = 10;
+    session.heartrates = [70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60];
+    list.add(session);
+  }
+
   list.sort((a, b) =>
       a.start.millisecondsSinceEpoch.compareTo(b.start.millisecondsSinceEpoch));
   await sessions.clear();
@@ -98,7 +132,8 @@ String getStats(
   DateTime end,
 ) {
   Duration totalDuration = const Duration(seconds: 0);
-  int totalSessions = 0, totalBreaths = 0;
+  int totalSessions = 0, totalBreaths = 0, average = 0;
+  List<int> averages = [];
 
   for (var item in list) {
     if ((item.start.compareTo(start) >= 0 && item.end.compareTo(end) <= 0)) {
@@ -106,10 +141,26 @@ String getStats(
       totalDuration += diff;
       totalBreaths += item.breaths;
       totalSessions += 1;
+      if (item.heartrates != null) {
+        int avg = item.heartrates!.average.toInt();
+        if (avg > 0) {
+          averages.add(avg);
+        }
+      }
     }
   }
 
-  return "${AppLocalizations.of(context).sessions}:$totalSessions ${AppLocalizations.of(context).duration}:${getDurationString(totalDuration)} ${AppLocalizations.of(context).breaths}:$totalBreaths";
+  String text =
+      "${AppLocalizations.of(context).sessions}:$totalSessions ${AppLocalizations.of(context).duration}:${getDurationString(totalDuration)} ${AppLocalizations.of(context).breaths}:$totalBreaths";
+
+  if (averages.isNotEmpty) {
+    average = averages.average.toInt();
+    if (average > 0) {
+      text += " ${AppLocalizations.of(context).heartrate}:$average";
+    }
+  }
+
+  return text;
 }
 
 String getStreak(

@@ -2,6 +2,8 @@
 // flutter test integration_test/demo_test.dart
 // To execute demo with screenshots saved run:
 // flutter drive --no-pub --driver=integration_test/driver.dart --target=integration_test/demo_test.dart
+// To execute demo script run:
+// ./screenshots/demo.sh emulator-5554
 
 import 'package:brethap/constants.dart';
 import 'package:brethap/home_widget.dart';
@@ -123,7 +125,7 @@ Future<void> main() async {
       // remove session
       Duration duration = const Duration(milliseconds: 500);
       double drag = 500;
-      finder = find.byKey(const Key('199'));
+      finder = find.byKey(const Key('200'));
       expect(finder, findsOneWidget);
       await tester.timedDrag(finder, Offset(drag, 0), duration);
       await tester.pump(wait * 2);

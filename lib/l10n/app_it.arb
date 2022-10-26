@@ -59,5 +59,6 @@
     "preference": "Preferenze",
     "week": "Settimana",
     "month": "Mese",
-    "colorDisabled": "I Colori sono disabilitati in modalità notte."
+    "colorDisabled": "I Colori sono disabilitati in modalità notte.",
+    "heartrate": "Battito cardiaco"
 }
