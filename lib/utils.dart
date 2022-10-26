@@ -73,7 +73,7 @@ Future<void> createRandomSessions(
   Session session;
   List<Session> list = sessions.values.toList().cast<Session>();
 
-  while (list.length < length) {
+  while (list.length < length - 1) {
     mockStart = _mockDate(start, end);
     mockEnd = _mockDate(
         mockStart, mockStart.add(Duration(seconds: random.nextInt(120 * 60))));
@@ -87,11 +87,14 @@ Future<void> createRandomSessions(
   }
 
   // Add heartrate session
-  session = Session(start: DateTime.now());
-  session.end = session.start.add(const Duration(seconds: 60));
-  session.breaths = 10;
-  session.heartrates = [70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60];
-  list.add(session);
+  if (list.length < length) {
+    session =
+        Session(start: DateTime.now().subtract(const Duration(minutes: 60)));
+    session.end = session.start.add(const Duration(seconds: 60));
+    session.breaths = 10;
+    session.heartrates = [70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60];
+    list.add(session);
+  }
 
   list.sort((a, b) =>
       a.start.millisecondsSinceEpoch.compareTo(b.start.millisecondsSinceEpoch));
@@ -129,7 +132,8 @@ String getStats(
   DateTime end,
 ) {
   Duration totalDuration = const Duration(seconds: 0);
-  int totalSessions = 0, totalBreaths = 0;
+  int totalSessions = 0, totalBreaths = 0, average = 0;
+  List<int> averages = [];
 
   for (var item in list) {
     if ((item.start.compareTo(start) >= 0 && item.end.compareTo(end) <= 0)) {
@@ -137,10 +141,26 @@ String getStats(
       totalDuration += diff;
       totalBreaths += item.breaths;
       totalSessions += 1;
+      if (item.heartrates != null) {
+        int avg = item.heartrates!.average.toInt();
+        if (avg > 0) {
+          averages.add(avg);
+        }
+      }
     }
   }
 
-  return "${AppLocalizations.of(context).sessions}:$totalSessions ${AppLocalizations.of(context).duration}:${getDurationString(totalDuration)} ${AppLocalizations.of(context).breaths}:$totalBreaths";
+  String text =
+      "${AppLocalizations.of(context).sessions}:$totalSessions ${AppLocalizations.of(context).duration}:${getDurationString(totalDuration)} ${AppLocalizations.of(context).breaths}:$totalBreaths";
+
+  if (averages.isNotEmpty) {
+    average = averages.average.toInt();
+    if (average > 0) {
+      text += " ${AppLocalizations.of(context).heartrate}:$average";
+    }
+  }
+
+  return text;
 }
 
 String getStreak(
