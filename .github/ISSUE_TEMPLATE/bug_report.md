@@ -1,13 +1,13 @@
 ---
-name: Bug report
+name: Bug Report
 about: Create a report to help us improve
-title: ''
+title: '[Bug]: '
 labels: bug
 assignees: ''
 
 ---
 
-For questions or comments, please use the [Discussions](https://github.com/jithware/brethap/discussions) section.
+*For questions or comments, please use the [Discussions](https://github.com/jithware/brethap/discussions) section. Please complete the sections below:*
 
 **Describe the bug**
 A clear and concise description of what the bug is.
@@ -37,4 +37,4 @@ If applicable, add screenshots to help explain your problem.
  - Version [e.g. 1.0.1+10]
 
 **Additional context**
-Add any other context about the problem here.
+Add any other context or screenshots about the problem here.
