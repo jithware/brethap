@@ -494,11 +494,18 @@ $url'''),
                         ),
                       ),
                     ))),
-            Text(
-              getDurationString(_duration),
-              style: Theme.of(context).textTheme.headline5,
-              semanticsLabel: getDurationString(_duration),
-            ),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Icon(
+                Icons.timer,
+                color: Theme.of(context).primaryColor,
+              ),
+              const SizedBox(width: 5),
+              Text(
+                getDurationString(_duration),
+                style: Theme.of(context).textTheme.headline5,
+                semanticsLabel: getDurationString(_duration),
+              ),
+            ]),
           ],
         ),
       ),
@@ -520,41 +527,53 @@ $url'''),
               key: Key(HomeWidget.keyPreferences),
               title: Text(AppLocalizations.of(context).preferences),
               leading: const Icon(Icons.settings),
-              onTap: () {
+              onTap: () async {
                 _isRunning = false;
-                Navigator.push(
+                await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => PreferencesWidget(
                           preferences: widget.preferences,
                           callback: _preferenceUpdated),
                     ));
+
+                // closes drawer
+                if (!mounted) return;
+                Navigator.pop(context);
               },
             ),
             ListTile(
               key: Key(HomeWidget.keySessions),
               title: Text(AppLocalizations.of(context).sessions),
               leading: const Icon(Icons.format_list_numbered_outlined),
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
                           SessionsWidget(sessions: widget.sessions)),
                 );
+
+                // closes drawer
+                if (!mounted) return;
+                Navigator.pop(context);
               },
             ),
             ListTile(
                 key: Key(HomeWidget.keyCalendar),
                 title: Text(AppLocalizations.of(context).calendar),
                 leading: const Icon(Icons.calendar_today),
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
                             SessionsCalendarWidget(sessions: widget.sessions)),
                   );
+
+                  // closes drawer
+                  if (!mounted) return;
+                  Navigator.pop(context);
                 }),
             SafeArea(
               child: AboutListTile(

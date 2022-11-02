@@ -44,19 +44,21 @@ Future<void> main() async {
 
     await goBack(tester);
 
+    await openDrawer(tester);
+
     await tapItem(tester, HomeWidget.keySessions);
 
     await testSessionsWidget(tester);
 
     await goBack(tester);
 
+    await openDrawer(tester);
+
     await tapItem(tester, HomeWidget.keyCalendar);
 
     await testSessionsCalendarWidget(tester);
 
     await goBack(tester);
-
-    await closeDrawer(tester);
 
     //await tester.pump(const Duration(seconds: 10));
   });

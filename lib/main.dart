@@ -94,7 +94,7 @@ class MainWidget extends StatelessWidget {
         primarySwatch: primaryColor,
         canvasColor: backgroundColor,
       ),
-      darkTheme: ThemeData.dark(),
+      darkTheme: ThemeData.dark().copyWith(primaryColor: Colors.blue),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: HomeWidget(
