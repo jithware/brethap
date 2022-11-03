@@ -133,9 +133,6 @@ Future<void> main() async {
       // go back
       await goBack(tester);
 
-      // close drawer
-      await closeDrawer(tester);
-
       await tester.pump(wait);
       envVars += "SESSIONS_END=${stopwatch.elapsed - wait}\n";
 
@@ -184,9 +181,6 @@ Future<void> main() async {
 
       // go back
       await goBack(tester);
-
-      // close drawer
-      await closeDrawer(tester);
 
       await tester.pump(wait);
       envVars += "CALENDAR_END=${stopwatch.elapsed - wait}\n";
@@ -352,9 +346,6 @@ Future<void> main() async {
 
       // go back
       await goBack(tester);
-
-      // close drawer
-      await closeDrawer(tester);
 
       await tester.pump(wait);
       envVars += "PREFERENCES_END=${stopwatch.elapsed - wait}\n";
