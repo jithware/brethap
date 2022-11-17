@@ -4,5 +4,3 @@ bewaard zodat je ze terug kan kijken en je voortgang kan zien aan de hand van
 statistieken in een lijst of kalender. Duur, ademhaling en andere opties zijn
 instelbaar via instellingen die bewaard worden. Meegeleverde ademhalingspatronen
 zijn 4-7-8, fysiologische zucht en meer.
-
-Voor gebruikers van Wear OS is er een ook een minimale versie beschikbaar.
