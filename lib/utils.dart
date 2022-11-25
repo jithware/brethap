@@ -309,7 +309,7 @@ Future<bool> isPhysicalPhone() async {
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   if (Platform.isAndroid) {
     AndroidDeviceInfo info = await deviceInfo.androidInfo;
-    return info.isPhysicalDevice ?? false;
+    return info.isPhysicalDevice;
   }
   if (Platform.isIOS) {
     IosDeviceInfo info = await deviceInfo.iosInfo;
