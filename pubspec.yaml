@@ -15,11 +15,11 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.7.6+74
+version: 1.7.7+76
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
-  flutter: ^3.3.2
+  flutter: ^3.3.9
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -33,8 +33,8 @@ dependencies:
 
   flutter_localizations: 
     sdk: flutter         
-  vibration: ^1.7.5
-  package_info_plus: ^1.4.1
+  vibration: ^1.7.6
+  package_info_plus: ^3.0.2
   hive_flutter: ^1.1.0
   path_provider: ^2.0.9
   intl: ^0.17.0
@@ -49,7 +49,7 @@ dependencies:
   flutter_material_color_picker: ^1.1.0+2
   just_audio: ^0.9.20
   hive: ^2.2.3
-  device_info_plus: ^4.1.2
+  device_info_plus: ^8.0.0
   collection: ^1.16.0
 
 dev_dependencies:
@@ -57,11 +57,11 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.10.0
+  flutter_launcher_icons: ^0.11.0
   flutter_lints: ^2.0.1
 
   # To build hive adapters run: flutter packages pub run build_runner build --delete-conflicting-outputs
-  hive_generator: ^1.1.0
+  hive_generator: ^2.0.0
   build_runner: ^2.1.0
 
 # To build launcher icons run: flutter pub run flutter_launcher_icons:main
