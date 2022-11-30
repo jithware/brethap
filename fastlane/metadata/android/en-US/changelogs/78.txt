@@ -1,0 +1,3 @@
+Release version: 1.7.8+78
+* Default to english when language not defined
+* Other minor enhancements
