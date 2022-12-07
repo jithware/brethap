@@ -551,6 +551,7 @@ $url'''),
                       _launchURL(BUGS_URL);
                     },
                   ),
+                  Center(child: Image.asset('images/github-qr.png'))
                 ],
               ),
             ),
