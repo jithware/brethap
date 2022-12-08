@@ -1,3 +1,3 @@
-Release version: 1.7.9+80
+Release version: 1.7.9+82
 * Add method for sharing app
 * Other minor enhancements
