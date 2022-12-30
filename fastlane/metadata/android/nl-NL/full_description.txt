@@ -1,3 +1,5 @@
 Brethap is weer een andere meditatieapp. Het heeft een timer voor meditatie, maar laat je ook ademhalingspatronen instellen om te volgen. Je sessies worden bewaard zodat je ze terug kan kijken en je voortgang kan zien aan de hand van statistieken in een lijst of kalender. Duur, ademhaling en andere opties zijn instelbaar via instellingen die bewaard worden. Meegeleverde ademhalingspatronen zijn 4-7-8, fysiologische zucht en meer.
 
 Voor gebruikers van Wear OS is er een ook een minimale versie beschikbaar.
+
+Documentatie: https://github.com/jithware/brethap
