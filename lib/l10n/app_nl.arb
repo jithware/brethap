@@ -60,5 +60,6 @@
     "week": "Week",
     "month": "Maand",
     "colorDisabled": "Kleur is in donkere modus uitgeschakeld.",
-    "heartrate": "Hartslag"
+    "heartrate": "Hartslag",
+    "noPreferences": "Geen voorkeuren"
 }

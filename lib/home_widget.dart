@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:vibration/vibration.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -44,7 +45,8 @@ class HomeWidget extends StatefulWidget {
   // These static variables are used with flutter tests
   static String keyPreferences = "Preferences",
       keySessions = "Sessions",
-      keyCalendar = "Calendar";
+      keyCalendar = "Calendar",
+      keyNoPreferences = "No Preferences";
   static int totalSessions = 200;
 
   @override
@@ -431,12 +433,15 @@ $url'''),
 
   // Callback for variables needed in HomeWidget when PreferenceWidget closes
   void _preferenceUpdated() {
-    debugPrint("HomeWidget.preferenceUpdated()");
+    debugPrint("$widget.preferenceUpdated()");
     Preference preference = widget.preferences.get(0);
     setState(() {
       _duration = Duration(seconds: preference.duration);
       _appName = preference.name.isEmpty ? APP_NAME : preference.name;
     });
+    Get.changeTheme(ThemeData(
+        primarySwatch: COLORS_PRIMARY[preference.colors[0]] as MaterialColor,
+        canvasColor: Color(preference.colors[1])));
   }
 
   @override
@@ -453,6 +458,44 @@ $url'''),
     return Scaffold(
       appBar: AppBar(
         title: Text(_appName),
+        actions: <Widget>[
+          Visibility(
+            visible: !_isRunning,
+            child: PopupMenuButton<String>(
+              itemBuilder: (BuildContext context) {
+                int i = 0;
+                List<PopupMenuItem<String>> menuItems = [];
+                for (Preference p in widget.preferences.values) {
+                  if (i > 0) {
+                    String name =
+                        "${AppLocalizations.of(context).preference} $i";
+                    if (p.name.isNotEmpty) {
+                      name = p.name;
+                    }
+                    menuItems.add(PopupMenuItem(
+                      child: Text(name),
+                      onTap: () async {
+                        Preference currentPreference =
+                            widget.preferences.getAt(0);
+                        currentPreference.copy(p);
+                        await currentPreference.save();
+                        _preferenceUpdated();
+                      },
+                    ));
+                  }
+                  i++;
+                }
+                if (menuItems.isEmpty) {
+                  menuItems.add(PopupMenuItem(
+                    key: Key(HomeWidget.keyNoPreferences),
+                    child: Text(AppLocalizations.of(context).noPreferences),
+                  ));
+                }
+                return menuItems;
+              },
+            ),
+          ),
+        ],
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -510,9 +553,6 @@ $url'''),
         ),
       ),
       drawer: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
         child: ListView(
           padding: EdgeInsets.zero,
           children: [

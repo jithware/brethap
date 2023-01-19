@@ -60,5 +60,6 @@
     "week": "Hafta",
     "month": "Ay",
     "colorDisabled": "Koyu modda renk devre dışı bırakılır.",
-    "heartrate": "Kalp atış hızı"
+    "heartrate": "Kalp atış hızı",
+    "noPreferences": "Tercih Yok"
 }

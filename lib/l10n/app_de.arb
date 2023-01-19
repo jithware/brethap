@@ -60,5 +60,6 @@
     "week": "Woche",
     "month": "Monat",
     "colorDisabled": "Farbe ist im dunklen Modus deaktiviert.",
-    "heartrate": "Pulsschlag"
+    "heartrate": "Pulsschlag",
+    "noPreferences": "Keine Einstellungen"
 }
