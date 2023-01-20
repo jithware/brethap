@@ -1,0 +1,3 @@
+Release version: 1.7.10+88
+* Add preference selection on home screen
+* Other minor enhancements

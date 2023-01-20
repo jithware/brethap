@@ -60,5 +60,6 @@
     "week": "Settimana",
     "month": "Mese",
     "colorDisabled": "I Colori sono disabilitati in modalità notte.",
-    "heartrate": "Battito Cardiaco"
+    "heartrate": "Battito Cardiaco",
+    "noPreferences": "Nessuna preferenza"
 }

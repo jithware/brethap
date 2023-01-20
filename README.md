@@ -25,6 +25,7 @@ For Wear OS users, there is a slimmed down [version](https://github.com/jithware
 ### Running
 * To start a session, press the Start button
 * To end a session, let the timer expire or press the Stop button
+* To switch a preference, tap the preferences menu
 
 [<img src="./screenshots/android/running.webp"
      alt="Running"

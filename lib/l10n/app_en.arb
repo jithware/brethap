@@ -60,5 +60,6 @@
     "week": "Week",
     "month": "Month",
     "colorDisabled": "Color is disabled in dark mode.",
-    "heartrate": "Heart Rate"
+    "heartrate": "Heart Rate",
+    "noPreferences": "No Preferences"
 }

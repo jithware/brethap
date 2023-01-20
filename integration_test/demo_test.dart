@@ -20,9 +20,9 @@ import 'screenshot.dart';
 
 // ignore_for_file: dead_code
 const bool demoRunning = true,
-    demoSessions = true,
-    demoCalendar = true,
-    demoPreferences = true;
+    demoSessions = false,
+    demoCalendar = false,
+    demoPreferences = false;
 
 const Duration wait = Duration(milliseconds: 500);
 const Duration snackbar = Duration(milliseconds: 4000);
@@ -85,10 +85,11 @@ Future<void> main() async {
       await tester.pump(snackbar);
       await tester.pumpAndSettle();
 
+      // preferences menu
+      await testPreferencesMenu(tester);
+
       await tester.pump(wait);
       envVars += "RUNNING_END=${stopwatch.elapsed - wait}\n";
-
-      await Future.delayed(const Duration(seconds: 1));
     }
 
     // Sessions
@@ -135,8 +136,6 @@ Future<void> main() async {
 
       await tester.pump(wait);
       envVars += "SESSIONS_END=${stopwatch.elapsed - wait}\n";
-
-      await Future.delayed(const Duration(seconds: 1));
     }
 
     // Calendar
@@ -184,8 +183,6 @@ Future<void> main() async {
 
       await tester.pump(wait);
       envVars += "CALENDAR_END=${stopwatch.elapsed - wait}\n";
-
-      await Future.delayed(const Duration(seconds: 1));
     }
 
     // Preferences
@@ -349,8 +346,6 @@ Future<void> main() async {
 
       await tester.pump(wait);
       envVars += "PREFERENCES_END=${stopwatch.elapsed - wait}\n";
-
-      await Future.delayed(const Duration(seconds: 1));
     }
 
     await tester.pump(wait);

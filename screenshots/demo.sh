@@ -35,6 +35,8 @@ fi
 
 source "$ENVFILE"
 RECORD_LEN="$(ffprobe -v error -select_streams v:0 -show_entries stream=duration -of default=noprint_wrappers=1:nokey=1 -sexagesimal $TMPMP4)"
+echo "Recorded length: $RECORD_LEN"
+echo "Demo length: $DEMO_END"
 DIFF="$(( $(date -d "$RECORD_LEN" "+%s%6N") - $(date -d "$DEMO_END" "+%s%6N") ))"
 SECS="${DIFF:0:2}.${DIFF:2:6}"
 START="$(printf '%02d:%02d:%02f' $(echo -e "$SECS/3600\n$SECS%3600/60\n$SECS%60"| bc))" 
