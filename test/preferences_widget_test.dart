@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:brethap/constants.dart';
 import 'package:brethap/preferences_widget.dart';
 import 'package:brethap/wear.dart';
-import 'home_widget_test.dart';
+import 'test_utils.dart';
 
 const Duration wait = Duration(milliseconds: 500);
 

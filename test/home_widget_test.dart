@@ -1,13 +1,12 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:brethap/constants.dart';
 import 'package:brethap/home_widget.dart';
 import 'package:brethap/hive_storage.dart';
 import 'package:brethap/wear.dart';
+import 'test_utils.dart';
 
 const Duration wait = Duration(seconds: 2);
 
@@ -133,27 +132,6 @@ Future<void> testHomeWidget(WidgetTester tester) async {
   await testPreferencesMenu(tester);
 
   await tester.pumpAndSettle();
-}
-
-class HiveData {
-  Box preferences, sessions;
-  HiveData({
-    required this.preferences,
-    required this.sessions,
-  });
-}
-
-Future<HiveData> setupHive() async {
-  Box preferences, sessions;
-  WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter(Directory.systemTemp.createTempSync().path);
-
-  Hive.registerAdapter(PreferenceAdapter());
-  Hive.registerAdapter(SessionAdapter());
-  preferences = await Hive.openBox('preferences');
-  sessions = await Hive.openBox('sessions');
-
-  return HiveData(preferences: preferences, sessions: sessions);
 }
 
 Future<void> main() async {

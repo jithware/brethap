@@ -520,7 +520,7 @@ $url'''),
           children: <Widget>[
             Text(
               _status,
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.headlineSmall,
               semanticsLabel: _status,
             ),
             Center(
@@ -545,7 +545,7 @@ $url'''),
               const SizedBox(width: 5),
               Text(
                 getDurationString(_duration),
-                style: Theme.of(context).textTheme.headline5,
+                style: Theme.of(context).textTheme.headlineSmall,
                 semanticsLabel: getDurationString(_duration),
               ),
             ]),
