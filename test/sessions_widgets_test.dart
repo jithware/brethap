@@ -8,7 +8,7 @@ import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
 import 'package:brethap/sessions_widget.dart';
 import 'package:brethap/sessions_calendar_widget.dart';
-import 'home_widget_test.dart';
+import 'test_utils.dart';
 
 const Duration WAIT = Duration(milliseconds: 500);
 int totalSessions = HomeWidget.totalSessions + 1;

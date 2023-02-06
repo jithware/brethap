@@ -3,13 +3,13 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "canvaskit/canvaskit.js": "2bc454a691c631b07a9307ac4ca47797",
-"canvaskit/canvaskit.wasm": "bf50631470eb967688cca13ee181af62",
-"canvaskit/profiling/canvaskit.js": "38164e5a72bdad0faa4ce740c9b8e564",
-"canvaskit/profiling/canvaskit.wasm": "95a45378b69e77af5ed2bc72b2209b94",
-"flutter.js": "f85e6fb278b0fd20c349186fb46ae36d",
-"main.dart.js": "64c2807cfa4a5ae516c25c74d4d11ea6",
-"version.json": "06dbf76ed52f409b89d416a858712e24",
+  "canvaskit/canvaskit.js": "97937cb4c2c2073c968525a3e08c86a3",
+"canvaskit/canvaskit.wasm": "3de12d898ec208a5f31362cc00f09b9e",
+"canvaskit/profiling/canvaskit.js": "c21852696bc1cc82e8894d851c01921a",
+"canvaskit/profiling/canvaskit.wasm": "371bc4e204443b0d5e774d64a046eb99",
+"flutter.js": "1cfe996e845b3a8a33f57607e8b09ee4",
+"main.dart.js": "e56af773d35265c0849a770a6001a2d9",
+"version.json": "2e72181680410ce48af280b4bfc36b9f",
 "assets/images/launcher.png": "0950cc32a8f3e26588045a04f0cd6f55",
 "assets/images/animated.webp": "66954f7024b8640b3d7b84b85c4d7457",
 "assets/images/github-qr.png": "a90398f108840b6ed86c87cc82579dab",
@@ -19,17 +19,17 @@ const RESOURCES = {
 "assets/audio/tone3.oga": "8f8bdf184eb72b4c547be5a3ec02a3ec",
 "assets/audio/tone4.oga": "168074a296f6960504ea328b5d380a6c",
 "assets/packages/wakelock_web/assets/no_sleep.js": "7748a45cd593f33280669b29c2c8919a",
-"assets/fonts/MaterialIcons-Regular.otf": "95db9098c58fd6db106f1116bae85a0b",
+"assets/fonts/MaterialIcons-Regular.otf": "e7069dfd19b331be16bed984668fe080",
 "assets/shaders/ink_sparkle.frag": "2147963e04ef3991e7988a822e50fac3",
 "assets/AssetManifest.json": "5a833c245488e230e8501a5f9d455b64",
 "assets/FontManifest.json": "7b2a36307916a9721811788013e65289",
-"assets/NOTICES": "fb83885891ee93d057d9fb9ccd175bd9",
+"assets/NOTICES": "46653f80c36879ec05cd97c0f072af23",
 "README.md": "fe162a7842c5ce0ff4e7b90971ae99ff",
 "favicon.png": "6b0e697bd5734279a8c6298ea0aebfcb",
 "icons/Icon-192.png": "c1c6e61ac04053c7a7e425a2bf641eac",
 "icons/Icon-512.png": "47e7dfec5298557877f350ed4e7dd55e",
-"index.html": "530508e9c1c38d8e2b632905bc0b9bd7",
-"/": "530508e9c1c38d8e2b632905bc0b9bd7",
+"index.html": "638b5ba3bea93ffb61efbcafcd0e77e0",
+"/": "638b5ba3bea93ffb61efbcafcd0e77e0",
 "manifest.json": "7dbb56011187c29a1092f838ef6df339"
 };
 
