@@ -928,27 +928,7 @@ packages:
       sha256: "857f77b3fe6ae82dd045455baa626bc4b93cb9bb6c86bf3f27c182167c3a5567"
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
-    version: "0.2.0"
-=======
     version: "0.2.1"
-  watch_connectivity:
-    dependency: "direct main"
-    description:
-      name: watch_connectivity
-      sha256: "3dacb8d3ea04b8d7cd45e2b6d3d9be95478c8d5b849c8a50c0435c81dc2f605a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.4"
-  watch_connectivity_platform_interface:
-    dependency: transitive
-    description:
-      name: watch_connectivity_platform_interface
-      sha256: c03b17267c7829f047b4b16476304b08082e4e94320e44af031e6f4c0c7e5e40
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.1"
->>>>>>> master
   watcher:
     dependency: transitive
     description:
