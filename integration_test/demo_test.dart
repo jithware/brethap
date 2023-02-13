@@ -20,9 +20,9 @@ import 'screenshot.dart';
 
 // ignore_for_file: dead_code
 const bool demoRunning = true,
-    demoSessions = false,
-    demoCalendar = false,
-    demoPreferences = false;
+    demoSessions = true,
+    demoCalendar = true,
+    demoPreferences = true;
 
 const Duration wait = Duration(milliseconds: 500);
 const Duration snackbar = Duration(milliseconds: 4000);
