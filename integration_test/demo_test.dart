@@ -86,7 +86,7 @@ Future<void> main() async {
       await tester.pumpAndSettle();
 
       // preferences menu
-      await testPreferencesMenu(tester);
+      await testPreferencesMenu(tester, HomeWidget.keyNoPreferences);
 
       await tester.pump(wait);
       envVars += "RUNNING_END=${stopwatch.elapsed - wait}\n";
@@ -290,14 +290,14 @@ Future<void> main() async {
       await tester.pump(wait);
 
       // enter preference name
-      String preference = "${PreferencesWidget.keyPreference} 1";
+      String preference1 = "${PreferencesWidget.keyPreference} 1";
       finder = find.byKey(Key(PreferencesWidget.keyPreferenceName));
       expect(finder, findsOneWidget);
-      await tester.enterText(finder, preference);
+      await tester.enterText(finder, preference1);
       await tester.pump(wait * 2);
 
       // save preference
-      finder = find.byKey(Key(preference));
+      finder = find.byKey(Key(preference1));
       expect(finder, findsOneWidget);
       await tester.longPress(finder);
       await tester.pump(wait);
@@ -321,28 +321,30 @@ Future<void> main() async {
       await tester.pump(wait);
 
       // save preset
-      preference = "${PreferencesWidget.keyPreference} 2";
-      finder = find.byKey(Key(preference));
+      String preference2 = "${PreferencesWidget.keyPreference} 2";
+      finder = find.byKey(Key(preference2));
       expect(finder, findsOneWidget);
       await tester.longPress(finder);
       await tester.pump(wait);
 
       // tap preset
-      preference = "${PreferencesWidget.keyPreference} 1";
-      finder = find.byKey(Key(preference));
+      finder = find.byKey(Key(preference1));
       expect(finder, findsOneWidget);
       await tester.tap(finder);
       await tester.pump(wait * 2);
 
       // tap preset
-      preference = "${PreferencesWidget.keyPreference} 2";
-      finder = find.byKey(Key(preference));
+      finder = find.byKey(Key(preference2));
       expect(finder, findsOneWidget);
       await tester.tap(finder);
       await tester.pump(wait * 2);
 
       // go back
       await goBack(tester);
+
+      // tap preferences menu
+      await testPreferencesMenu(tester, preference1);
+      await testPreferencesMenu(tester, preference2);
 
       await tester.pump(wait);
       envVars += "PREFERENCES_END=${stopwatch.elapsed - wait}\n";

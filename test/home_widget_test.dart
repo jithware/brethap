@@ -26,13 +26,13 @@ Future<void> closeDrawer(WidgetTester tester) async {
   await tester.pump(wait * .5);
 }
 
-Future<void> testPreferencesMenu(WidgetTester tester) async {
+Future<void> testPreferencesMenu(WidgetTester tester, String key) async {
   Finder finder = find.byType(IconButton).last;
   expect(finder, findsOneWidget);
   await tester.tap(finder);
   await tester.pump(wait * .5);
   await tester.pump(wait * .5);
-  finder = find.byKey(Key(HomeWidget.keyNoPreferences));
+  finder = find.byKey(Key(key));
   expect(finder, findsOneWidget);
   await tester.tap(finder);
   await tester.pump(wait * .5);
@@ -129,7 +129,7 @@ Future<void> testHomeWidget(WidgetTester tester) async {
   await closeDrawer(tester);
 
   // Verify preferences menu
-  await testPreferencesMenu(tester);
+  await testPreferencesMenu(tester, HomeWidget.keyNoPreferences);
 
   await tester.pumpAndSettle();
 }
