@@ -1,3 +1,4 @@
 Release version: 1.7.12+92
+* Update dependencies
 * Update German translation
 * Other minor enhancements

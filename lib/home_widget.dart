@@ -427,6 +427,7 @@ $url'''),
                       name = p.name;
                     }
                     menuItems.add(PopupMenuItem(
+                      key: Key(name),
                       child: Text(name),
                       onTap: () async {
                         Preference currentPreference =
