@@ -14,7 +14,7 @@ For Wear OS users, there is a slimmed down [version](https://github.com/jithware
      alt="Get it on The Web"
      height="80">](https://jithware.github.io/brethap)
      
-*Note: iOS/macOS users can only use the [unsupported](https://github.com/jithware/brethap/discussions/95) web version at this time.*
+*The web version has a reduced amount of features. iOS/macOS users can only use the [unsupported](https://github.com/jithware/brethap/discussions/95) web version at this time.*
 
 ## Screenshots
 
