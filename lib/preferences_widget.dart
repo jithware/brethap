@@ -458,45 +458,51 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
               ),
 
               // Duration vibrate
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    AppLocalizations.of(context).durationVibrate,
-                  ),
-                  Text("${preference.vibrateDuration} ms",
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                ],
+              Visibility(
+                visible: !isWeb(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context).durationVibrate,
+                    ),
+                    Text("${preference.vibrateDuration} ms",
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width - 30,
-                      child: Slider(
-                        key: const Key(DURATION_VIBRATE_TEXT),
-                        value: _vibrateDurationD,
-                        min: 0,
-                        max: PreferencesWidget.maxVibration.toDouble(),
-                        divisions: PreferencesWidget.maxVibration + 1,
-                        onChanged: (double value) {
-                          setState(() {
-                            _vibrateDurationD = value;
-                            preference.vibrateDuration =
-                                (value.round()).toInt() * 10;
-                          });
-                        },
-                        onChangeEnd: (double value) {
-                          setState(() {
-                            preference.vibrateDuration =
-                                (value.round()).toInt() * 10;
-                            preference.save();
-                            debugPrint(
-                                "$DURATION_VIBRATE_TEXT: ${preference.vibrateDuration}");
-                          });
-                        },
-                      ))
-                ],
+              Visibility(
+                visible: !isWeb(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width - 30,
+                        child: Slider(
+                          key: const Key(DURATION_VIBRATE_TEXT),
+                          value: _vibrateDurationD,
+                          min: 0,
+                          max: PreferencesWidget.maxVibration.toDouble(),
+                          divisions: PreferencesWidget.maxVibration + 1,
+                          onChanged: (double value) {
+                            setState(() {
+                              _vibrateDurationD = value;
+                              preference.vibrateDuration =
+                                  (value.round()).toInt() * 10;
+                            });
+                          },
+                          onChangeEnd: (double value) {
+                            setState(() {
+                              preference.vibrateDuration =
+                                  (value.round()).toInt() * 10;
+                              preference.save();
+                              debugPrint(
+                                  "$DURATION_VIBRATE_TEXT: ${preference.vibrateDuration}");
+                            });
+                          },
+                        ))
+                  ],
+                ),
               ),
 
               // Duration TTS
@@ -962,45 +968,52 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
               const SizedBox(height: 50),
 
               // Breath vibrate
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    AppLocalizations.of(context).breathVibrate,
-                  ),
-                  Text("${preference.vibrateBreath} ms",
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                ],
+              Visibility(
+                visible: !isWeb(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context).breathVibrate,
+                    ),
+                    Text("${preference.vibrateBreath} ms",
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width - 30,
-                      child: Slider(
-                        key: const Key(BREATH_VIBRATE_TEXT),
-                        value: _vibrateBreathD,
-                        min: 0,
-                        max: PreferencesWidget.maxVibration.toDouble(),
-                        divisions: PreferencesWidget.maxVibration + 1,
-                        onChanged: (double value) {
-                          setState(() {
-                            _vibrateBreathD = value;
-                            preference.vibrateBreath =
-                                (value.round()).toInt() * 10;
-                          });
-                        },
-                        onChangeEnd: (double value) {
-                          setState(() {
-                            preference.vibrateBreath =
-                                (value.round()).toInt() * 10;
-                            preference.save();
-                            debugPrint(
-                                "$BREATH_VIBRATE_TEXT: ${preference.vibrateBreath}");
-                          });
-                        },
-                      ))
-                ],
+
+              Visibility(
+                visible: !isWeb(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width - 30,
+                        child: Slider(
+                          key: const Key(BREATH_VIBRATE_TEXT),
+                          value: _vibrateBreathD,
+                          min: 0,
+                          max: PreferencesWidget.maxVibration.toDouble(),
+                          divisions: PreferencesWidget.maxVibration + 1,
+                          onChanged: (double value) {
+                            setState(() {
+                              _vibrateBreathD = value;
+                              preference.vibrateBreath =
+                                  (value.round()).toInt() * 10;
+                            });
+                          },
+                          onChangeEnd: (double value) {
+                            setState(() {
+                              preference.vibrateBreath =
+                                  (value.round()).toInt() * 10;
+                              preference.save();
+                              debugPrint(
+                                  "$BREATH_VIBRATE_TEXT: ${preference.vibrateBreath}");
+                            });
+                          },
+                        ))
+                  ],
+                ),
               ),
 
               // Breath TTS

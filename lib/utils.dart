@@ -318,3 +318,7 @@ Future<bool> isPhysicalPhone() async {
 
   return false;
 }
+
+bool isWeb() {
+  return kIsWeb;
+}

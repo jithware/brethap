@@ -1,0 +1,3 @@
+Release version: 1.7.13+94
+* Disable vibration preference in web version
+* Other minor enhancements
