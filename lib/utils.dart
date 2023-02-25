@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:collection/collection.dart';
@@ -281,17 +281,13 @@ Future<Directory?> getStorageDir() async {
 
 Future<void> play(AudioPlayer player, String audio) async {
   if (audio == AUDIO_TONE1) {
-    await player.setAsset('audio/tone1.oga');
-    await player.play();
+    await player.play(AssetSource('tone1.oga'));
   } else if (audio == AUDIO_TONE2) {
-    await player.setAsset('audio/tone2.oga');
-    await player.play();
+    await player.play(AssetSource('tone2.oga'));
   } else if (audio == AUDIO_TONE3) {
-    await player.setAsset('audio/tone3.oga');
-    await player.play();
+    await player.play(AssetSource('tone3.oga'));
   } else if (audio == AUDIO_TONE4) {
-    await player.setAsset('audio/tone4.oga');
-    await player.play();
+    await player.play(AssetSource('tone4.oga'));
   }
 }
 

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -28,19 +29,19 @@ Future<void> testSwitch(WidgetTester tester, String key, bool value) async {
 }
 
 Future<void> testAudio(WidgetTester tester, String key) async {
-  Finder audio = find.byKey(Key(key), skipOffstage: false);
-  await tester.ensureVisible(audio);
-  await tester.tap(audio);
+  Finder finder = find.byKey(Key(key), skipOffstage: false);
+  await tester.ensureVisible(finder);
+  await tester.tap(finder);
   await tester.pumpAndSettle();
   expect(find.textContaining(AUDIO_NONE), findsWidgets);
   expect(find.textContaining(AUDIO_TONE1), findsWidgets);
   expect(find.textContaining(AUDIO_TONE2), findsWidgets);
   expect(find.textContaining(AUDIO_TONE3), findsWidgets);
   expect(find.textContaining(AUDIO_TONE4), findsWidgets);
-  Finder none = find.text(AUDIO_NONE).last;
-  await tester.tap(none);
+  finder = find.text(AUDIO_TONE1).last;
+  await tester.tap(finder);
   await tester.pumpAndSettle();
-  expect(find.textContaining(AUDIO_NONE), findsWidgets);
+  expect(find.textContaining(AUDIO_TONE1), findsWidgets);
   await tester.pumpAndSettle();
 }
 
@@ -299,6 +300,7 @@ Future<void> main() async {
   late HiveData hiveData;
   setUpAll((() async {
     hiveData = await setupHive();
+    AudioCache.instance = AudioCache(prefix: "audio/");
   }));
 
   tearDownAll((() async {}));

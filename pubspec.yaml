@@ -47,7 +47,7 @@ dependencies:
   io: ^1.0.3
   get: ^4.6.1
   flutter_material_color_picker: ^1.1.0+2
-  just_audio: ^0.9.20
+  audioplayers: ^3.0.1
   hive: ^2.2.3
   device_info_plus: ^8.0.0
   collection: ^1.16.0

@@ -1,4 +1,5 @@
 Release version: 1.7.13+94
 * Update dependencies
+* Switch audio player to one that does not need network state permission
 * Disable vibration preference in web version
 * Other minor enhancements
