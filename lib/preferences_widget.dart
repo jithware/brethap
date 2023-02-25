@@ -4,8 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:get/get.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:just_audio/just_audio.dart';
-
+import 'package:audioplayers/audioplayers.dart';
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
 import 'package:brethap/hive_storage.dart';

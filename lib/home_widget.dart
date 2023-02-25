@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:collection/collection.dart';
 
 import 'package:brethap/utils.dart';
@@ -121,6 +121,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   }
 
   void _initAudio() {
+    AudioCache.instance = AudioCache(prefix: "audio/");
     _player = AudioPlayer();
   }
 
