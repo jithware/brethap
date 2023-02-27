@@ -34,6 +34,7 @@ Remove and re-add the submodule/flutter repo link:
 git checkout fdroid
 git rm submodules/flutter
 git submodule add -b stable --force https://github.com/flutter/flutter.git submodules/flutter
+git submodule deinit --force submodules/flutter
 ```
 *This is used only for creating a link to the flutter stable repo at a specific commit in time. Do __not__ run "git submodule init/update" as the actual flutter source code is not used here, only when building on fdroid*
 
