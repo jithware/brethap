@@ -170,13 +170,15 @@ Future<void> main() async {
       finder = find.byType(FormatButton);
       expect(finder, findsOneWidget);
       await tester.tap(finder);
-      await tester.pump(wait * 2);
+      await tester.pump(wait);
+      await tester.pump(wait);
 
       // tap month
       finder = find.byType(FormatButton);
       expect(finder, findsOneWidget);
       await tester.tap(finder);
-      await tester.pump(wait * 2);
+      await tester.pump(wait);
+      await tester.pump(wait);
 
       // go back
       await goBack(tester);

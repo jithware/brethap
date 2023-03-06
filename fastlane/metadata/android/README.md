@@ -46,6 +46,7 @@ git remote add upstream https://gitlab.com/fdroid/fdroiddata.git
 Refresh fork on gitlab:
 ```
 git checkout master
+git branch -d com.jithware.brethap
 git fetch upstream
 git pull upstream master
 git push origin master
