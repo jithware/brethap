@@ -31,10 +31,10 @@ Future<void> testStats(WidgetTester tester, String sessions) async {
   String text = "Sessions:$sessions";
   expect(find.textContaining(text), findsNothing);
   await tester.tap(find.byType(FloatingActionButton));
-  await tester.pumpAndSettle();
+  await tester.pumpAndSettle(WAIT);
   expect(find.textContaining(text), findsOneWidget);
   await tester.pump(const Duration(seconds: 3));
-  await tester.pumpAndSettle();
+  await tester.pumpAndSettle(WAIT);
 }
 
 Future<void> testSessionsWidget(WidgetTester tester) async {
