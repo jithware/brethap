@@ -2,4 +2,6 @@ Brethap is yet another meditation app (yama). Including a timer for meditation, 
 
 For Wear OS users, there is a slimmed down version available as well.
 
-Documentation: https://github.com/jithware/brethap
+Full Phone documentation at: https://github.com/jithware/brethap
+
+Full Wear OS documentation at: https://github.com/jithware/brethap_wear
