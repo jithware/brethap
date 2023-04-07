@@ -1,3 +1,6 @@
+// To execute test run:
+// flutter test integration_test/app_test.dart
+
 import 'package:brethap/home_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
