@@ -1,0 +1,3 @@
+Release version: 1.7.16+104
+* Add adaptive icons
+* Other minor enhancements
