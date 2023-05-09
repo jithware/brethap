@@ -699,6 +699,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       AUDIO_TONE2,
                       AUDIO_TONE3,
                       AUDIO_TONE4,
+                      AUDIO_SILENCE
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -734,6 +735,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       AUDIO_TONE2,
                       AUDIO_TONE3,
                       AUDIO_TONE4,
+                      AUDIO_SILENCE
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -916,6 +918,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       AUDIO_TONE2,
                       AUDIO_TONE3,
                       AUDIO_TONE4,
+                      AUDIO_SILENCE
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -951,6 +954,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                       AUDIO_TONE2,
                       AUDIO_TONE3,
                       AUDIO_TONE4,
+                      AUDIO_SILENCE
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
