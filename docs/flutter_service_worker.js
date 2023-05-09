@@ -3,13 +3,14 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "5a833c245488e230e8501a5f9d455b64",
+  "assets/AssetManifest.json": "59a272dc30237a42f22deff5b12f96bf",
 "assets/FontManifest.json": "7b2a36307916a9721811788013e65289",
-"assets/audio/tone1.oga": "47d6e5ba97b4410b4a0696540aeda65f",
-"assets/audio/tone2.oga": "64a7862cfd8a3478ec78d142728eeeee",
-"assets/audio/tone3.oga": "8f8bdf184eb72b4c547be5a3ec02a3ec",
-"assets/audio/tone4.oga": "168074a296f6960504ea328b5d380a6c",
-"assets/audio/README.md": "d41d8cd98f00b204e9800998ecf8427e",
+"assets/audio/tone1.oga": "3b5c5430936533a61b252935f4d6e9f2",
+"assets/audio/tone2.oga": "e36b524a8203eca520119e266e35363d",
+"assets/audio/tone3.oga": "eef4cb2a8401cf7adda411b63c916959",
+"assets/audio/tone4.oga": "5baa56cdf20a2a3738a9846dd78d016d",
+"assets/audio/README.md": "eda83b4c6c54489031cd7bb7e6384416",
+"assets/audio/silence15.oga": "9f73d078aec33e52b29f2c10c596144a",
 "assets/fonts/MaterialIcons-Regular.otf": "e7069dfd19b331be16bed984668fe080",
 "assets/images/animated.webp": "66954f7024b8640b3d7b84b85c4d7457",
 "assets/images/donate.png": "b307bbd89f39b81a984fa8ef1808f2e8",
@@ -28,10 +29,10 @@ const RESOURCES = {
 "icons/Icon-512.png": "47e7dfec5298557877f350ed4e7dd55e",
 "manifest.json": "7dbb56011187c29a1092f838ef6df339",
 "README.md": "e36fa824f15fa14b5e13c4be30936e63",
-"index.html": "230dc24d809884e58490a558047d3add",
-"/": "230dc24d809884e58490a558047d3add",
-"main.dart.js": "62c4ff8fd63966047c931aae286a803d",
-"version.json": "f85ee69a72021a5df135fb1d8dcd41bb"
+"main.dart.js": "988b3f87740161ed5d4f01c07f98d1ba",
+"index.html": "68adb47ccac0ab89665c446d1e5070c2",
+"/": "68adb47ccac0ab89665c446d1e5070c2",
+"version.json": "a60710f5a2f373c7cac583ef6bc6c588"
 };
 
 // The application shell files that are downloaded before a service worker can
