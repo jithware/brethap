@@ -1,0 +1,3 @@
+Release version: 1.7.17+110
+* Add silence to audio for when display is off
+* Other minor enhancements

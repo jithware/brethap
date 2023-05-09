@@ -288,6 +288,8 @@ Future<void> play(AudioPlayer player, String audio) async {
     await player.play(AssetSource('tone3.oga'));
   } else if (audio == AUDIO_TONE4) {
     await player.play(AssetSource('tone4.oga'));
+  } else if (audio == AUDIO_SILENCE) {
+    await player.play(AssetSource('silence15.oga'));
   }
 }
 
