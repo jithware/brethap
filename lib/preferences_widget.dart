@@ -1041,10 +1041,10 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 ],
               ),
 
-              Divider(
-                key: Key(PreferencesWidget.keyDrag),
+              const Divider(
                 thickness: 3,
               ),
+
               const SizedBox(height: 50),
               Visibility(
                 visible: Get.isDarkMode,
@@ -1052,7 +1052,6 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   AppLocalizations.of(context).colorDisabled,
                 ),
               ),
-              const SizedBox(height: 20),
 
               // Primary Color
               Visibility(
@@ -1067,27 +1066,32 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 ),
               ),
 
+              const SizedBox(height: 20),
+
               Visibility(
                 visible: !Get.isDarkMode,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    MaterialColorPicker(
-                        key: const Key(COLOR_PRIMARY_TEXT),
-                        colors: COLORS_PRIMARY,
-                        allowShades: false,
-                        onMainColorChange: (ColorSwatch? color) {
-                          _primaryColor = color as MaterialColor;
-                          _changeTheme();
-                          preference.colors[0] =
-                              _getColorPosition(COLORS_PRIMARY, color);
-                          preference.save();
-                          debugPrint("$COLOR_PRIMARY_TEXT: $color");
-                        },
-                        selectedColor: _primaryColor),
-                  ],
-                ),
+                child: MaterialColorPicker(
+                    key: const Key(COLOR_PRIMARY_TEXT),
+                    colors: COLORS_PRIMARY,
+                    allowShades: false,
+                    onMainColorChange: (ColorSwatch? color) {
+                      _primaryColor = color as MaterialColor;
+                      _changeTheme();
+                      preference.colors[0] =
+                          _getColorPosition(COLORS_PRIMARY, color);
+                      preference.save();
+                      debugPrint("$COLOR_PRIMARY_TEXT: $color");
+                    },
+                    selectedColor: _primaryColor),
               ),
+
+              const SizedBox(height: 20),
+
+              Divider(
+                key: Key(PreferencesWidget.keyDrag),
+                thickness: 3,
+              ),
+              const SizedBox(height: 50),
 
               // Background Color
               Visibility(
@@ -1102,27 +1106,26 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 ),
               ),
 
+              const SizedBox(height: 20),
+
               Visibility(
                 visible: !Get.isDarkMode,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    MaterialColorPicker(
-                        key: const Key(COLOR_BACKGROUND_TEXT),
-                        colors: COLORS_BACKGROUND,
-                        onBack: () {
-                          _changeTheme();
-                        },
-                        onColorChange: (Color color) {
-                          _backgroundColor = color;
-                          preference.colors[1] = color.value;
-                          preference.save();
-                          debugPrint("$COLOR_BACKGROUND_TEXT: $color");
-                        },
-                        selectedColor: _backgroundColor),
-                  ],
-                ),
+                child: MaterialColorPicker(
+                    key: const Key(COLOR_BACKGROUND_TEXT),
+                    colors: COLORS_BACKGROUND,
+                    onBack: () {
+                      _changeTheme();
+                    },
+                    onColorChange: (Color color) {
+                      _backgroundColor = color;
+                      preference.colors[1] = color.value;
+                      preference.save();
+                      debugPrint("$COLOR_BACKGROUND_TEXT: $color");
+                    },
+                    selectedColor: _backgroundColor),
               ),
+
+              const SizedBox(height: 20),
 
               const Divider(
                 thickness: 3,

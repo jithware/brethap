@@ -31,7 +31,8 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
     _lastDay = DateTime.now();
     _firstDay = _getFirstDate(_list);
     _selectedDay = _focusedDay;
-    _statFirstDay = Jiffy(_focusedDay).startOf(Units.MONTH).dateTime;
+    _statFirstDay =
+        Jiffy.parseFromDateTime(_focusedDay).startOf(Unit.month).dateTime;
     _statLastDay = _focusedDay;
     _selectedSessions = ValueNotifier(_getSessionsForDay(_selectedDay!));
   }
@@ -81,11 +82,15 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
 
   void _updateStats() {
     if (_calendarFormat == CalendarFormat.month) {
-      _statFirstDay = Jiffy(_focusedDay).startOf(Units.MONTH).dateTime;
-      _statLastDay = Jiffy(_statFirstDay).add(months: 1).dateTime;
+      _statFirstDay =
+          Jiffy.parseFromDateTime(_focusedDay).startOf(Unit.month).dateTime;
+      _statLastDay =
+          Jiffy.parseFromDateTime(_statFirstDay).add(months: 1).dateTime;
     } else if (_calendarFormat == CalendarFormat.week) {
-      _statFirstDay = Jiffy(_focusedDay).startOf(Units.WEEK).dateTime;
-      _statLastDay = Jiffy(_statFirstDay).add(weeks: 1).dateTime;
+      _statFirstDay =
+          Jiffy.parseFromDateTime(_focusedDay).startOf(Unit.week).dateTime;
+      _statLastDay =
+          Jiffy.parseFromDateTime(_statFirstDay).add(weeks: 1).dateTime;
     }
     debugPrint(
         "focusedDay: $_focusedDay  statFirstDay: $_statFirstDay  statLastDay: $_statLastDay");
