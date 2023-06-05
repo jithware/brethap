@@ -47,6 +47,8 @@ Future<void> main() async {
 
     await goBack(tester);
 
+    await closeDrawer(tester);
+
     await openDrawer(tester);
 
     await tapItem(tester, HomeWidget.keySessions);
@@ -55,6 +57,8 @@ Future<void> main() async {
 
     await goBack(tester);
 
+    await closeDrawer(tester);
+
     await openDrawer(tester);
 
     await tapItem(tester, HomeWidget.keyCalendar);
@@ -62,6 +66,8 @@ Future<void> main() async {
     await testSessionsCalendarWidget(tester);
 
     await goBack(tester);
+
+    await closeDrawer(tester);
 
     //await tester.pump(const Duration(seconds: 10));
   });

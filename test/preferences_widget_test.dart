@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -58,6 +59,50 @@ Future<void> tapPreset(WidgetTester tester, String preset) async {
   expect(tap, findsOneWidget);
   await tester.tap(tap);
   await tester.pumpAndSettle();
+}
+
+Future<void> changeColors(WidgetTester tester) async {
+  // scroll to primary color
+  Finder finder =
+      find.byKey(const Key(COLOR_PRIMARY_TEXT), skipOffstage: false);
+  expect(finder, findsOneWidget);
+  await tester.ensureVisible(finder);
+  await tester.pump(wait);
+
+  // tap primary color
+  await tester.pump(wait);
+  finder = find.byType(CircleColor);
+  expect(finder, findsWidgets);
+  await tester.tap(finder.at(5));
+  await tester.pump(wait);
+
+  // scroll to background color
+  finder = find.byKey(const Key(COLOR_BACKGROUND_TEXT));
+  expect(finder, findsOneWidget);
+  await tester.ensureVisible(finder);
+  await tester.pump(wait);
+
+  // tap background color
+  await tester.pump(wait);
+  finder = find.byType(CircleColor);
+  expect(finder, findsWidgets);
+  await tester.tap(finder.at(24));
+  await tester.pump(wait);
+
+  // tap shade
+  await tester.pump(wait);
+  finder = find.byType(CircleColor);
+  expect(finder, findsWidgets);
+  await tester.tap(finder.at(19));
+  await tester.pump(wait);
+
+  // tap back
+  await tester.pump(wait);
+  finder = find.byIcon(Icons.arrow_back);
+  expect(finder, findsWidgets);
+  await tester.tap(finder.at(0));
+
+  await tester.pump(wait);
 }
 
 Future<void> testPreferencesWidget(
@@ -195,25 +240,8 @@ Future<void> testPreferencesWidget(
   // Drag breath tts switch
   await testSwitch(tester, BREATH_TTS_TEXT, false);
 
-  // Verify primary color
-  Finder primaryColor = find.byKey(const Key(COLOR_PRIMARY_TEXT));
-  await tester.ensureVisible(primaryColor);
-  expect(primaryColor, findsOneWidget);
-  Offset offset = const Offset(65.0, 540.0); // Colors.indigo;
-  await tester.tapAt(offset);
-  await tester.pumpAndSettle();
-
-  // Verify background color
-  Finder backgroundColor = find.byKey(const Key(COLOR_BACKGROUND_TEXT));
-  expect(backgroundColor, findsOneWidget);
-  await tester.tapAt(offset);
-  await tester.pumpAndSettle();
-  offset = const Offset(175.0, 545.0); // Colors.indigo.shade100;
-  await tester.tapAt(offset);
-  await tester.pumpAndSettle();
-  offset = const Offset(65.0, 535.0); // back
-  await tester.tapAt(offset);
-  await tester.pumpAndSettle();
+  // Change colors
+  await changeColors(tester);
 
   // Scroll up.
   await tester.dragUntilVisible(
@@ -221,7 +249,7 @@ Future<void> testPreferencesWidget(
     find.byKey(Key(PreferencesWidget.keyDrag)),
     const Offset(0, 1250),
   );
-  await tester.pumpAndSettle();
+  await tester.pump(wait);
 
   preferenceName = find.byKey(Key(PreferencesWidget.keyPreferenceName));
   expect(preferenceName, findsOneWidget);

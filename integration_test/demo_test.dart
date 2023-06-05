@@ -9,13 +9,13 @@ import 'package:brethap/constants.dart';
 import 'package:brethap/home_widget.dart';
 import 'package:brethap/preferences_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:table_calendar/src/widgets/format_button.dart';
 
 import 'package:brethap/main.dart' as app;
 import '../test/home_widget_test.dart';
+import '../test/preferences_widget_test.dart';
 import 'screenshot.dart';
 
 // ignore_for_file: dead_code
@@ -134,6 +134,9 @@ Future<void> main() async {
       // go back
       await goBack(tester);
 
+      // close the drawer
+      await closeDrawer(tester);
+
       await tester.pump(wait);
       envVars += "SESSIONS_END=${stopwatch.elapsed - wait}\n";
     }
@@ -182,6 +185,9 @@ Future<void> main() async {
 
       // go back
       await goBack(tester);
+
+      // close the drawer
+      await closeDrawer(tester);
 
       await tester.pump(wait);
       envVars += "CALENDAR_END=${stopwatch.elapsed - wait}\n";
@@ -239,44 +245,8 @@ Future<void> main() async {
       await tester.tap(finder);
       await tester.pump(wait);
 
-      // scroll to primary color
-      finder = find.byKey(const Key(COLOR_PRIMARY_TEXT), skipOffstage: false);
-      expect(finder, findsOneWidget);
-      await tester.ensureVisible(finder);
-      await tester.pump(wait);
-
-      // tap primary color
-      await tester.pump(wait);
-      finder = find.byType(CircleColor);
-      expect(finder, findsWidgets);
-      await tester.tap(finder.at(5));
-      await tester.pump(wait);
-
-      // scroll to background color
-      finder = find.byKey(const Key(COLOR_BACKGROUND_TEXT));
-      expect(finder, findsOneWidget);
-      await tester.ensureVisible(finder);
-      await tester.pump(wait);
-
-      // tap background color
-      await tester.pump(wait);
-      finder = find.byType(CircleColor);
-      expect(finder, findsWidgets);
-      await tester.tap(finder.at(24));
-      await tester.pump(wait);
-
-      // tap shade
-      await tester.pump(wait);
-      finder = find.byType(CircleColor);
-      expect(finder, findsWidgets);
-      await tester.tap(finder.at(19));
-      await tester.pump(wait);
-
-      // tap back
-      await tester.pump(wait);
-      finder = find.byIcon(Icons.arrow_back);
-      expect(finder, findsWidgets);
-      await tester.tap(finder.at(0));
+      // change colors
+      await changeColors(tester);
 
       await tester.pumpAndSettle();
       takeScreenshot(binding, "5_colors.png");
@@ -343,6 +313,9 @@ Future<void> main() async {
 
       // go back
       await goBack(tester);
+
+      // close the drawer
+      await closeDrawer(tester);
 
       // tap preferences menu
       await testPreferencesMenu(tester, preference1);

@@ -578,10 +578,6 @@ $url'''),
                           preferences: widget.preferences,
                           callback: _preferenceUpdated),
                     ));
-
-                // closes drawer
-                if (!mounted) return;
-                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -595,10 +591,6 @@ $url'''),
                       builder: (context) =>
                           SessionsWidget(sessions: widget.sessions)),
                 );
-
-                // closes drawer
-                if (!mounted) return;
-                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -612,10 +604,6 @@ $url'''),
                         builder: (context) =>
                             SessionsCalendarWidget(sessions: widget.sessions)),
                   );
-
-                  // closes drawer
-                  if (!mounted) return;
-                  Navigator.pop(context);
                 }),
             SafeArea(
               child: AboutListTile(

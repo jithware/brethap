@@ -175,16 +175,18 @@ String getStreak(
   int streak = 1, runningStreak = 1;
   for (int i = 0; i < list.length - 1; i++) {
     // in start/end range
-    if (Jiffy(list[i].start).isAfter(Jiffy(start)) &&
-        Jiffy(list[i].end).isBefore(Jiffy(end))) {
-      Jiffy first = Jiffy(list[i].start).startOf(Units.DAY);
-      Jiffy next = Jiffy(list[i + 1].start).startOf(Units.DAY);
+    if (Jiffy.parseFromDateTime(list[i].start)
+            .isAfter(Jiffy.parseFromDateTime(start)) &&
+        Jiffy.parseFromDateTime(list[i].end)
+            .isBefore(Jiffy.parseFromDateTime(end))) {
+      Jiffy first = Jiffy.parseFromDateTime(list[i].start).startOf(Unit.day);
+      Jiffy next = Jiffy.parseFromDateTime(list[i + 1].start).startOf(Unit.day);
       // before end range
-      if (next.isBefore(Jiffy(end))) {
+      if (next.isBefore(Jiffy.parseFromDateTime(end))) {
         // not the same day
-        if (!first.isSame(next, Units.DAY)) {
+        if (!first.isSame(next, unit: Unit.day)) {
           // one day difference
-          if (first.diff(next, Units.DAY, true).abs() <= 1) {
+          if (first.diff(next, unit: Unit.day, asFloat: true).abs() <= 1) {
             runningStreak++;
           } else {
             runningStreak = 1;
