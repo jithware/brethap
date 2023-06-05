@@ -96,10 +96,7 @@ class MainWidget extends StatelessWidget {
       ),
       darkTheme: ThemeData.dark().copyWith(primaryColor: Colors.blue),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      // See https://github.com/flutter/flutter/issues/100857#issuecomment-1332298431
-      supportedLocales: List.from(AppLocalizations.supportedLocales)
-        ..sort((a, b) =>
-            const Locale('en').languageCode.compareTo(a.languageCode)),
+      supportedLocales: AppLocalizations.supportedLocales,
       home: HomeWidget(
           appName: appName,
           version: version,
