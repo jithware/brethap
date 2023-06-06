@@ -1,7 +1,7 @@
 // See https://docs.hivedb.dev/#/custom-objects/generate_adapter
 // flutter packages pub run build_runner build --delete-conflicting-outputs
 
-import 'package:brethap/utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'constants.dart';
 
@@ -160,8 +160,8 @@ class Preference extends HiveObject {
         duration: DURATION,
         inhale: [INHALE, INHALE_HOLD, INHALE_LAST],
         exhale: [EXHALE, EXHALE_HOLD, EXHALE_LAST],
-        vibrateDuration: isWeb() ? 0 : VIBRATE_DURATION,
-        vibrateBreath: isWeb() ? 0 : VIBRATE_BREATH,
+        vibrateDuration: kIsWeb ? 0 : VIBRATE_DURATION,
+        vibrateBreath: kIsWeb ? 0 : VIBRATE_BREATH,
         durationTts: DURATION_TTS,
         breathTts: BREATH_TTS,
         colors: [COLOR_PRIMARY, COLOR_BACKGROUND],
