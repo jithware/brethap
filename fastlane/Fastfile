@@ -31,7 +31,7 @@ platform :android do
       aab: "build/app/outputs/bundle/release/app-release.aab",
       skip_upload_aab: false,
       skip_upload_metadata: true,
-      skip_upload_changelogs: true,
+      skip_upload_changelogs: false,
       skip_upload_images: true,
       skip_upload_screenshots: true,
       validate_only: false
