@@ -51,3 +51,6 @@ brethap.tar.gz
 
 # Output of flutter test
 downloadsPath/brethap.sessions.csv
+
+# Flutter version management set with: fvm use 3.10.3
+.fvm/flutter_sdk
