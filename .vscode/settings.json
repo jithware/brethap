@@ -1,0 +1,12 @@
+// Install flutter version management: dart pub global activate fvm
+// Set current version: fvm use 3.10.3
+// For usage see: https://fvm.app/docs/guides/basic_commands
+{
+    "dart.flutterSdkPath": ".fvm/flutter_sdk",
+    "search.exclude": {
+        "**/.fvm": true
+    },
+    "files.watcherExclude": {
+        "**/.fvm": true
+    }
+}
