@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jithware.brethap">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.jithware.brethap">
    <application
         android:label="Brethap"
         android:icon="@mipmap/ic_launcher">
@@ -45,5 +46,12 @@
     </queries>
 
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- See https://github.com/jithware/brethap/issues/103  -->
+    <permission tools:node="remove"
+                android:name="com.jithware.brethap.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+                android:protectionLevel="signature"/>
+    <uses-permission tools:node="remove"
+                     android:name="com.jithware.brethap.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"/>
     
 </manifest>
