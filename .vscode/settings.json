@@ -8,5 +8,17 @@
     },
     "files.watcherExclude": {
         "**/.fvm": true
-    }
+    },
+    "cSpell.languageSettings": [
+        {
+            "languageId": "dart",
+            "includeRegExpList": [
+                "strings",
+                "comments"
+            ]
+        }
+    ],
+    "cSpell.ignorePaths": [
+        "pubspec.*",
+    ],
 }

@@ -44,7 +44,7 @@ android {
     defaultConfig {
         applicationId "com.jithware.brethap"
         minSdkVersion 23
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
