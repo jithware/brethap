@@ -25,6 +25,19 @@ Deploy appbundle to Google Play Internal Testing
 
 ----
 
+
+## web
+
+### web deploy
+
+```sh
+[bundle exec] fastlane web deploy
+```
+
+Deploy to jithware.github.io/brethap
+
+----
+
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
 
 More information about _fastlane_ can be found on [fastlane.tools](https://fastlane.tools).
