@@ -61,6 +61,19 @@ For Wear OS users, there is a slimmed down [version](https://github.com/jithware
      alt="Preferences"
      height="400">](./screenshots/android/preferences.webp)
 
+## Versioning
+
+Brethap [releases](https://github.com/jithware/brethap/releases) use the following [software versioning](https://en.wikipedia.org/wiki/Software_versioning):
+
+_major.minor.maintenance+build_ (example: 1.2.3+4)
+
+Examples updates:
+
+* major = application rewrite
+* minor = preferences addition or change
+* maintenance = enhancements and bug fixes
+* build = incremented number from previous build
+
 ## Donate
 
 Donate to the project's maintainer [@jithware](https://github.com/jithware)

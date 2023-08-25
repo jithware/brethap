@@ -29,14 +29,25 @@ flutter pub upgrade --major-versions
 See files in [#67](https://github.com/jithware/brethap/issues/67) to update to flutter version from upgrade above
 
 ## Upgrade flutter on fdroid
-Remove and re-add the submodule/flutter repo link:
+If submodule not created run:
 ```
 git checkout fdroid
-git rm submodules/flutter
-git submodule add -b stable --force https://github.com/flutter/flutter.git submodules/flutter
+git submodule add -b stable https://github.com/flutter/flutter.git submodules/flutter
+```
+Update the submodule/flutter repo link:
+```
+git checkout fdroid
+git submodule status
+git submodule update --remote
+git submodule status
+# commit fdroid branch with new link then remove all the flutter source with:
 git submodule deinit --force submodules/flutter
 ```
-*This is used only for creating a link to the flutter stable repo at a specific commit in time. Do __not__ run "git submodule init/update" as the actual flutter source code is not used here, only when building on fdroid*
+*This is used only for creating a link to the flutter stable repo at a specific commit in time. The actual flutter source code is not used here, only when building on fdroid. It may be necessary to remove and re-add the submodule with:*
+```
+git rm -f submodules/flutter
+git submodule add -b stable --force https://github.com/flutter/flutter.git submodules/flutter
+```
 
 ## Refresh fdroiddata fork on gitlab
 If upstream not already defined (check with: `git remote show upstream` ), run on fdroiddata fork:
