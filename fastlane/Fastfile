@@ -40,3 +40,15 @@ platform :android do
   end
 
 end
+
+
+platform :web do
+
+  desc "Deploy to jithware.github.io/brethap"
+  lane :deploy do
+    sh("git", "checkout", "master")
+    sh("flutter build web --base-href \"/brethap/\" --output docs/")
+    sh("VER=$(grep \"version: \" ../pubspec.yaml) && cd .. && git commit -am \"Web deploy $VER\" && git push")
+  end
+
+end
