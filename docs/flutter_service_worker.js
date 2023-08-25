@@ -37,8 +37,8 @@ const RESOURCES = {"assets/FontManifest.json": "7b2a36307916a9721811788013e65289
 "README.md": "e36fa824f15fa14b5e13c4be30936e63",
 "flutter.js": "6fef97aeca90b426343ba6c5c9dc5d4a",
 "main.dart.js": "13834ad5c2f4c9cb41e52397192acfb4",
-"index.html": "dcfee4e86efb34983a6a0d26dd6401b6",
-"/": "dcfee4e86efb34983a6a0d26dd6401b6",
+"index.html": "c578c640d76354a961941b52e1fb5f8c",
+"/": "c578c640d76354a961941b52e1fb5f8c",
 "version.json": "32e0336cd2d39d26ec2384840c44a878"};
 // The application shell files that are downloaded before a service worker can
 // start.
