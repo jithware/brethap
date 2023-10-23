@@ -11,7 +11,7 @@ import 'package:brethap/constants.dart';
 import 'package:brethap/hive_storage.dart';
 
 class SessionsWidget extends StatefulWidget {
-  const SessionsWidget({Key? key, required this.sessions}) : super(key: key);
+  const SessionsWidget({super.key, required this.sessions});
   final Box sessions;
 
   // These static variables are used with flutter tests

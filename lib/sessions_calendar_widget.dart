@@ -9,8 +9,7 @@ import 'package:brethap/utils.dart';
 import 'package:brethap/hive_storage.dart';
 
 class SessionsCalendarWidget extends StatefulWidget {
-  const SessionsCalendarWidget({Key? key, required this.sessions})
-      : super(key: key);
+  const SessionsCalendarWidget({super.key, required this.sessions});
   final Box sessions;
 
   @override

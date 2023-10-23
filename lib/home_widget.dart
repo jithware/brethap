@@ -22,12 +22,11 @@ import 'package:brethap/wear.dart';
 
 class HomeWidget extends StatefulWidget {
   const HomeWidget(
-      {Key? key,
+      {super.key,
       required this.appName,
       required this.version,
       required this.preferences,
-      required this.sessions})
-      : super(key: key);
+      required this.sessions});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect

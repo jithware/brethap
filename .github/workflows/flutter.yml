@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.13.0'
+        flutter-version: '3.13.8'
     - run: flutter --version
     - run: flutter pub get
     - run: flutter analyze
