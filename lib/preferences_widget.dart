@@ -12,8 +12,7 @@ import 'package:brethap/wear.dart';
 
 class PreferencesWidget extends StatefulWidget {
   const PreferencesWidget(
-      {Key? key, required this.preferences, required this.callback})
-      : super(key: key);
+      {super.key, required this.preferences, required this.callback});
 
   final Box preferences;
   final dynamic callback;

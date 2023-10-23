@@ -68,12 +68,11 @@ Future<void> main() async {
 
 class MainWidget extends StatelessWidget {
   const MainWidget(
-      {Key? key,
+      {super.key,
       required this.appName,
       required this.version,
       required this.preferences,
-      required this.sessions})
-      : super(key: key);
+      required this.sessions});
 
   final String appName, version;
   final Box preferences, sessions;
