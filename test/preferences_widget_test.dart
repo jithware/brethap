@@ -155,7 +155,7 @@ Future<void> testPreferencesWidget(
   await tester.pumpAndSettle();
   expect(
       find.textContaining(
-          "${((PreferencesWidget.maxBreath + PreferencesWidget.minBreath) / 10 / 2).toStringAsFixed(1)} s",
+          "${((PreferencesWidget.maxInhale + PreferencesWidget.minBreath) / 10 / 2).toStringAsFixed(1)} s",
           skipOffstage: false),
       findsOneWidget);
 
@@ -195,7 +195,7 @@ Future<void> testPreferencesWidget(
   await tester.pumpAndSettle();
   expect(
       find.textContaining(
-          "${((PreferencesWidget.maxBreath + PreferencesWidget.minBreath) / 10 / 2).toStringAsFixed(1)} s",
+          "${((PreferencesWidget.maxExhale + PreferencesWidget.minBreath) / 10 / 2).toStringAsFixed(1)} s",
           skipOffstage: false),
       findsOneWidget);
 
