@@ -22,7 +22,8 @@ class PreferencesWidget extends StatefulWidget {
       maxDurationSeconds = 59,
       maxVibration = 100,
       minBreath = 5,
-      maxBreath = 150,
+      maxInhale = 150,
+      maxExhale = 300,
       maxHold = 100;
   static String keyMenu = "Menu",
       keyPreference = "Preference",
@@ -552,8 +553,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         key: const Key(INHALE_TEXT),
                         value: _inhale0,
                         min: PreferencesWidget.minBreath.toDouble(),
-                        max: PreferencesWidget.maxBreath.toDouble(),
-                        divisions: PreferencesWidget.maxBreath -
+                        max: PreferencesWidget.maxInhale.toDouble(),
+                        divisions: PreferencesWidget.maxInhale -
                             PreferencesWidget.minBreath +
                             1,
                         onChanged: (double value) {
@@ -771,8 +772,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         key: const Key(EXHALE_TEXT),
                         value: _exhale0,
                         min: PreferencesWidget.minBreath.toDouble(),
-                        max: PreferencesWidget.maxBreath.toDouble(),
-                        divisions: PreferencesWidget.maxBreath.toInt() -
+                        max: PreferencesWidget.maxExhale.toDouble(),
+                        divisions: PreferencesWidget.maxExhale.toInt() -
                             PreferencesWidget.minBreath.toInt() +
                             1,
                         onChanged: (double value) {
