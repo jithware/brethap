@@ -11,6 +11,7 @@ git pull
 git checkout fdroid
 git merge --no-ff --no-commit master  # resolve any conflicts here
 git push
+git checkout master
 ```
 
 ## Update a pull request
