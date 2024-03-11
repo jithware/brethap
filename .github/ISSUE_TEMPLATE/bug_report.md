@@ -32,4 +32,6 @@ If applicable, [add](https://docs.github.com/en/get-started/writing-on-github/wo
 
 **Additional context:**
 
-[Attach](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files) any other context [e.g. .txt file] or screenshots about the problem here.
+[Attach](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files) any other context [e.g. .txt file] or screenshots about the problem here. 
+
+*Note: external urls to images or files are not acceptable as they can be temporary or altered, thereby not preserving the integrity of the bug history.*
