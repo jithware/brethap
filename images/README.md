@@ -17,3 +17,13 @@ File->Export As "animated.webp"
 Export->Lossless, As Animation, Loop forever, Delay 100ms
 Export
 ```
+
+Convert to gray
+```
+convert launcher-adaptive.png -colorspace gray launcher-monochrome.png 
+```
+
+Convert to svg
+```
+convert -threshold 0% -negate app_icon.png launcher.svg && sed -i 's/fill="#000000"/fill="#1e88e5"/g' launcher.svg
+```

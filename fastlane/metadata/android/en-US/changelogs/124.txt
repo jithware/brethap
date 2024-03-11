@@ -1,0 +1,3 @@
+Release version: 1.7.25+124
+* Update icons
+* Other minor enhancements

@@ -35,7 +35,9 @@ Future<void> main() async {
   testWidgets('Integration test', (WidgetTester tester) async {
     app.main();
 
-    await tester.pump(wait);
+    // Allow splash screen to clear
+    await tester.pump(wait * 3);
+    await tester.pumpAndSettle();
 
     await testHomeWidget(tester);
 
