@@ -50783,7 +50783,7 @@ i.toString
 i=A.qG(f,f,B.QT,f,new A.awA(g),!1,f,A.an(i.gx_(),f,f,f,f,f,f,f,f))
 h=A.aw(a,B.p,s)
 h.toString
-r=A.aiP(A.a([new A.ON(B.IU,o,f),q,m,l,A.we(!0,new A.Kz(B.QM,j,k,p,"Copyright 2023 Jithware. All rights reserved.",A.a([i,A.qG(f,f,B.QP,f,new A.awB(g),!1,f,A.an(h.gyc(),f,f,f,f,f,f,f,f)),A.ht(A.aN8("images/github-qr.png"),f,f)],r),f),B.Y,!0)],r),B.Y,f,!1)
+r=A.aiP(A.a([new A.ON(B.IU,o,f),q,m,l,A.we(!0,new A.Kz(B.QM,j,k,p,"Copyright 2024 Jithware. All rights reserved.",A.a([i,A.qG(f,f,B.QP,f,new A.awB(g),!1,f,A.an(h.gyc(),f,f,f,f,f,f,f,f)),A.ht(A.aN8("images/github-qr.png"),f,f)],r),f),B.Y,!0)],r),B.Y,f,!1)
 if(g.d){s=A.aw(a,B.p,s)
 s.toString
 s=s.gu1(s)}else{s=A.aw(a,B.p,s)
