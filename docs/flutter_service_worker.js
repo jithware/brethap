@@ -20,7 +20,7 @@ const RESOURCES = {"assets/FontManifest.json": "7b2a36307916a9721811788013e65289
 "assets/AssetManifest.json": "59a272dc30237a42f22deff5b12f96bf",
 "assets/AssetManifest.smcbin": "ac03e14a2298c8b8fd2d2a5670257a69",
 "assets/AssetManifest.bin": "32ff4f32a17c46c1b6090eab9915205c",
-"assets/NOTICES": "bd43a1528509ca6af7ccc98b217e713d",
+"assets/NOTICES": "7a2f1c8d203b29a017751505dd013b45",
 "canvaskit/profiling/canvaskit.js": "c21852696bc1cc82e8894d851c01921a",
 "canvaskit/profiling/canvaskit.wasm": "371bc4e204443b0d5e774d64a046eb99",
 "canvaskit/chromium/canvaskit.js": "96ae916cd2d1b7320fff853ee22aebb0",
@@ -36,10 +36,10 @@ const RESOURCES = {"assets/FontManifest.json": "7b2a36307916a9721811788013e65289
 "manifest.json": "7dbb56011187c29a1092f838ef6df339",
 "README.md": "e36fa824f15fa14b5e13c4be30936e63",
 "flutter.js": "6fef97aeca90b426343ba6c5c9dc5d4a",
-"index.html": "b5277170683580dbd63d8d0973bcd2ea",
-"/": "b5277170683580dbd63d8d0973bcd2ea",
-"main.dart.js": "4e989ad06bf85794ccfb8c9a6321c326",
-"version.json": "109f8e0215fc4dfe10981ce4afff291b"};
+"index.html": "a5daec0e0d3d8b781681ac418b4f7022",
+"/": "a5daec0e0d3d8b781681ac418b4f7022",
+"main.dart.js": "4f5bbdadc55c9829f9163b4cc4701888",
+"version.json": "8341a5901f33dbf2b1e45d855ff3b56b"};
 // The application shell files that are downloaded before a service worker can
 // start.
 const CORE = ["main.dart.js",
