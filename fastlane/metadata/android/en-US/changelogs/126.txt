@@ -1,0 +1,3 @@
+Release version: 1.7.26+126
+* Update Android target SDK to 34
+* Other minor enhancements
