@@ -1,0 +1,5 @@
+Release version: 1.8.0+128
+* Update Android target SDK to 35
+* Other minor enhancements
+
+This is a minor version update. It will remove all existing saved preferences. The colors preference is no longer available as it is not functional in Material 3.

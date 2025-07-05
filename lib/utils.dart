@@ -10,15 +10,18 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:collection/collection.dart';
 
 import 'package:brethap/constants.dart';
 import 'package:brethap/hive_storage.dart';
 import 'package:brethap/wear.dart';
+import 'package:brethap/l10n/generated/app_localizations.dart';
 
-Card getSessionCard(context, Session session,
-    {String dateFormat = DATE_FORMAT}) {
+Card getSessionCard(
+  dynamic context,
+  Session session, {
+  String dateFormat = DATE_FORMAT,
+}) {
   Duration diff = roundDuration(session.end.difference(session.start));
   List<double>? heartrates = session.heartrates;
   int average = 0, reduced = 0;
@@ -27,47 +30,62 @@ Card getSessionCard(context, Session session,
     reduced = (heartrates.last - heartrates.first).toInt();
   }
   return Card(
-      child: ListTile(
-    onTap: () {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    },
-    onLongPress: () {
-      debugPrint("session: ${session.toString()}");
-    },
-    title: Text(DateFormat(dateFormat).format(session.start)),
-    subtitle: Row(children: [
-      Padding(
-          padding: const EdgeInsets.all(1.0),
-          child: Icon(Icons.timer, color: Theme.of(context).primaryColor)),
-      Text(getDurationString(diff)),
-      const SizedBox(width: 10.0),
-      Padding(
-          padding: const EdgeInsets.all(1.0),
-          child: Icon(Icons.air, color: Theme.of(context).primaryColor)),
-      Text("${session.breaths}"),
-      const SizedBox(width: 10.0),
-      average > 0
-          ? Padding(
-              padding: const EdgeInsets.all(1.0),
-              child:
-                  Icon(Icons.favorite, color: Theme.of(context).primaryColor))
-          : const SizedBox.shrink(),
-      average > 0 ? Text("$average") : const SizedBox.shrink(),
-      const SizedBox(width: 10.0),
-      reduced != 0
-          ? Padding(
-              padding: const EdgeInsets.all(1.0),
-              child: Icon(Icons.monitor_heart,
-                  color: Theme.of(context).primaryColor))
-          : const SizedBox.shrink(),
-      reduced != 0 ? Text("$reduced") : const SizedBox.shrink(),
-    ]),
-  ));
+    child: ListTile(
+      onTap: () {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      },
+      onLongPress: () {
+        debugPrint("session: ${session.toString()}");
+      },
+      title: Text(DateFormat(dateFormat).format(session.start)),
+      subtitle: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(1.0),
+            child: Icon(Icons.timer, color: Theme.of(context).primaryColor),
+          ),
+          Text(getDurationString(diff)),
+          const SizedBox(width: 10.0),
+          Padding(
+            padding: const EdgeInsets.all(1.0),
+            child: Icon(Icons.air, color: Theme.of(context).primaryColor),
+          ),
+          Text("${session.breaths}"),
+          const SizedBox(width: 10.0),
+          average > 0
+              ? Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: Icon(
+                  Icons.favorite,
+                  color: Theme.of(context).primaryColor,
+                ),
+              )
+              : const SizedBox.shrink(),
+          average > 0 ? Text("$average") : const SizedBox.shrink(),
+          const SizedBox(width: 10.0),
+          reduced != 0
+              ? Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: Icon(
+                  Icons.monitor_heart,
+                  color: Theme.of(context).primaryColor,
+                ),
+              )
+              : const SizedBox.shrink(),
+          reduced != 0 ? Text("$reduced") : const SizedBox.shrink(),
+        ],
+      ),
+    ),
+  );
 }
 
 // Used for testing
 Future<void> createRandomSessions(
-    Box sessions, int length, DateTime start, DateTime end) async {
+  Box sessions,
+  int length,
+  DateTime start,
+  DateTime end,
+) async {
   Random random = Random(DateTime.now().millisecondsSinceEpoch);
   DateTime mockStart, mockEnd;
   Session session;
@@ -76,28 +94,34 @@ Future<void> createRandomSessions(
   while (list.length < length - 1) {
     mockStart = _mockDate(start, end);
     mockEnd = _mockDate(
-        mockStart, mockStart.add(Duration(seconds: random.nextInt(120 * 60))));
+      mockStart,
+      mockStart.add(Duration(seconds: random.nextInt(120 * 60))),
+    );
     session = Session(start: mockStart);
     session.end = mockEnd;
     int breaths =
         (mockEnd.millisecondsSinceEpoch - mockStart.millisecondsSinceEpoch) ~/
-            Duration.millisecondsPerSecond;
+        Duration.millisecondsPerSecond;
     session.breaths = breaths ~/ (random.nextInt(10) + 1);
     list.add(session);
   }
 
   // Add heartrate session
   if (list.length < length) {
-    session =
-        Session(start: DateTime.now().subtract(const Duration(minutes: 60)));
+    session = Session(
+      start: DateTime.now().subtract(const Duration(minutes: 60)),
+    );
     session.end = session.start.add(const Duration(seconds: 60));
     session.breaths = 10;
     session.heartrates = [70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60];
     list.add(session);
   }
 
-  list.sort((a, b) =>
-      a.start.millisecondsSinceEpoch.compareTo(b.start.millisecondsSinceEpoch));
+  list.sort(
+    (a, b) => a.start.millisecondsSinceEpoch.compareTo(
+      b.start.millisecondsSinceEpoch,
+    ),
+  );
   await sessions.clear();
   await sessions.addAll(list);
 
@@ -109,8 +133,9 @@ DateTime _mockDate([DateTime? firstMoment, DateTime? secondMoment]) {
   firstMoment ??= DateTime.fromMillisecondsSinceEpoch(0);
   secondMoment ??= DateTime.now();
   Duration difference = secondMoment.difference(firstMoment);
-  return firstMoment
-      .add(Duration(seconds: random.nextInt(difference.inSeconds + 1)));
+  return firstMoment.add(
+    Duration(seconds: random.nextInt(difference.inSeconds + 1)),
+  );
 }
 
 DateTime firstDateOfWeek(DateTime dateTime) {
@@ -125,12 +150,7 @@ DateTime firstDateOfMonth(DateTime dateTime) {
   return DateTime(dateTime.year, dateTime.month, 1);
 }
 
-String getStats(
-  context,
-  List<Session> list,
-  DateTime start,
-  DateTime end,
-) {
+String getStats(dynamic context, List<Session> list, DateTime start, DateTime end) {
   Duration totalDuration = const Duration(seconds: 0);
   int totalSessions = 0, totalBreaths = 0, average = 0;
   List<int> averages = [];
@@ -163,22 +183,19 @@ String getStats(
   return text;
 }
 
-String getStreak(
-  context,
-  List<Session> list,
-  DateTime start,
-  DateTime end,
-) {
+String getStreak(dynamic context, List<Session> list, DateTime start, DateTime end) {
   if (list.isEmpty) {
     return "${AppLocalizations.of(context).streak}:0";
   }
   int streak = 1, runningStreak = 1;
   for (int i = 0; i < list.length - 1; i++) {
     // in start/end range
-    if (Jiffy.parseFromDateTime(list[i].start)
-            .isAfter(Jiffy.parseFromDateTime(start)) &&
-        Jiffy.parseFromDateTime(list[i].end)
-            .isBefore(Jiffy.parseFromDateTime(end))) {
+    if (Jiffy.parseFromDateTime(
+          list[i].start,
+        ).isAfter(Jiffy.parseFromDateTime(start)) &&
+        Jiffy.parseFromDateTime(
+          list[i].end,
+        ).isBefore(Jiffy.parseFromDateTime(end))) {
       Jiffy first = Jiffy.parseFromDateTime(list[i].start).startOf(Unit.day);
       Jiffy next = Jiffy.parseFromDateTime(list[i + 1].start).startOf(Unit.day);
       // before end range
@@ -208,10 +225,12 @@ Future<void> createDefaultPref(Box preferences) async {
   debugPrint("created default preference: $preference");
 }
 
-showAlertDialog(BuildContext context, String title, String content, callback) {
+void showAlertDialog(BuildContext context, String title, String content, callback) {
   Widget cancelButton = TextButton(
-    child:
-        Text(AppLocalizations.of(context).cancel, key: const Key(CANCEL_TEXT)),
+    child: Text(
+      AppLocalizations.of(context).cancel,
+      key: const Key(CANCEL_TEXT),
+    ),
     onPressed: () {
       Navigator.of(context).pop();
     },
@@ -225,10 +244,7 @@ showAlertDialog(BuildContext context, String title, String content, callback) {
   AlertDialog alert = AlertDialog(
     title: Text(title),
     content: Text(content),
-    actions: [
-      cancelButton,
-      continueButton,
-    ],
+    actions: [cancelButton, continueButton],
   );
 
   // show the dialog
@@ -240,7 +256,7 @@ showAlertDialog(BuildContext context, String title, String content, callback) {
   );
 }
 
-showInfoDialog(BuildContext context, String title, String content) {
+void showInfoDialog(BuildContext context, String title, String content) {
   Widget cancelButton = TextButton(
     child: Text(AppLocalizations.of(context).ok, key: const Key(OK_TEXT)),
     onPressed: () {
@@ -251,9 +267,7 @@ showInfoDialog(BuildContext context, String title, String content) {
   AlertDialog alert = AlertDialog(
     title: Text(title),
     content: Text(content),
-    actions: [
-      cancelButton,
-    ],
+    actions: [cancelButton],
   );
 
   // show the dialog

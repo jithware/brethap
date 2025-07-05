@@ -2,12 +2,12 @@ import 'package:brethap/home_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
 import 'package:brethap/sessions_widget.dart';
 import 'package:brethap/sessions_calendar_widget.dart';
+import 'package:brethap/l10n/generated/app_localizations.dart';
 import 'test_utils.dart';
 
 const Duration WAIT = Duration(milliseconds: 500);
@@ -104,10 +104,11 @@ Future<void> main() async {
     setUp(() async {
       sessions = hiveData.sessions;
       await createRandomSessions(
-          sessions,
-          totalSessions,
-          DateTime.now().subtract(const Duration(days: 180)),
-          DateTime.now().subtract(const Duration(days: 1)));
+        sessions,
+        totalSessions,
+        DateTime.now().subtract(const Duration(days: 180)),
+        DateTime.now().subtract(const Duration(days: 1)),
+      );
     });
 
     tearDown(() async {
@@ -115,22 +116,26 @@ Future<void> main() async {
     });
 
     testWidgets('SessionsWidget', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: SessionsWidget(sessions: sessions),
-      ));
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SessionsWidget(sessions: sessions),
+        ),
+      );
       await tester.pump(WAIT);
 
       await testSessionsWidget(tester);
     });
 
     testWidgets('SessionsCalendarWidget', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: SessionsCalendarWidget(sessions: sessions),
-      ));
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SessionsCalendarWidget(sessions: sessions),
+        ),
+      );
 
       await tester.pump(WAIT);
 

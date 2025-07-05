@@ -1,12 +1,11 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:brethap/constants.dart';
 import 'package:brethap/preferences_widget.dart';
 import 'package:brethap/wear.dart';
+import 'package:brethap/l10n/generated/app_localizations.dart';
 import 'test_utils.dart';
 
 const Duration wait = Duration(milliseconds: 500);
@@ -19,13 +18,17 @@ Future<void> tapMenu(WidgetTester tester) async {
 }
 
 Future<void> testSwitch(WidgetTester tester, String key, bool value) async {
-  Finder swit = find.byWidgetPredicate((widget) =>
-      widget is Switch && widget.key == Key(key) && widget.value == value);
+  Finder swit = find.byWidgetPredicate(
+    (widget) =>
+        widget is Switch && widget.key == Key(key) && widget.value == value,
+  );
   expect(swit, findsOneWidget);
   await tester.drag(swit, const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
-  swit = find.byWidgetPredicate((widget) =>
-      widget is Switch && widget.key == Key(key) && widget.value == !value);
+  swit = find.byWidgetPredicate(
+    (widget) =>
+        widget is Switch && widget.key == Key(key) && widget.value == !value,
+  );
   expect(swit, findsOneWidget);
 }
 
@@ -62,85 +65,62 @@ Future<void> tapPreset(WidgetTester tester, String preset) async {
 }
 
 Future<void> changeColors(WidgetTester tester) async {
-  // scroll to primary color
-  Finder finder =
-      find.byKey(const Key(COLOR_PRIMARY_TEXT), skipOffstage: false);
-  expect(finder, findsOneWidget);
-  await tester.ensureVisible(finder);
-  await tester.pump(wait);
-
-  // tap primary color
-  await tester.pump(wait);
-  finder = find.byType(CircleColor);
-  expect(finder, findsWidgets);
-  await tester.tap(finder.at(5));
-  await tester.pump(wait);
-
-  // scroll to background color
-  finder = find.byKey(const Key(COLOR_BACKGROUND_TEXT));
-  expect(finder, findsOneWidget);
-  await tester.ensureVisible(finder);
-  await tester.pump(wait);
-
-  // tap background color
-  await tester.pump(wait);
-  finder = find.byType(CircleColor);
-  expect(finder, findsWidgets);
-  await tester.tap(finder.at(24));
-  await tester.pump(wait);
-
-  // tap shade
-  await tester.pump(wait);
-  finder = find.byType(CircleColor);
-  expect(finder, findsWidgets);
-  await tester.tap(finder.at(19));
-  await tester.pump(wait);
-
-  // tap back
-  await tester.pump(wait);
-  finder = find.byIcon(Icons.arrow_back);
-  expect(finder, findsWidgets);
-  await tester.tap(finder.at(0));
-
   await tester.pump(wait);
 }
 
-Future<void> testPreferencesWidget(
-  WidgetTester tester,
-) async {
+Future<void> testPreferencesWidget(WidgetTester tester) async {
   // Preference Name
   Finder preferenceName = find.byKey(Key(PreferencesWidget.keyPreferenceName));
   expect(preferenceName, findsOneWidget);
 
   // Drag duration minutes slider
   expect(
-      find.textContaining(getDurationString(const Duration(seconds: DURATION))),
-      findsOneWidget);
+    find.textContaining(getDurationString(const Duration(seconds: DURATION))),
+    findsOneWidget,
+  );
   await tester.drag(
-      find.byKey(const Key(DURATION_MINUTES_TEXT)), const Offset(0.0, 0.0));
+    find.byKey(const Key(DURATION_MINUTES_TEXT)),
+    const Offset(0.0, 0.0),
+  );
   await tester.pumpAndSettle();
   expect(
-      find.textContaining(getDurationString(
-          Duration(minutes: PreferencesWidget.maxDurationMinutes ~/ 2))),
-      findsOneWidget);
+    find.textContaining(
+      getDurationString(
+        Duration(minutes: PreferencesWidget.maxDurationMinutes ~/ 2),
+      ),
+    ),
+    findsOneWidget,
+  );
 
   // Drag duration seconds slider
   await tester.drag(
-      find.byKey(const Key(DURATION_SECONDS_TEXT)), const Offset(0.0, 0.0));
+    find.byKey(const Key(DURATION_SECONDS_TEXT)),
+    const Offset(0.0, 0.0),
+  );
   await tester.pumpAndSettle();
   expect(
-      find.textContaining(getDurationString(Duration(
+    find.textContaining(
+      getDurationString(
+        Duration(
           minutes: PreferencesWidget.maxDurationMinutes ~/ 2,
-          seconds: PreferencesWidget.maxDurationSeconds ~/ 2))),
-      findsOneWidget);
+          seconds: PreferencesWidget.maxDurationSeconds ~/ 2,
+        ),
+      ),
+    ),
+    findsOneWidget,
+  );
 
   // Drag vibrate duration slider
   expect(find.textContaining("$VIBRATE_DURATION ms"), findsOneWidget);
   await tester.drag(
-      find.byKey(const Key(DURATION_VIBRATE_TEXT)), const Offset(0.0, 0.0));
+    find.byKey(const Key(DURATION_VIBRATE_TEXT)),
+    const Offset(0.0, 0.0),
+  );
   await tester.pumpAndSettle();
-  expect(find.textContaining("${PreferencesWidget.maxVibration * 10 ~/ 2} ms"),
-      findsOneWidget);
+  expect(
+    find.textContaining("${PreferencesWidget.maxVibration * 10 ~/ 2} ms"),
+    findsOneWidget,
+  );
 
   // Drag duration tts switch
   await testSwitch(tester, DURATION_TTS_TEXT, false);
@@ -149,37 +129,49 @@ Future<void> testPreferencesWidget(
   Finder inhaleSlider = find.byKey(const Key(INHALE_TEXT), skipOffstage: false);
   await tester.ensureVisible(inhaleSlider);
   await tester.pumpAndSettle();
-  expect(find.textContaining("${(INHALE / Duration.millisecondsPerSecond)} s"),
-      findsWidgets);
+  expect(
+    find.textContaining("${(INHALE / Duration.millisecondsPerSecond)} s"),
+    findsWidgets,
+  );
   await tester.drag(inhaleSlider, const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
   expect(
-      find.textContaining(
-          "${((PreferencesWidget.maxInhale + PreferencesWidget.minBreath) / 10 / 2).toStringAsFixed(1)} s",
-          skipOffstage: false),
-      findsOneWidget);
+    find.textContaining(
+      "${((PreferencesWidget.maxInhale + PreferencesWidget.minBreath) / 10 / 2).toStringAsFixed(1)} s",
+      skipOffstage: false,
+    ),
+    findsOneWidget,
+  );
 
   // Drag inhale hold slider
   expect(
-      find.textContaining(
-          "${(INHALE_HOLD / Duration.millisecondsPerSecond)} s"),
-      findsWidgets);
+    find.textContaining("${(INHALE_HOLD / Duration.millisecondsPerSecond)} s"),
+    findsWidgets,
+  );
   await tester.drag(
-      find.byKey(const Key(INHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
+    find.byKey(const Key(INHALE_HOLD_TEXT)),
+    const Offset(0.0, 0.0),
+  );
   await tester.pumpAndSettle();
-  expect(find.textContaining("${PreferencesWidget.maxHold / 10 / 2} s"),
-      findsOneWidget);
+  expect(
+    find.textContaining("${PreferencesWidget.maxHold / 10 / 2} s"),
+    findsOneWidget,
+  );
 
   // Drag inhale last slider
   expect(
-      find.textContaining(
-          "${(INHALE_LAST / Duration.millisecondsPerSecond)} s"),
-      findsWidgets);
+    find.textContaining("${(INHALE_LAST / Duration.millisecondsPerSecond)} s"),
+    findsWidgets,
+  );
   await tester.drag(
-      find.byKey(const Key(INHALE_LAST_TEXT)), const Offset(0.0, 0.0));
+    find.byKey(const Key(INHALE_LAST_TEXT)),
+    const Offset(0.0, 0.0),
+  );
   await tester.pumpAndSettle();
-  expect(find.textContaining("${PreferencesWidget.maxHold / 10 / 2} s"),
-      findsNWidgets(2));
+  expect(
+    find.textContaining("${PreferencesWidget.maxHold / 10 / 2} s"),
+    findsNWidgets(2),
+  );
 
   // Inhale audio
   await testAudio(tester, INHALE_AUDIO_TEXT);
@@ -194,32 +186,42 @@ Future<void> testPreferencesWidget(
   await tester.drag(exhale, const Offset(0.0, 0.0));
   await tester.pumpAndSettle();
   expect(
-      find.textContaining(
-          "${((PreferencesWidget.maxExhale + PreferencesWidget.minBreath) / 10 / 2).toStringAsFixed(1)} s",
-          skipOffstage: false),
-      findsOneWidget);
+    find.textContaining(
+      "${((PreferencesWidget.maxExhale + PreferencesWidget.minBreath) / 10 / 2).toStringAsFixed(1)} s",
+      skipOffstage: false,
+    ),
+    findsOneWidget,
+  );
 
   // Drag exhale hold slider
   expect(
-      find.textContaining(
-          "${(EXHALE_HOLD / Duration.millisecondsPerSecond)} s"),
-      findsWidgets);
+    find.textContaining("${(EXHALE_HOLD / Duration.millisecondsPerSecond)} s"),
+    findsWidgets,
+  );
   await tester.drag(
-      find.byKey(const Key(EXHALE_HOLD_TEXT)), const Offset(0.0, 0.0));
+    find.byKey(const Key(EXHALE_HOLD_TEXT)),
+    const Offset(0.0, 0.0),
+  );
   await tester.pumpAndSettle();
-  expect(find.textContaining("${PreferencesWidget.maxHold / 10 / 2} s"),
-      findsOneWidget);
+  expect(
+    find.textContaining("${PreferencesWidget.maxHold / 10 / 2} s"),
+    findsOneWidget,
+  );
 
   // Drag exhale last slider
   expect(
-      find.textContaining(
-          "${(EXHALE_LAST / Duration.millisecondsPerSecond)} s"),
-      findsWidgets);
+    find.textContaining("${(EXHALE_LAST / Duration.millisecondsPerSecond)} s"),
+    findsWidgets,
+  );
   await tester.drag(
-      find.byKey(const Key(EXHALE_LAST_TEXT)), const Offset(0.0, 0.0));
+    find.byKey(const Key(EXHALE_LAST_TEXT)),
+    const Offset(0.0, 0.0),
+  );
   await tester.pumpAndSettle();
-  expect(find.textContaining("${PreferencesWidget.maxHold / 10 / 2} s"),
-      findsNWidgets(2));
+  expect(
+    find.textContaining("${PreferencesWidget.maxHold / 10 / 2} s"),
+    findsNWidgets(2),
+  );
 
   // Exhale audio
   await testAudio(tester, EXHALE_AUDIO_TEXT);
@@ -234,14 +236,13 @@ Future<void> testPreferencesWidget(
     const Offset(0.0, 0.0),
   );
   await tester.pumpAndSettle();
-  expect(find.textContaining("${PreferencesWidget.maxVibration * 10 ~/ 2} ms"),
-      findsOneWidget);
+  expect(
+    find.textContaining("${PreferencesWidget.maxVibration * 10 ~/ 2} ms"),
+    findsOneWidget,
+  );
 
   // Drag breath tts switch
   await testSwitch(tester, BREATH_TTS_TEXT, false);
-
-  // Change colors
-  await changeColors(tester);
 
   // Scroll up.
   await tester.dragUntilVisible(
@@ -296,31 +297,38 @@ Future<void> testPreferencesWidget(
   await tapPreset(tester, PRESET_478_TEXT);
   expect(find.textContaining(PRESET_478_TEXT), findsOneWidget);
   expect(
-      find.textContaining(
-          getDurationString(const Duration(seconds: DURATION_478))),
-      findsOneWidget);
+    find.textContaining(
+      getDurationString(const Duration(seconds: DURATION_478)),
+    ),
+    findsOneWidget,
+  );
 
   // Verify Box preset
   await tapPreset(tester, BOX_TEXT);
   expect(find.textContaining(BOX_TEXT), findsOneWidget);
   expect(
-      find.textContaining(
-          getDurationString(const Duration(seconds: DURATION_BOX))),
-      findsOneWidget);
+    find.textContaining(
+      getDurationString(const Duration(seconds: DURATION_BOX)),
+    ),
+    findsOneWidget,
+  );
 
   // Verify physiological sigh preset
   await tapPreset(tester, PHYS_SIGH_TEXT);
   expect(find.textContaining(PHYS_SIGH_TEXT), findsOneWidget);
   expect(
-      find.textContaining(
-          getDurationString(const Duration(seconds: DURATION_PS))),
-      findsOneWidget);
+    find.textContaining(
+      getDurationString(const Duration(seconds: DURATION_PS)),
+    ),
+    findsOneWidget,
+  );
 
   // Verify default preset
   await tapPreset(tester, DEFAULT_TEXT);
   expect(
-      find.textContaining(getDurationString(const Duration(seconds: DURATION))),
-      findsOneWidget);
+    find.textContaining(getDurationString(const Duration(seconds: DURATION))),
+    findsOneWidget,
+  );
 
   // debugDumpApp();
 }
@@ -335,7 +343,8 @@ Future<void> main() async {
   tearDownAll((() async {}));
 
   testWidgets('PreferencesWidget', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
+    await tester.pumpWidget(
+      MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: PreferencesWidget(
@@ -343,7 +352,9 @@ Future<void> main() async {
           callback: () {
             debugPrint("testWidget callback executed");
           },
-        )));
+        ),
+      ),
+    );
 
     await tester.pumpAndSettle();
 

@@ -1,14 +1,16 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:csv/csv.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:collection/collection.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/constants.dart';
 import 'package:brethap/hive_storage.dart';
+import 'package:brethap/l10n/generated/app_localizations.dart';
 
 class SessionsWidget extends StatefulWidget {
   const SessionsWidget({super.key, required this.sessions});
@@ -75,13 +77,17 @@ class _SessionsWidgetState extends State<SessionsWidget> {
     int added = 0;
     try {
       List<List<dynamic>> rows = [
-        ["start", "end", "breaths", "heartrate"]
+        ["start", "end", "breaths", "heartrate"],
       ];
       for (var element in list) {
         List<double>? heartrates = element.heartrates;
         heartrates ??= [0.0];
-        rows.add(
-            [element.start, element.end, element.breaths, heartrates.average]);
+        rows.add([
+          element.start,
+          element.end,
+          element.breaths,
+          heartrates.average,
+        ]);
         added++;
       }
       String csv = const ListToCsvConverter().convert(rows);
@@ -129,8 +135,11 @@ class _SessionsWidgetState extends State<SessionsWidget> {
 
       if (added > 0) {
         // sort the list ascending to add to sessions
-        _list.sort((a, b) => a.start.millisecondsSinceEpoch
-            .compareTo(b.start.millisecondsSinceEpoch));
+        _list.sort(
+          (a, b) => a.start.millisecondsSinceEpoch.compareTo(
+            b.start.millisecondsSinceEpoch,
+          ),
+        );
 
         // clear sessions and add back
         await widget.sessions.clear();
@@ -140,8 +149,11 @@ class _SessionsWidgetState extends State<SessionsWidget> {
 
         setState(() {
           // sort the list descending for ui
-          _list.sort((a, b) => b.start.millisecondsSinceEpoch
-              .compareTo(a.start.millisecondsSinceEpoch));
+          _list.sort(
+            (a, b) => b.start.millisecondsSinceEpoch.compareTo(
+              a.start.millisecondsSinceEpoch,
+            ),
+          );
         });
       }
     } catch (e) {
@@ -151,11 +163,11 @@ class _SessionsWidgetState extends State<SessionsWidget> {
     return added;
   }
 
-  _showSnackBar(BuildContext context, String text, Duration duration) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(text),
-      duration: duration,
-    ));
+  void _showSnackBar(BuildContext context, String text, Duration duration) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(text), duration: duration));
   }
 
   @override
@@ -171,33 +183,38 @@ class _SessionsWidgetState extends State<SessionsWidget> {
               switch (value) {
                 case CLEAR_ALL_TEXT:
                   showAlertDialog(
-                      context,
-                      AppLocalizations.of(context).clearAll,
-                      AppLocalizations.of(context).clearAllSessions, () {
-                    _clearAll();
-                    Navigator.of(context).pop();
-                    _showSnackBar(
+                    context,
+                    AppLocalizations.of(context).clearAll,
+                    AppLocalizations.of(context).clearAllSessions,
+                    () {
+                      _clearAll();
+                      Navigator.of(context).pop();
+                      _showSnackBar(
                         context,
                         AppLocalizations.of(context).sessionsCleared,
-                        const Duration(seconds: 3));
-                  });
+                        const Duration(seconds: 3),
+                      );
+                    },
+                  );
                   debugPrint(CLEAR_ALL_TEXT);
                   break;
                 case BACKUP_TEXT:
                   _exportCsv(_list).then((value) {
                     _showSnackBar(
-                        context,
-                        AppLocalizations.of(context).sessionsBackedUp,
-                        const Duration(seconds: 3));
+                      context,
+                      AppLocalizations.of(context).sessionsBackedUp,
+                      const Duration(seconds: 3),
+                    );
                   });
                   debugPrint(BACKUP_TEXT);
                   break;
                 case RESTORE_TEXT:
                   _importCsv().then((value) {
                     _showSnackBar(
-                        context,
-                        AppLocalizations.of(context).sessionsRestored,
-                        const Duration(seconds: 3));
+                      context,
+                      AppLocalizations.of(context).sessionsRestored,
+                      const Duration(seconds: 3),
+                    );
                   });
                   debugPrint(RESTORE_TEXT);
                   break;
@@ -205,9 +222,10 @@ class _SessionsWidgetState extends State<SessionsWidget> {
                   _exportCsv(_list).then((number) {
                     _getExportFile().then((file) {
                       _showSnackBar(
-                          context,
-                          "$number ${AppLocalizations.of(context).sessionsExportedTo}:\n${file.path}",
-                          const Duration(seconds: 5));
+                        context,
+                        "$number ${AppLocalizations.of(context).sessionsExportedTo}:\n${file.path}",
+                        const Duration(seconds: 5),
+                      );
                     });
                   });
                   debugPrint(EXPORT_TEXT);
@@ -246,31 +264,30 @@ class _SessionsWidgetState extends State<SessionsWidget> {
         itemBuilder: (context, index) {
           Session session = _list[index];
           return Dismissible(
-              key: Key(session.key.toString()),
-              onDismissed: (direction) {
-                setState(() {
-                  _list[index].delete(); // removes from sessions
-                  _list.remove(session); // removes from list
-                });
-              },
-              child: getSessionCard(context, session));
+            key: Key(session.key.toString()),
+            onDismissed: (direction) {
+              setState(() {
+                _list[index].delete(); // removes from sessions
+                _list.remove(session); // removes from list
+              });
+            },
+            child: getSessionCard(context, session),
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            DateTime firstDate = _getFirstDate(_list);
-            String stats = getStats(context, _list, firstDate, DateTime.now());
-            String streak =
-                getStreak(context, _list, firstDate, DateTime.now());
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("$stats $streak", key: const Key("stats")),
-              ),
-            );
-          },
-          tooltip: AppLocalizations.of(context).statistics,
-          child: const Icon(Icons.query_stats)),
+        onPressed: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          DateTime firstDate = _getFirstDate(_list);
+          String stats = getStats(context, _list, firstDate, DateTime.now());
+          String streak = getStreak(context, _list, firstDate, DateTime.now());
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("$stats $streak", key: const Key("stats"))),
+          );
+        },
+        tooltip: AppLocalizations.of(context).statistics,
+        child: const Icon(Icons.query_stats),
+      ),
     );
   }
 }

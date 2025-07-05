@@ -1,13 +1,12 @@
 import 'dart:async';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:get/get.dart';
 
 import 'package:brethap/hive_storage.dart';
 import 'package:brethap/home_widget.dart';
 import 'package:brethap/constants.dart';
+import 'package:brethap/l10n/generated/app_localizations.dart';
 
 Future<void> main() async {
   // Do not debugPrint in release
@@ -58,21 +57,24 @@ Future<void> main() async {
     sessions = await Hive.openBox(SESSIONS_BOX);
   }
 
-  runApp(MainWidget(
-    appName: appName,
-    version: version,
-    preferences: preferences,
-    sessions: sessions,
-  ));
+  runApp(
+    MainWidget(
+      appName: appName,
+      version: version,
+      preferences: preferences,
+      sessions: sessions,
+    ),
+  );
 }
 
 class MainWidget extends StatelessWidget {
-  const MainWidget(
-      {super.key,
-      required this.appName,
-      required this.version,
-      required this.preferences,
-      required this.sessions});
+  const MainWidget({
+    super.key,
+    required this.appName,
+    required this.version,
+    required this.preferences,
+    required this.sessions,
+  });
 
   final String appName, version;
   final Box preferences, sessions;
@@ -87,20 +89,26 @@ class MainWidget extends StatelessWidget {
       backgroundColor = Color(preference.colors[1]);
     }
 
-    return GetMaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: primaryColor,
         canvasColor: backgroundColor,
+        useMaterial3: false,
       ),
-      darkTheme: ThemeData.dark().copyWith(primaryColor: Colors.blue),
+      darkTheme: ThemeData.dark().copyWith(
+        primaryColor: Colors.blue,
+        // ignore: deprecated_member_use
+        useMaterial3: false,
+      ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: HomeWidget(
-          appName: appName,
-          version: version,
-          preferences: preferences,
-          sessions: sessions),
+        appName: appName,
+        version: version,
+        preferences: preferences,
+        sessions: sessions,
+      ),
     );
   }
 }

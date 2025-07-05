@@ -52,7 +52,6 @@ For Wear OS users, there is a slimmed down [version](https://github.com/jithware
 ### Preferences
 * To view preferences, press the drawer menu in the top left and press Preferences
 * To change a preference, enter a name, move the preference slider either left or right, or choose an option from the drop down
-* To change the theme colors, select a color. After selecting the background color, press the back arrow next to the colors. If your system is set to dark theme, colors are disabled.
 * To save a preference, hold down a Preference button
 * To select a preset preference, press the Preference menu in the top right and select Presets
 * To select a saved preference, press a Preference button
