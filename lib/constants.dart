@@ -5,7 +5,7 @@ const String JITHWARE_URL = "http://www.jithware.com",
         "https://www.paypal.com/donate/?hosted_button_id=2ZFSMQ8DGQVFS",
     BUGS_URL = "https://github.com/jithware/brethap/issues",
     HELP_URL = "https://github.com/jithware/brethap#readme",
-    COPYRIGHT = "Copyright 2024 Jithware. All rights reserved.",
+    COPYRIGHT = "Copyright 2025 Jithware. All rights reserved.",
     APP_NAME = "Brethap";
 
 const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
@@ -55,16 +55,26 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
 const int SAVED_PREFERENCES = 5;
 
 // Default values
-const int DURATION = 120, //seconds
-    INHALE = 4000, //milliseconds
-    INHALE_HOLD = 0, //milliseconds
-    INHALE_LAST = 0, //milliseconds
-    EXHALE = 4000, //milliseconds
-    EXHALE_HOLD = 0, //milliseconds
-    EXHALE_LAST = 0, //milliseconds
-    VIBRATE_DURATION = 250, //milliseconds
-    VIBRATE_BREATH = 50, //milliseconds
-    COLOR_PRIMARY = 0, //color position
+const int DURATION =
+        120, //seconds
+    INHALE =
+        4000, //milliseconds
+    INHALE_HOLD =
+        0, //milliseconds
+    INHALE_LAST =
+        0, //milliseconds
+    EXHALE =
+        4000, //milliseconds
+    EXHALE_HOLD =
+        0, //milliseconds
+    EXHALE_LAST =
+        0, //milliseconds
+    VIBRATE_DURATION =
+        250, //milliseconds
+    VIBRATE_BREATH =
+        50, //milliseconds
+    COLOR_PRIMARY =
+        0, //color position
     COLOR_BACKGROUND = 0xfffafafa; //color white
 const bool DURATION_TTS = false, BREATH_TTS = false;
 const String INHALE_AUDIO = AUDIO_TONE1,
@@ -97,21 +107,32 @@ const List<ColorSwatch> COLORS_PRIMARY = <ColorSwatch>[
 const List<ColorSwatch> COLORS_BACKGROUND = COLORS_PRIMARY;
 
 // Physiological sigh values
-const int DURATION_PS = 15, //seconds
-    INHALE_PS = 1000, //milliseconds
-    INHALE_HOLD_PS = 500, //milliseconds
-    INHALE_LAST_PS = 500, //milliseconds
+const int DURATION_PS =
+        15, //seconds
+    INHALE_PS =
+        1000, //milliseconds
+    INHALE_HOLD_PS =
+        500, //milliseconds
+    INHALE_LAST_PS =
+        500, //milliseconds
     EXHALE_PS = 3000; //milliseconds
 
 // 4-7-8 values
-const int DURATION_478 = 76, //seconds
-    INHALE_478 = 4000, //milliseconds
-    INHALE_HOLD_478 = 7000, //milliseconds
+const int DURATION_478 =
+        76, //seconds
+    INHALE_478 =
+        4000, //milliseconds
+    INHALE_HOLD_478 =
+        7000, //milliseconds
     EXHALE_478 = 8000; //milliseconds
 
 // Box values
-const int DURATION_BOX = 60, //seconds
-    INHALE_BOX = 4000, //milliseconds
-    INHALE_HOLD_BOX = 4000, //milliseconds
-    EXHALE_BOX = 4000, //milliseconds
+const int DURATION_BOX =
+        60, //seconds
+    INHALE_BOX =
+        4000, //milliseconds
+    INHALE_HOLD_BOX =
+        4000, //milliseconds
+    EXHALE_BOX =
+        4000, //milliseconds
     EXHALE_HOLD_BOX = 4000; //milliseconds

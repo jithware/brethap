@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
 import 'package:vibration/vibration.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:wakelock/wakelock.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:collection/collection.dart';
 
@@ -19,14 +17,16 @@ import 'package:brethap/sessions_widget.dart';
 import 'package:brethap/hive_storage.dart';
 import 'package:brethap/sessions_calendar_widget.dart';
 import 'package:brethap/wear.dart';
+import 'package:brethap/l10n/generated/app_localizations.dart';
 
 class HomeWidget extends StatefulWidget {
-  const HomeWidget(
-      {super.key,
-      required this.appName,
-      required this.version,
-      required this.preferences,
-      required this.sessions});
+  const HomeWidget({
+    super.key,
+    required this.appName,
+    required this.version,
+    required this.preferences,
+    required this.sessions,
+  });
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -57,8 +57,9 @@ class _HomeWidgetState extends State<HomeWidget> {
       _hasCustomVibrate = false,
       _hasWakelock = false,
       _hasSpeak = false,
-      // ignore: unused_field, prefer_final_fields
-      _hasWear = false;
+          // ignore: unused_field, prefer_final_fields
+          _hasWear =
+          false;
   late Duration _duration;
   late String _status, _appName;
   late FlutterTts _tts;
@@ -87,10 +88,11 @@ class _HomeWidgetState extends State<HomeWidget> {
   void _init() {
     if (kDebugMode) {
       createRandomSessions(
-          widget.sessions,
-          HomeWidget.totalSessions,
-          DateTime.now().subtract(const Duration(days: 180)),
-          DateTime.now().subtract(const Duration(days: 1)));
+        widget.sessions,
+        HomeWidget.totalSessions,
+        DateTime.now().subtract(const Duration(days: 180)),
+        DateTime.now().subtract(const Duration(days: 1)),
+      );
     }
     _status = "";
     if (widget.preferences.isEmpty) {
@@ -102,8 +104,8 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   Future<void> _initVibrator() async {
     try {
-      _hasVibrator = await Vibration.hasVibrator() ?? false;
-      _hasCustomVibrate = await Vibration.hasCustomVibrationsSupport() ?? false;
+      _hasVibrator = await Vibration.hasVibrator();
+      _hasCustomVibrate = await Vibration.hasCustomVibrationsSupport();
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -126,7 +128,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   Future<void> _initWakeLock() async {
     try {
-      await Wakelock.enabled;
+      await WakelockPlus.enabled;
       _hasWakelock = true;
     } catch (e) {
       debugPrint(e.toString());
@@ -146,7 +148,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   void _wakeLock(bool enable) {
     if (_hasWakelock) {
-      Wakelock.toggle(enable: enable);
+      WakelockPlus.toggle(enable: enable);
       debugPrint("wakelock: $enable");
     }
   }
@@ -195,9 +197,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     }
 
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(text),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 
   Future<void> _onBreath(String text) async {
@@ -240,7 +240,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     });
   }
 
-  void _buttonPressed(context) {
+  void _buttonPressed(dynamic context) {
     debugPrint("$widget._buttonPressed");
 
     if (_isRunning) {
@@ -259,9 +259,11 @@ class _HomeWidgetState extends State<HomeWidget> {
           preference.exhale[0] + preference.exhale[1] + preference.exhale[2];
       int breath = inhale + exhale;
       int cycle = 0;
-      double inhaleScale = timerSpan.inMilliseconds /
+      double inhaleScale =
+          timerSpan.inMilliseconds /
           (preference.inhale[0] + preference.inhale[2]);
-      double exhaleScale = timerSpan.inMilliseconds /
+      double exhaleScale =
+          timerSpan.inMilliseconds /
           (preference.exhale[0] + preference.exhale[2]);
       bool inhaling = true, exhaling = false;
 
@@ -271,7 +273,8 @@ class _HomeWidgetState extends State<HomeWidget> {
             _status = AppLocalizations.of(context).pressStart;
             _isRunning = false;
             session.end = DateTime.now();
-            session.breaths = (preference.duration - _duration.inSeconds) ~/
+            session.breaths =
+                (preference.duration - _duration.inSeconds) ~/
                 (breath / Duration.millisecondsPerSecond);
             _addSession(session);
             _onDuration(session);
@@ -393,9 +396,6 @@ $url'''),
       _duration = Duration(seconds: preference.duration);
       _appName = preference.name.isEmpty ? APP_NAME : preference.name;
     });
-    Get.changeTheme(ThemeData(
-        primarySwatch: COLORS_PRIMARY[preference.colors[0]] as MaterialColor,
-        canvasColor: Color(preference.colors[1])));
   }
 
   @override
@@ -426,25 +426,29 @@ $url'''),
                     if (p.name.isNotEmpty) {
                       name = p.name;
                     }
-                    menuItems.add(PopupMenuItem(
-                      key: Key(name),
-                      child: Text(name),
-                      onTap: () async {
-                        Preference currentPreference =
-                            widget.preferences.getAt(0);
-                        currentPreference.copy(p);
-                        await currentPreference.save();
-                        _preferenceUpdated();
-                      },
-                    ));
+                    menuItems.add(
+                      PopupMenuItem(
+                        key: Key(name),
+                        child: Text(name),
+                        onTap: () async {
+                          Preference currentPreference = widget.preferences
+                              .getAt(0);
+                          currentPreference.copy(p);
+                          await currentPreference.save();
+                          _preferenceUpdated();
+                        },
+                      ),
+                    );
                   }
                   i++;
                 }
                 if (menuItems.isEmpty) {
-                  menuItems.add(PopupMenuItem(
-                    key: Key(HomeWidget.keyNoPreferences),
-                    child: Text(AppLocalizations.of(context).noPreferences),
-                  ));
+                  menuItems.add(
+                    PopupMenuItem(
+                      key: Key(HomeWidget.keyNoPreferences),
+                      child: Text(AppLocalizations.of(context).noPreferences),
+                    ),
+                  );
                 }
                 return menuItems;
               },
@@ -455,7 +459,6 @@ $url'''),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-
         child: Column(
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
@@ -479,31 +482,33 @@ $url'''),
               semanticsLabel: _status,
             ),
             Center(
-                child: Transform.scale(
-                    scale: _scale,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 150.0,
-                        height: 150.0,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ))),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Icon(
-                Icons.timer,
-                color: Theme.of(context).primaryColor,
+              child: Transform.scale(
+                scale: _scale,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: 150.0,
+                    height: 150.0,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
               ),
-              const SizedBox(width: 5),
-              Text(
-                getDurationString(_duration),
-                style: Theme.of(context).textTheme.headlineSmall,
-                semanticsLabel: getDurationString(_duration),
-              ),
-            ]),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.timer, color: Theme.of(context).primaryColor),
+                const SizedBox(width: 5),
+                Text(
+                  getDurationString(_duration),
+                  style: Theme.of(context).textTheme.headlineSmall,
+                  semanticsLabel: getDurationString(_duration),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -513,8 +518,9 @@ $url'''),
           children: [
             DrawerHeader(
               decoration: const BoxDecoration(
-                image:
-                    DecorationImage(image: AssetImage("images/launcher.png")),
+                image: DecorationImage(
+                  image: AssetImage("images/launcher.png"),
+                ),
               ),
               child: Text(widget.appName),
             ),
@@ -525,12 +531,14 @@ $url'''),
               onTap: () async {
                 _isRunning = false;
                 await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PreferencesWidget(
-                          preferences: widget.preferences,
-                          callback: _preferenceUpdated),
-                    ));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PreferencesWidget(
+                      preferences: widget.preferences,
+                      callback: _preferenceUpdated,
+                    ),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -541,23 +549,26 @@ $url'''),
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          SessionsWidget(sessions: widget.sessions)),
+                    builder: (context) =>
+                        SessionsWidget(sessions: widget.sessions),
+                  ),
                 );
               },
             ),
             ListTile(
-                key: Key(HomeWidget.keyCalendar),
-                title: Text(AppLocalizations.of(context).calendar),
-                leading: const Icon(Icons.calendar_today),
-                onTap: () async {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            SessionsCalendarWidget(sessions: widget.sessions)),
-                  );
-                }),
+              key: Key(HomeWidget.keyCalendar),
+              title: Text(AppLocalizations.of(context).calendar),
+              leading: const Icon(Icons.calendar_today),
+              onTap: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        SessionsCalendarWidget(sessions: widget.sessions),
+                  ),
+                );
+              },
+            ),
             SafeArea(
               child: AboutListTile(
                 icon: const Icon(Icons.info_outline),
@@ -580,7 +591,7 @@ $url'''),
                       _launchURL(BUGS_URL);
                     },
                   ),
-                  Center(child: Image.asset('images/github-qr.png'))
+                  Center(child: Image.asset('images/github-qr.png')),
                 ],
               ),
             ),

@@ -3,10 +3,10 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/hive_storage.dart';
+import 'package:brethap/l10n/generated/app_localizations.dart';
 
 class SessionsCalendarWidget extends StatefulWidget {
   const SessionsCalendarWidget({super.key, required this.sessions});
@@ -92,119 +92,129 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
           Jiffy.parseFromDateTime(_statFirstDay).add(weeks: 1).dateTime;
     }
     debugPrint(
-        "focusedDay: $_focusedDay  statFirstDay: $_statFirstDay  statLastDay: $_statLastDay");
+      "focusedDay: $_focusedDay  statFirstDay: $_statFirstDay  statLastDay: $_statLastDay",
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).calendar),
-      ),
-      body: Column(children: [
-        TableCalendar<Session>(
-          firstDay: _firstDay,
-          lastDay: _lastDay,
-          focusedDay: _focusedDay,
-          calendarFormat: _calendarFormat,
-          eventLoader: _getSessionsForDay,
-          availableCalendarFormats: {
-            CalendarFormat.month: AppLocalizations.of(context).month,
-            CalendarFormat.week: AppLocalizations.of(context).week,
-          },
-          selectedDayPredicate: (day) {
-            return isSameDay(_selectedDay, day);
-          },
-          onDaySelected: (selectedDay, focusedDay) {
-            if (!isSameDay(_selectedDay, selectedDay)) {
+      appBar: AppBar(title: Text(AppLocalizations.of(context).calendar)),
+      body: Column(
+        children: [
+          TableCalendar<Session>(
+            firstDay: _firstDay,
+            lastDay: _lastDay,
+            focusedDay: _focusedDay,
+            calendarFormat: _calendarFormat,
+            eventLoader: _getSessionsForDay,
+            availableCalendarFormats: {
+              CalendarFormat.month: AppLocalizations.of(context).month,
+              CalendarFormat.week: AppLocalizations.of(context).week,
+            },
+            selectedDayPredicate: (day) {
+              return isSameDay(_selectedDay, day);
+            },
+            onDaySelected: (selectedDay, focusedDay) {
+              if (!isSameDay(_selectedDay, selectedDay)) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                  _selectedSessions.value = _getSessionsForDay(selectedDay);
+                });
+              }
+            },
+            onFormatChanged: (format) {
+              if (_calendarFormat != format) {
+                setState(() {
+                  _calendarFormat = format;
+                  _selectedDay = null;
+                  _selectedSessions.value = [];
+                  _updateStats();
+                });
+              }
+            },
+            onPageChanged: (focusedDay) {
+              _focusedDay = focusedDay;
+              _selectedDay = null;
               setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-                _selectedSessions.value = _getSessionsForDay(selectedDay);
-              });
-            }
-          },
-          onFormatChanged: (format) {
-            if (_calendarFormat != format) {
-              setState(() {
-                _calendarFormat = format;
-                _selectedDay = null;
                 _selectedSessions.value = [];
                 _updateStats();
               });
-            }
-          },
-          onPageChanged: (focusedDay) {
-            _focusedDay = focusedDay;
-            _selectedDay = null;
-            setState(() {
-              _selectedSessions.value = [];
-              _updateStats();
-            });
-          },
-          calendarBuilders:
-              CalendarBuilders(markerBuilder: (context, date, events) {
-            if (events.isNotEmpty) {
-              DateTime dt = DateTime(date.year, date.month, date.day);
-              Color color = Theme.of(context).primaryColor;
-              if (dt.compareTo(_statFirstDay) < 0 ||
-                  dt.compareTo(_statLastDay) >= 0) {
-                color = Theme.of(context).disabledColor;
-              }
-
-              return Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: color,
-                ),
-                width: 16.0,
-                height: 16.0,
-                child: Center(
-                  child: Text('${events.length}',
-                      style:
-                          const TextStyle(color: Colors.white, fontSize: 10.0)),
-                ),
-              );
-            }
-            return null;
-          }),
-        ),
-        const SizedBox(height: 8.0),
-        Expanded(
-          child: ValueListenableBuilder<List<Session>>(
-            valueListenable: _selectedSessions,
-            builder: (context, value, _) {
-              return ListView.builder(
-                itemCount: value.length,
-                itemBuilder: (context, index) {
-                  Session session = value[index];
-                  return getSessionCard(context, session);
-                },
-              );
             },
+            calendarBuilders: CalendarBuilders(
+              markerBuilder: (context, date, events) {
+                if (events.isNotEmpty) {
+                  DateTime dt = DateTime(date.year, date.month, date.day);
+                  Color color = Theme.of(context).primaryColor;
+                  if (dt.compareTo(_statFirstDay) < 0 ||
+                      dt.compareTo(_statLastDay) >= 0) {
+                    color = Theme.of(context).disabledColor;
+                  }
+
+                  return Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: color,
+                    ),
+                    width: 16.0,
+                    height: 16.0,
+                    child: Center(
+                      child: Text(
+                        '${events.length}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10.0,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return null;
+              },
+            ),
           ),
-        ),
-      ]),
+          const SizedBox(height: 8.0),
+          Expanded(
+            child: ValueListenableBuilder<List<Session>>(
+              valueListenable: _selectedSessions,
+              builder: (context, value, _) {
+                return ListView.builder(
+                  itemCount: value.length,
+                  itemBuilder: (context, index) {
+                    Session session = value[index];
+                    return getSessionCard(context, session);
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            String stats =
-                getStats(context, _list, _statFirstDay, _statLastDay);
-            String streak =
-                getStreak(context, _list, _statFirstDay, _statLastDay);
-            setState(() {
-              _selectedDay = null;
-              _selectedSessions.value =
-                  _getSessionsForDateSpan(_statFirstDay, _statLastDay);
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("$stats $streak", key: const Key("stats")),
-              ),
+        onPressed: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          String stats = getStats(context, _list, _statFirstDay, _statLastDay);
+          String streak = getStreak(
+            context,
+            _list,
+            _statFirstDay,
+            _statLastDay,
+          );
+          setState(() {
+            _selectedDay = null;
+            _selectedSessions.value = _getSessionsForDateSpan(
+              _statFirstDay,
+              _statLastDay,
             );
-          },
-          tooltip: AppLocalizations.of(context).statistics,
-          child: const Icon(Icons.query_stats)),
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("$stats $streak", key: const Key("stats"))),
+          );
+        },
+        tooltip: AppLocalizations.of(context).statistics,
+        child: const Icon(Icons.query_stats),
+      ),
     );
   }
 }

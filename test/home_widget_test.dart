@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:brethap/constants.dart';
 import 'package:brethap/home_widget.dart';
 import 'package:brethap/hive_storage.dart';
 import 'package:brethap/wear.dart';
+import 'package:brethap/l10n/generated/app_localizations.dart';
 import 'test_utils.dart';
 
 const Duration wait = Duration(seconds: 2);
@@ -21,7 +21,10 @@ Future<void> openDrawer(WidgetTester tester) async {
 Future<void> closeDrawer(WidgetTester tester) async {
   Size size = tester.getSize(find.byType(Scaffold));
   await tester.flingFrom(
-      Offset(size.width - 1, size.height / 2), const Offset(-100, 0), 1000);
+    Offset(size.width - 1, size.height / 2),
+    const Offset(-100, 0),
+    1000,
+  );
   await tester.pump(wait * .5);
   await tester.pump(wait * .5);
 }
@@ -42,12 +45,11 @@ Future<void> testPreferencesMenu(WidgetTester tester, String key) async {
 Future<void> testHomeWidget(WidgetTester tester) async {
   const Duration shortWait = Duration(milliseconds: 500);
   Preference preference = Preference.getDefaultPref();
-  Duration duration = Duration(seconds: preference.duration),
-      totalTime = const Duration(),
-      inhale =
-          Duration(milliseconds: preference.inhale[0] + preference.inhale[1]),
-      exhale =
-          Duration(milliseconds: preference.exhale[0] + preference.exhale[1]);
+  Duration
+  duration = Duration(seconds: preference.duration),
+  totalTime = const Duration(),
+  inhale = Duration(milliseconds: preference.inhale[0] + preference.inhale[1]),
+  exhale = Duration(milliseconds: preference.exhale[0] + preference.exhale[1]);
 
   // Verify app name in title bar
   expect(find.text(APP_NAME), findsOneWidget);
@@ -144,7 +146,8 @@ Future<void> main() async {
 
   testWidgets('HomeWidget', (WidgetTester tester) async {
     const String APP_VERSION = "1.0.0";
-    await tester.pumpWidget(MaterialApp(
+    await tester.pumpWidget(
+      MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: HomeWidget(
@@ -152,7 +155,9 @@ Future<void> main() async {
           version: APP_VERSION,
           preferences: hiveData.preferences,
           sessions: hiveData.sessions,
-        )));
+        ),
+      ),
+    );
 
     await testHomeWidget(tester);
 

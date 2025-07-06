@@ -43,6 +43,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/.cxx
 
 # To backup source archive run: git archive -o brethap.tar.gz HEAD
 brethap.tar.gz
@@ -51,8 +52,6 @@ brethap.tar.gz
 
 # Output of flutter test
 downloadsPath/brethap.sessions.csv
-
-# Flutter version management set with: fvm use 3.13.8
 
 # FVM Version Cache
 .fvm/
