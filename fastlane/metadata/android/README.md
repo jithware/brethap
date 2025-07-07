@@ -16,7 +16,7 @@ git checkout master
 
 ## Update a pull request
 ```
-git fetch origin pull/84/head:pull-84
+git fetch origin pull/84/head:pull-84 # set to desired pull request
 git checkout pull-84 # make any updates here
 git push
 ```
@@ -24,10 +24,12 @@ git push
 ## Upgrade flutter and dependencies
 ```
 git checkout master
-flutter upgrade
+dart pub global activate fvm
+fvm use 3.32.5 # set to desired flutter version
 flutter pub upgrade --major-versions
 ```
-See files in [#67](https://github.com/jithware/brethap/issues/67) to update to flutter version from upgrade above
+* Update ```flutter: 3.32.5``` in [pubspec.yaml](../../../pubspec.yaml) to desired flutter version
+* Update ```flutter-version: 3.32.5``` in [flutter.yml](../../../.github/workflows/flutter.yml) to desired flutter version
 
 ## Upgrade flutter on fdroid
 If submodule not created run:
