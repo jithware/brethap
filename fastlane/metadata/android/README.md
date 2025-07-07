@@ -35,22 +35,21 @@ flutter pub upgrade --major-versions
 If submodule not created run:
 ```
 git checkout fdroid
-git submodule add -b stable https://github.com/flutter/flutter.git submodules/flutter
+git submodule add https://github.com/flutter/flutter.git submodules/flutter
+git submodule status
 ```
+
 Update the submodule/flutter repo link:
 ```
 git checkout fdroid
+cd submodules/flutter
+git checkout 3.32.5 # set to desired tag
+cd ../..
 git submodule status
-git submodule update --remote
-git submodule status
-# commit fdroid branch with new link then remove all the flutter source with:
+# commit fdroid branch with new repo link then remove all the local flutter source with:
 git submodule deinit --force submodules/flutter
 ```
-*This is used only for creating a link to the flutter stable repo at a specific commit in time. The actual flutter source code is not used here, only when building on fdroid. It may be necessary to remove and re-add the submodule with:*
-```
-git rm -f submodules/flutter
-git submodule add -b stable --force https://github.com/flutter/flutter.git submodules/flutter
-```
+*This is used only for creating a link to the flutter repo at a specific commit in time. The actual flutter source code is not used in the brethap repo, only when building on fdroid.*
 
 ## Refresh fdroiddata fork on gitlab
 If upstream not already defined (check with: `git remote show upstream` ), run on fdroiddata fork:
