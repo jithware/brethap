@@ -54,23 +54,23 @@ Card getSessionCard(
           const SizedBox(width: 10.0),
           average > 0
               ? Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: Icon(
-                  Icons.favorite,
-                  color: Theme.of(context).primaryColor,
-                ),
-              )
+                  padding: const EdgeInsets.all(1.0),
+                  child: Icon(
+                    Icons.favorite,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                )
               : const SizedBox.shrink(),
           average > 0 ? Text("$average") : const SizedBox.shrink(),
           const SizedBox(width: 10.0),
           reduced != 0
               ? Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: Icon(
-                  Icons.monitor_heart,
-                  color: Theme.of(context).primaryColor,
-                ),
-              )
+                  padding: const EdgeInsets.all(1.0),
+                  child: Icon(
+                    Icons.monitor_heart,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                )
               : const SizedBox.shrink(),
           reduced != 0 ? Text("$reduced") : const SizedBox.shrink(),
         ],
@@ -150,7 +150,12 @@ DateTime firstDateOfMonth(DateTime dateTime) {
   return DateTime(dateTime.year, dateTime.month, 1);
 }
 
-String getStats(dynamic context, List<Session> list, DateTime start, DateTime end) {
+String getStats(
+  dynamic context,
+  List<Session> list,
+  DateTime start,
+  DateTime end,
+) {
   Duration totalDuration = const Duration(seconds: 0);
   int totalSessions = 0, totalBreaths = 0, average = 0;
   List<int> averages = [];
@@ -183,7 +188,12 @@ String getStats(dynamic context, List<Session> list, DateTime start, DateTime en
   return text;
 }
 
-String getStreak(dynamic context, List<Session> list, DateTime start, DateTime end) {
+String getStreak(
+  dynamic context,
+  List<Session> list,
+  DateTime start,
+  DateTime end,
+) {
   if (list.isEmpty) {
     return "${AppLocalizations.of(context).streak}:0";
   }
@@ -225,7 +235,12 @@ Future<void> createDefaultPref(Box preferences) async {
   debugPrint("created default preference: $preference");
 }
 
-void showAlertDialog(BuildContext context, String title, String content, callback) {
+void showAlertDialog(
+  BuildContext context,
+  String title,
+  String content,
+  callback,
+) {
   Widget cancelButton = TextButton(
     child: Text(
       AppLocalizations.of(context).cancel,
@@ -304,8 +319,6 @@ Future<void> play(AudioPlayer player, String audio) async {
     await player.play(AssetSource('tone3.oga'));
   } else if (audio == AUDIO_TONE4) {
     await player.play(AssetSource('tone4.oga'));
-  } else if (audio == AUDIO_SILENCE) {
-    await player.play(AssetSource('silence15.oga'));
   }
 }
 

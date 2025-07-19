@@ -42,7 +42,6 @@ Future<void> testAudio(WidgetTester tester, String key) async {
   expect(find.textContaining(AUDIO_TONE2), findsWidgets);
   expect(find.textContaining(AUDIO_TONE3), findsWidgets);
   expect(find.textContaining(AUDIO_TONE4), findsWidgets);
-  expect(find.textContaining(AUDIO_SILENCE), findsWidgets);
   finder = find.text(AUDIO_TONE1).last;
   await tester.tap(finder);
   await tester.pumpAndSettle();

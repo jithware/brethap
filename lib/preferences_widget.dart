@@ -81,8 +81,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     setState(() {
       Duration duration = Duration(seconds: preference.duration);
       _durationMinutes = duration.inMinutes.toDouble();
-      _durationSeconds =
-          (duration.inSeconds % Duration.secondsPerMinute).toDouble();
+      _durationSeconds = (duration.inSeconds % Duration.secondsPerMinute)
+          .toDouble();
       _inhale0 =
           preference.inhale[0].toDouble() / Duration.millisecondsPerSecond * 10;
       _inhale1 =
@@ -201,7 +201,11 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     _init();
   }
 
-  SimpleDialogOption _getPresetOption(String key, String text, Preference pref) {
+  SimpleDialogOption _getPresetOption(
+    String key,
+    String text,
+    Preference pref,
+  ) {
     return SimpleDialogOption(
       onPressed: () {
         switch (key) {
@@ -314,20 +318,19 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   break;
               }
             },
-            itemBuilder:
-                (BuildContext context) => [
-                  PopupMenuItem<String>(
-                    key: const Key(RESET_ALL_TEXT),
-                    value: RESET_ALL_TEXT,
-                    child: Text(AppLocalizations.of(context).resetAll),
-                  ),
-                  const PopupMenuDivider(),
-                  PopupMenuItem<String>(
-                    key: const Key(PRESETS_TEXT),
-                    value: PRESETS_TEXT,
-                    child: Text(AppLocalizations.of(context).presets),
-                  ),
-                ],
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem<String>(
+                key: const Key(RESET_ALL_TEXT),
+                value: RESET_ALL_TEXT,
+                child: Text(AppLocalizations.of(context).resetAll),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem<String>(
+                key: const Key(PRESETS_TEXT),
+                value: PRESETS_TEXT,
+                child: Text(AppLocalizations.of(context).presets),
+              ),
+            ],
           ),
         ],
       ),
@@ -382,20 +385,18 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     onChanged: (double value) {
                       setState(() {
                         _durationMinutes = value;
-                        preference.duration =
-                            Duration(
-                              minutes: _durationMinutes.toInt(),
-                              seconds: _durationSeconds.toInt(),
-                            ).inSeconds.toInt();
+                        preference.duration = Duration(
+                          minutes: _durationMinutes.toInt(),
+                          seconds: _durationSeconds.toInt(),
+                        ).inSeconds.toInt();
                       });
                     },
                     onChangeEnd: (double value) {
                       setState(() {
-                        preference.duration =
-                            Duration(
-                              minutes: _durationMinutes.toInt(),
-                              seconds: _durationSeconds.toInt(),
-                            ).inSeconds.toInt();
+                        preference.duration = Duration(
+                          minutes: _durationMinutes.toInt(),
+                          seconds: _durationSeconds.toInt(),
+                        ).inSeconds.toInt();
                         preference.save();
                         widget.callback();
                       });
@@ -423,20 +424,18 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     onChanged: (double value) {
                       setState(() {
                         _durationSeconds = value;
-                        preference.duration =
-                            Duration(
-                              minutes: _durationMinutes.toInt(),
-                              seconds: _durationSeconds.toInt(),
-                            ).inSeconds.toInt();
+                        preference.duration = Duration(
+                          minutes: _durationMinutes.toInt(),
+                          seconds: _durationSeconds.toInt(),
+                        ).inSeconds.toInt();
                       });
                     },
                     onChangeEnd: (double value) {
                       setState(() {
-                        preference.duration =
-                            Duration(
-                              minutes: _durationMinutes.toInt(),
-                              seconds: _durationSeconds.toInt(),
-                            ).inSeconds.toInt();
+                        preference.duration = Duration(
+                          minutes: _durationMinutes.toInt(),
+                          seconds: _durationSeconds.toInt(),
+                        ).inSeconds.toInt();
                         preference.save();
                         widget.callback();
                       });
@@ -689,7 +688,6 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         AUDIO_TONE2,
                         AUDIO_TONE3,
                         AUDIO_TONE4,
-                        AUDIO_SILENCE,
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -724,7 +722,6 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         AUDIO_TONE2,
                         AUDIO_TONE3,
                         AUDIO_TONE4,
-                        AUDIO_SILENCE,
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -903,7 +900,6 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         AUDIO_TONE2,
                         AUDIO_TONE3,
                         AUDIO_TONE4,
-                        AUDIO_SILENCE,
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -938,7 +934,6 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                         AUDIO_TONE2,
                         AUDIO_TONE3,
                         AUDIO_TONE4,
-                        AUDIO_SILENCE,
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
