@@ -49,33 +49,22 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     AUDIO_TONE1 = "Tone 1",
     AUDIO_TONE2 = "Tone 2",
     AUDIO_TONE3 = "Tone 3",
-    AUDIO_TONE4 = "Tone 4",
-    AUDIO_SILENCE = "Silence";
+    AUDIO_TONE4 = "Tone 4";
 
 const int SAVED_PREFERENCES = 5;
 
 // Default values
-const int DURATION =
-        120, //seconds
-    INHALE =
-        4000, //milliseconds
-    INHALE_HOLD =
-        0, //milliseconds
-    INHALE_LAST =
-        0, //milliseconds
-    EXHALE =
-        4000, //milliseconds
-    EXHALE_HOLD =
-        0, //milliseconds
-    EXHALE_LAST =
-        0, //milliseconds
-    VIBRATE_DURATION =
-        250, //milliseconds
-    VIBRATE_BREATH =
-        50, //milliseconds
-    COLOR_PRIMARY =
-        0, //color position
-    COLOR_BACKGROUND = 0xfffafafa; //color white
+const int DURATION = 120, //seconds
+INHALE = 4000, //milliseconds
+INHALE_HOLD = 0, //milliseconds
+INHALE_LAST = 0, //milliseconds
+EXHALE = 4000, //milliseconds
+EXHALE_HOLD = 0, //milliseconds
+EXHALE_LAST = 0, //milliseconds
+VIBRATE_DURATION = 250, //milliseconds
+VIBRATE_BREATH = 50, //milliseconds
+COLOR_PRIMARY = 0, //color position
+COLOR_BACKGROUND = 0xfffafafa; //color white
 const bool DURATION_TTS = false, BREATH_TTS = false;
 const String INHALE_AUDIO = AUDIO_TONE1,
     EXHALE_AUDIO = AUDIO_TONE2,
