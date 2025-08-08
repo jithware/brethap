@@ -9,6 +9,7 @@
 #
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
+# spellchecker:disable
 
 # Uncomment the line if you want fastlane to automatically update itself
 update_fastlane

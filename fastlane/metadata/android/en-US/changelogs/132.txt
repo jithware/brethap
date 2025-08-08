@@ -1,0 +1,3 @@
+Release version: 1.8.2+132
+* Added French translations
+* Other minor enhancements

@@ -18,10 +18,10 @@ const RESOURCES = {"assets/FontManifest.json": "7b2a36307916a9721811788013e65289
 "assets/packages/wakelock_plus/assets/no_sleep.js": "7748a45cd593f33280669b29c2c8919a",
 "assets/shaders/ink_sparkle.frag": "ecc85a2e95f5e9f53123dcaf8cb9b6ce",
 "assets/AssetManifest.smcbin": "ac03e14a2298c8b8fd2d2a5670257a69",
+"assets/NOTICES": "6789eec56c3e061dfd86872dfb03f73a",
 "assets/AssetManifest.bin": "7f71f525b800fe783d061db5578ad0b3",
 "assets/AssetManifest.bin.json": "ecbd67294a9628dfd2f2378ecb96ab5c",
 "assets/AssetManifest.json": "0dedca15fe9f47f9ef221b0fa49c217e",
-"assets/NOTICES": "6789eec56c3e061dfd86872dfb03f73a",
 "canvaskit/profiling/canvaskit.js": "c21852696bc1cc82e8894d851c01921a",
 "canvaskit/profiling/canvaskit.wasm": "371bc4e204443b0d5e774d64a046eb99",
 "canvaskit/chromium/canvaskit.js": "8191e843020c832c9cf8852a4b909d4c",
@@ -40,11 +40,11 @@ const RESOURCES = {"assets/FontManifest.json": "7b2a36307916a9721811788013e65289
 "manifest.json": "7dbb56011187c29a1092f838ef6df339",
 "README.md": "e36fa824f15fa14b5e13c4be30936e63",
 "flutter.js": "83d881c1dbb6d6bcd6b42e274605b69c",
-"flutter_bootstrap.js": "2e7cf91b94a6a342b36837ad372f7512",
-"index.html": "71a48496e1e22aa2950ecba54c5a95a8",
-"/": "71a48496e1e22aa2950ecba54c5a95a8",
-"main.dart.js": "c5a2aeae3cd5145f74f73ef30c8fa2a6",
-"version.json": "6331e67615956b38995394d73bca2177"};
+"flutter_bootstrap.js": "bad51e0b2ed7779907212df9af94e1a0",
+"index.html": "87df45431b4bcd80df0de8f3848aa802",
+"/": "87df45431b4bcd80df0de8f3848aa802",
+"main.dart.js": "9449a665f1d7250d7110f0d7c009b1e8",
+"version.json": "2861f8e159bcbb7c306df1afcb2425de"};
 // The application shell files that are downloaded before a service worker can
 // start.
 const CORE = ["main.dart.js",

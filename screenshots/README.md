@@ -17,5 +17,5 @@ ffmpeg -y -i screenshots/android/<video>.mp4 -vcodec libwebp -filter:v fps=fps=1
 
 To create feature graphic, run:
 ```
-montage fastlane/metadata/android/en-US/images/phoneScreenshots/[1,4,6,8]*.png -tile x1 -geometry x500+10 -background transparent fastlane/metadata/android/en-US/images/featureGraphic.png && mogrify -gravity Center -crop 1024x500+0+0 fastlane/metadata/android/en-US/images/featureGraphic.png 
+montage fastlane/metadata/android/en-US/images/phoneScreenshots/[1,4,6,8]*.png -tile x1 -geometry x500+10 -background transparent fastlane/metadata/android/en-US/images/featureGraphic.png && mogrify -resize 1024x500^ -gravity Center -crop 1024x500+0+0 fastlane/metadata/android/en-US/images/featureGraphic.png 
 ```

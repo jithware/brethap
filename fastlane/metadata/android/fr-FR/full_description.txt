@@ -1,0 +1,7 @@
+Brethap est aussi une application de méditation (yama). Elle inclut un minuteur pour la méditation et permet également de configurer un modèle de respiration à suivre. Vos sessions seront enregistrées, vous permettant de surveiller et d'afficher les statistiques des progrès dans une liste ou dans un calendrier. La durée, la respiration et d'autres options sont configurables via les préférences. Les techniques de respiration prédéfinies incluent 4-7-8, soupir physiologique, entre autres.
+
+Pour les utilisateurs de Wear OS, il existe aussi une version simplifiée.
+
+Documentation complète pour les téléphones : https://github.com/jithware/brethap
+
+Documentation complète pour Wear OS : https://github.com/jithware/brethap_wear
