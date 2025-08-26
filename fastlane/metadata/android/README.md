@@ -32,18 +32,13 @@ flutter pub upgrade --major-versions
 * Update ```flutter-version: 3.32.5``` in [flutter.yml](../../../.github/workflows/flutter.yml) to desired flutter version
 
 ## Upgrade flutter on fdroid
-If submodule not created run:
 ```
 git checkout fdroid
+git rm submodules/flutter
+rm -rf .git/modules/submodules/flutter
 git submodule add https://github.com/flutter/flutter.git submodules/flutter
-git submodule status
-```
-
-Update the submodule/flutter repo link:
-```
-git checkout fdroid
 cd submodules/flutter
-git checkout 3.32.5 # set to desired tag
+git checkout 3.35.1 # set to desired tag
 cd ../..
 git submodule status
 # commit fdroid branch with new repo link then remove all the local flutter source with:
