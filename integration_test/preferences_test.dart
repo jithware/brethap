@@ -115,8 +115,14 @@ Future<void> testPreferences(
   await tester.tap(finder);
   await tester.pump(demoWait);
 
-  // save preset
+  // enter preference name
   String preference2 = "${PreferencesWidget.keyPreference} 2";
+  finder = find.byKey(Key(PreferencesWidget.keyPreferenceName));
+  expect(finder, findsOneWidget);
+  await tester.enterText(finder, preference2);
+  await tester.pump(demoWait * 2);
+
+  // save preference
   finder = find.byKey(Key(preference2));
   expect(finder, findsOneWidget);
   await tester.longPress(finder);

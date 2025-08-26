@@ -1,0 +1,3 @@
+Release version: 1.8.3+134
+* Added Polish translations
+* Other minor enhancements

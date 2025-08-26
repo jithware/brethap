@@ -14,14 +14,29 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode').toInteger()
 if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+    flutterVersionCode = 1
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
+}
+
+def flutterCompileSdk = localProperties.getProperty('flutter.compileSdk').toInteger()
+if (flutterCompileSdk == null) {
+    flutterCompileSdk = 35
+}
+
+def flutterMinSdkVersion = localProperties.getProperty('flutter.minSdkVersion').toInteger()
+if (flutterMinSdkVersion == null) {
+    flutterMinSdkVersion = 24
+}
+
+def flutterTargetSdkVersion = localProperties.getProperty('flutter.targetSdkVersion').toInteger()
+if (flutterTargetSdkVersion == null) {
+    flutterTargetSdkVersion = 35
 }
 
 def keystoreProperties = new Properties()
@@ -34,7 +49,7 @@ android {
 
     namespace 'com.jithware.brethap'
 
-    compileSdkVersion 35
+    compileSdk flutterCompileSdk
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -43,9 +58,9 @@ android {
     // https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration
     defaultConfig {
         applicationId "com.jithware.brethap"
-        minSdkVersion 23
-        targetSdkVersion 35
-        versionCode flutterVersionCode.toInteger()
+        minSdkVersion flutterMinSdkVersion
+        targetSdkVersion flutterTargetSdkVersion
+        versionCode flutterVersionCode
         versionName flutterVersionName
     }
 
