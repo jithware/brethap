@@ -24,17 +24,17 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-def flutterCompileSdk = localProperties.getProperty('flutter.compileSdk').toInteger()
-if (flutterCompileSdk == null) {
-    flutterCompileSdk = 35
+def flutterCompileSdkVersion = localProperties.getProperty('flutter.compileSdkVersion')
+if (flutterCompileSdkVersion == null) {
+    flutterCompileSdkVersion = 36
 }
 
-def flutterMinSdkVersion = localProperties.getProperty('flutter.minSdkVersion').toInteger()
+def flutterMinSdkVersion = localProperties.getProperty('flutter.minSdkVersion')
 if (flutterMinSdkVersion == null) {
     flutterMinSdkVersion = 24
 }
 
-def flutterTargetSdkVersion = localProperties.getProperty('flutter.targetSdkVersion').toInteger()
+def flutterTargetSdkVersion = localProperties.getProperty('flutter.targetSdkVersion')
 if (flutterTargetSdkVersion == null) {
     flutterTargetSdkVersion = 35
 }
@@ -49,7 +49,7 @@ android {
 
     namespace 'com.jithware.brethap'
 
-    compileSdk flutterCompileSdk
+    compileSdk flutterCompileSdkVersion.toInteger()
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
