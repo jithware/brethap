@@ -2,21 +2,25 @@ name: Flutter Tests
 
 on:
   push:
-    branches: [ master, fdroid ]
+    branches: [master, fdroid]
   pull_request:
-    branches: [ master, fdroid ]
+    branches: [master, fdroid]
 
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-latest
 
-    # See https://github.com/subosito/flutter-action 
     steps:
-    - uses: actions/checkout@v3
-    - uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.35.1'
-    - run: flutter --version
-    - run: flutter pub get
-    - run: flutter analyze
-    - run: flutter test
+      # See https://github.com/actions/checkout
+      - uses: actions/checkout@v4
+
+      # See https://github.com/subosito/flutter-action
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+
+      - run: flutter --version
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test

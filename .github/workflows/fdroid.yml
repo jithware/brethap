@@ -1,0 +1,38 @@
+# Verify an apk can be created when tagging a release for fdroid
+
+name: Fdroid Tests
+
+on:
+  release:
+    types: [published]
+
+  # For testing changes to this workflow
+  push:
+
+jobs:
+  build_apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      # See https://github.com/actions/checkout
+      - uses: actions/checkout@v5
+        with:
+          ref: fdroid
+
+      # See https://github.com/actions/setup-java
+      - uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      # See https://github.com/subosito/flutter-action
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+
+      # Remove release config from build.gradle for unsigned apk
+      - run: sed -i '/release {/,/}/d' android/app/build.gradle
+
+      # Build an unsigned release apk
+      - run: flutter build apk --release --no-tree-shake-icons

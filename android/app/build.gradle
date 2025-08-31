@@ -86,7 +86,8 @@ android {
         jvmTarget = 17
     }
 
-    ndkVersion = "27.0.12077973"
+    // For latest versions see: https://developer.android.com/ndk/downloads
+    ndkVersion = "27.3.13750724"
 
 }
 

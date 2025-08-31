@@ -25,11 +25,11 @@ git push
 ```
 git checkout master
 dart pub global activate fvm
-fvm use 3.32.5 # set to desired flutter version
+fvm use 3.35.1 # set to desired flutter version
 flutter pub upgrade --major-versions
 ```
-* Update ```flutter: 3.32.5``` in [pubspec.yaml](../../../pubspec.yaml) to desired flutter version
-* Update ```flutter-version: 3.32.5``` in [flutter.yml](../../../.github/workflows/flutter.yml) to desired flutter version
+* Update ```flutter: 3.35.1``` in [pubspec.yaml](../../../pubspec.yaml) to desired flutter version
+
 
 ## Upgrade flutter on fdroid
 ```
