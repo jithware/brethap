@@ -7,7 +7,7 @@ on:
     types: [published]
 
   # For testing changes to this workflow
-  push:
+  # push:
 
 jobs:
   build_apk:
