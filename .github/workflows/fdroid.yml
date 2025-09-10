@@ -1,4 +1,5 @@
 # Verify an apk can be created when tagging a release for fdroid
+# spellchecker:disable
 
 name: Fdroid Tests
 

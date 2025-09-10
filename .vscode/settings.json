@@ -18,5 +18,8 @@
   "cSpell.ignorePaths": [
     "pubspec.*",
     "*.arb"
+  ],
+  "cSpell.words": [
+    "Brethap"
   ]
 }
