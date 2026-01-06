@@ -87,7 +87,7 @@ android {
     }
 
     // For latest versions see: https://developer.android.com/ndk/downloads
-    ndkVersion = "27.3.13750724"
+    ndkVersion = "29.0.14206865"
 
 }
 

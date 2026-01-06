@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:vibration/vibration.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -362,12 +361,12 @@ class _HomeWidgetState extends State<HomeWidget> {
     }
   }
 
-  void _showWebDialog(String url) {
+  void _showWebDialog(String title, String url) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context).couldNotLaunch),
+          title: Text(title),
           content: Text('''
 ${AppLocalizations.of(context).openBrowser}: 
 
@@ -375,17 +374,6 @@ $url'''),
         );
       },
     );
-  }
-
-  void _launchURL(String url) {
-    canLaunchUrlString(url).then((value) {
-      if (value) {
-        launchUrlString(url);
-      } else {
-        _showWebDialog(url);
-        debugPrint("Could not launch url");
-      }
-    });
   }
 
   // Callback for variables needed in HomeWidget when PreferenceWidget closes
@@ -581,14 +569,20 @@ $url'''),
                     title: Text(AppLocalizations.of(context).help),
                     leading: const Icon(Icons.help),
                     onTap: () {
-                      _launchURL(HELP_URL);
+                      _showWebDialog(
+                        AppLocalizations.of(context).help,
+                        HELP_URL,
+                      );
                     },
                   ),
                   ListTile(
                     title: Text(AppLocalizations.of(context).reportIssue),
                     leading: const Icon(Icons.bug_report),
                     onTap: () {
-                      _launchURL(BUGS_URL);
+                      _showWebDialog(
+                        AppLocalizations.of(context).reportIssue,
+                        BUGS_URL,
+                      );
                     },
                   ),
                   Center(child: Image.asset('images/github-qr.png')),

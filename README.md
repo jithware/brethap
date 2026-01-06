@@ -60,6 +60,8 @@ For Wear OS users, there is a slimmed down [version](https://github.com/jithware
      alt="Preferences"
      height="400">](./screenshots/android/preferences.webp)
 
+*For a finer adjustment to a preference, rotate your phone to landscape mode. See [#118](https://github.com/jithware/brethap/discussions/118#discussioncomment-13848851) for more detail.*
+
 ## Versioning
 
 Brethap [releases](https://github.com/jithware/brethap/releases) use the following [software versioning](https://en.wikipedia.org/wiki/Software_versioning):

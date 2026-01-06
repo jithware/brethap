@@ -37,16 +37,6 @@
             android:value="2" />
     </application>
 
-    <queries>
-      <!-- App opens https URLs -->
-      <intent>
-        <action android:name="android.intent.action.VIEW" />
-        <data android:scheme="https" />
-      </intent>
-    </queries>
-
-    <uses-permission android:name="android.permission.INTERNET"/>
-
     <!-- See https://github.com/jithware/brethap/issues/103  -->
     <permission tools:node="remove"
                 android:name="com.jithware.brethap.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
