@@ -75,6 +75,9 @@ Examples updates:
 * maintenance = enhancements and bug fixes
 * build = incremented number from previous build
 
+[<img src="https://img.shields.io/github/v/release/jithware/brethap.svg?logo=github"
+     alt="Brethap Version">](https://github.com/jithware/brethap/releases/latest)
+
 ## Donate
 
 Donate to the project's maintainer [@jithware](https://github.com/jithware)
