@@ -1,14 +1,11 @@
-# Verify an apk can be created when tagging a release for fdroid
+# Verify an apk can be created for fdroid
 # spellchecker:disable
 
 name: Fdroid Tests
 
 on:
-  release:
-    types: [published]
-
-  # For testing changes to this workflow
-  #push:
+  push:
+    branches: [fdroid]
 
 jobs:
   build_apk:

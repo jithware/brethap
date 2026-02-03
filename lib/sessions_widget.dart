@@ -77,16 +77,17 @@ class _SessionsWidgetState extends State<SessionsWidget> {
     int added = 0;
     try {
       List<List<dynamic>> rows = [
-        ["start", "end", "breaths", "heartrate"],
+        ["start", "end", "breaths", "heartrate", "description"],
       ];
       for (var element in list) {
-        List<double>? heartrates = element.heartrates;
-        heartrates ??= [0.0];
+        List<double>? heartrates = element.heartrates ?? [0.0];
+        String description = element.description ?? "";
         rows.add([
           element.start,
           element.end,
           element.breaths,
           heartrates.average,
+          description,
         ]);
         added++;
       }
@@ -126,6 +127,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
           session.end = DateTime.parse(row[1]);
           session.breaths = row[2];
           session.heartrates = [row[3]];
+          session.description = row[4];
           _list.add(session);
           await widget.sessions.add(session);
           added++;

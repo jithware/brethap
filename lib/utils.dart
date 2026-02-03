@@ -37,42 +37,53 @@ Card getSessionCard(
       onLongPress: () {
         debugPrint("session: ${session.toString()}");
       },
+
       title: Text(DateFormat(dateFormat).format(session.start)),
-      subtitle: Row(
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(1.0),
-            child: Icon(Icons.timer, color: Theme.of(context).primaryColor),
+          Visibility(
+            visible:
+                session.description != null && session.description!.isNotEmpty,
+            child: Text(session.description ?? ""),
           ),
-          Text(getDurationString(diff)),
-          const SizedBox(width: 10.0),
-          Padding(
-            padding: const EdgeInsets.all(1.0),
-            child: Icon(Icons.air, color: Theme.of(context).primaryColor),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: Icon(Icons.timer, color: Theme.of(context).primaryColor),
+              ),
+              Text(getDurationString(diff)),
+              const SizedBox(width: 10.0),
+              Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: Icon(Icons.air, color: Theme.of(context).primaryColor),
+              ),
+              Text("${session.breaths}"),
+              const SizedBox(width: 10.0),
+              average > 0
+                  ? Padding(
+                      padding: const EdgeInsets.all(1.0),
+                      child: Icon(
+                        Icons.favorite,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              average > 0 ? Text("$average") : const SizedBox.shrink(),
+              const SizedBox(width: 10.0),
+              reduced != 0
+                  ? Padding(
+                      padding: const EdgeInsets.all(1.0),
+                      child: Icon(
+                        Icons.monitor_heart,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              reduced != 0 ? Text("$reduced") : const SizedBox.shrink(),
+            ],
           ),
-          Text("${session.breaths}"),
-          const SizedBox(width: 10.0),
-          average > 0
-              ? Padding(
-                  padding: const EdgeInsets.all(1.0),
-                  child: Icon(
-                    Icons.favorite,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                )
-              : const SizedBox.shrink(),
-          average > 0 ? Text("$average") : const SizedBox.shrink(),
-          const SizedBox(width: 10.0),
-          reduced != 0
-              ? Padding(
-                  padding: const EdgeInsets.all(1.0),
-                  child: Icon(
-                    Icons.monitor_heart,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                )
-              : const SizedBox.shrink(),
-          reduced != 0 ? Text("$reduced") : const SizedBox.shrink(),
         ],
       ),
     ),

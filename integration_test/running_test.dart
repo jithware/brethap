@@ -22,6 +22,11 @@ Future<void> testRunning(
     await tester.pumpAndSettle();
   }
 
+  // tap status text do show/hide animation ring
+  await tapItem(tester, HomeWidget.keyStatusText);
+  await tester.pump(demoWait);
+  await tapItem(tester, HomeWidget.keyStatusText);
+
   // tap start
   Finder finder = find.byType(FloatingActionButton);
   expect(finder, findsOneWidget);

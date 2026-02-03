@@ -1,5 +1,5 @@
 // See https://docs.hivedb.dev/#/custom-objects/generate_adapter
-// flutter packages pub run build_runner build --delete-conflicting-outputs
+// dart run build_runner build --delete-conflicting-outputs
 
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
@@ -17,6 +17,8 @@ class Session extends HiveObject {
   late int breaths;
   @HiveField(3)
   List<double>? heartrates;
+  @HiveField(4)
+  String? description;
 
   Session({required this.start});
 
@@ -24,10 +26,12 @@ class Session extends HiveObject {
     final start = data['start'] as int;
     final end = data['end'] as int;
     final breaths = data['breaths'] as int;
-    List<double>? heartrates =
-        data['heartrates'] != null ? List.from(data['heartrates']) : null;
-    Session session =
-        Session(start: DateTime.fromMillisecondsSinceEpoch(start));
+    List<double>? heartrates = data['heartrates'] != null
+        ? List.from(data['heartrates'])
+        : null;
+    Session session = Session(
+      start: DateTime.fromMillisecondsSinceEpoch(start),
+    );
     session.end = DateTime.fromMillisecondsSinceEpoch(end);
     session.breaths = breaths;
     session.heartrates = heartrates;
@@ -40,6 +44,7 @@ class Session extends HiveObject {
       'end': end.millisecondsSinceEpoch,
       'breaths': breaths,
       'heartrates': heartrates,
+      'description': description,
     };
   }
 
@@ -81,17 +86,18 @@ class Preference extends HiveObject {
   @HiveField(9)
   List<String> audio;
 
-  Preference(
-      {required this.duration,
-      required this.inhale,
-      required this.exhale,
-      required this.vibrateDuration,
-      required this.vibrateBreath,
-      required this.durationTts,
-      required this.breathTts,
-      required this.colors,
-      required this.name,
-      required this.audio});
+  Preference({
+    required this.duration,
+    required this.inhale,
+    required this.exhale,
+    required this.vibrateDuration,
+    required this.vibrateBreath,
+    required this.durationTts,
+    required this.breathTts,
+    required this.colors,
+    required this.name,
+    required this.audio,
+  });
 
   void copy(Preference preference) {
     duration = preference.duration;
@@ -119,16 +125,17 @@ class Preference extends HiveObject {
     List<String> audio = List.from(data['audio']);
 
     return Preference(
-        duration: duration,
-        inhale: inhale,
-        exhale: exhale,
-        vibrateDuration: vibrateDuration,
-        vibrateBreath: vibrateBreath,
-        durationTts: durationTts,
-        breathTts: breathTts,
-        colors: colors,
-        name: name,
-        audio: audio);
+      duration: duration,
+      inhale: inhale,
+      exhale: exhale,
+      vibrateDuration: vibrateDuration,
+      vibrateBreath: vibrateBreath,
+      durationTts: durationTts,
+      breathTts: breathTts,
+      colors: colors,
+      name: name,
+      audio: audio,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -157,21 +164,17 @@ class Preference extends HiveObject {
 
   static Preference getDefaultPref() {
     Preference preference = Preference(
-        duration: DURATION,
-        inhale: [INHALE, INHALE_HOLD, INHALE_LAST],
-        exhale: [EXHALE, EXHALE_HOLD, EXHALE_LAST],
-        vibrateDuration: kIsWeb ? 0 : VIBRATE_DURATION,
-        vibrateBreath: kIsWeb ? 0 : VIBRATE_BREATH,
-        durationTts: DURATION_TTS,
-        breathTts: BREATH_TTS,
-        colors: [COLOR_PRIMARY, COLOR_BACKGROUND],
-        name: "",
-        audio: [
-          INHALE_AUDIO,
-          EXHALE_AUDIO,
-          INHALE_HOLD_AUDIO,
-          EXHALE_HOLD_AUDIO
-        ]);
+      duration: DURATION,
+      inhale: [INHALE, INHALE_HOLD, INHALE_LAST],
+      exhale: [EXHALE, EXHALE_HOLD, EXHALE_LAST],
+      vibrateDuration: kIsWeb ? 0 : VIBRATE_DURATION,
+      vibrateBreath: kIsWeb ? 0 : VIBRATE_BREATH,
+      durationTts: DURATION_TTS,
+      breathTts: BREATH_TTS,
+      colors: [COLOR_PRIMARY, COLOR_BACKGROUND],
+      name: "",
+      audio: [INHALE_AUDIO, EXHALE_AUDIO, INHALE_HOLD_AUDIO, EXHALE_HOLD_AUDIO],
+    );
     return preference;
   }
 

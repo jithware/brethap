@@ -1,0 +1,4 @@
+Release version: 1.8.6+140
+* Added breathing animation outer ring
+* Added preference name to session card
+* Other minor enhancements
