@@ -10,7 +10,7 @@ import 'package:brethap/sessions_calendar_widget.dart';
 import 'package:brethap/l10n/generated/app_localizations.dart';
 import 'test_utils.dart';
 
-const Duration WAIT = Duration(milliseconds: 500);
+const Duration WAIT = Duration(milliseconds: 1000);
 int totalSessions = HomeWidget.totalSessions + 1;
 
 Future<void> tapMenu(WidgetTester tester) async {

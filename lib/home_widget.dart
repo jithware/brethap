@@ -65,6 +65,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   late String _status, _preferenceName;
   late FlutterTts _tts;
   double _scale = 0.0;
+  int _breaths = 0;
   late AudioPlayer _player;
 
   @override
@@ -201,10 +202,13 @@ class _HomeWidgetState extends State<HomeWidget> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 
-  Future<void> _onBreath(String text) async {
+  Future<void> _onBreath(String text, [int cycles = 1]) async {
     Preference preference = widget.preferences.get(0);
 
-    _vibrate(preference.vibrateBreath);
+    for (int i = 0; i < cycles; i++) {
+      _vibrate(preference.vibrateBreath ~/ cycles);
+      await Future.delayed(const Duration(milliseconds: 200));
+    }
 
     if (preference.breathTts) {
       await _speak(text);
@@ -274,9 +278,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             _status = AppLocalizations.of(context).pressStart;
             _isRunning = false;
             session.end = DateTime.now();
-            session.breaths =
-                (preference.duration - _duration.inSeconds) ~/
-                (breath / Duration.millisecondsPerSecond);
+            session.breaths = _breaths;
             if (_preferenceName != APP_NAME) {
               session.description = _preferenceName;
             }
@@ -285,6 +287,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             _wakeLock(false);
             _duration = Duration(seconds: preference.duration);
             _scale = 0.0;
+            _breaths = 0;
             timer.cancel();
           });
         } else {
@@ -318,7 +321,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               exhaling = true;
               text = AppLocalizations.of(context).exhale;
               _scale = 1.0;
-              _onBreath(text);
+              _onBreath(text, 2);
               _status = text;
               _onExhale();
             } else if (preference.exhale[1] > 0 &&
@@ -341,6 +344,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             cycle += timerSpan.inMilliseconds;
             if (cycle >= breath) {
               cycle = 0;
+              _breaths++;
             }
 
             if (inhaling) {
@@ -361,7 +365,9 @@ class _HomeWidgetState extends State<HomeWidget> {
           });
         }
 
-        debugPrint("_duration: $_duration _scale: $_scale cycle: $cycle");
+        debugPrint(
+          "_duration: $_duration _scale: ${_scale.toStringAsFixed(3)} _breaths: $_breaths cycle: $cycle",
+        );
       });
     }
   }
@@ -491,7 +497,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                 key: Key(HomeWidget.keyStatusText),
                 _status,
                 style: Theme.of(context).textTheme.headlineSmall,
-                semanticsLabel: _status,
               ),
             ),
 
@@ -545,7 +550,13 @@ class _HomeWidgetState extends State<HomeWidget> {
                 Text(
                   getDurationString(_duration),
                   style: Theme.of(context).textTheme.headlineSmall,
-                  semanticsLabel: getDurationString(_duration),
+                ),
+                SizedBox(width: 5),
+                Icon(Icons.air, color: Theme.of(context).primaryColor),
+                SizedBox(width: 5),
+                Text(
+                  _breaths.toString(),
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ],
             ),

@@ -1,0 +1,4 @@
+Release version: 1.8.7+142
+* Added double vibrate for exhale
+* Added breath count to home widget
+* Other minor enhancements

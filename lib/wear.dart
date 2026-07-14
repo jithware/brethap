@@ -12,5 +12,5 @@ Duration roundDuration(Duration duration) {
   if (duration.inMilliseconds / 1000 == duration.inSeconds) {
     return duration;
   }
-  return Duration(seconds: duration.inSeconds + 1);
+  return Duration(seconds: duration.inSeconds);
 }

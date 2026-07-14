@@ -34,8 +34,8 @@ Future<void> testRunning(
   await tester.pump(demoWait);
 
   // running
-  for (int i = 0; i < 100; i++) {
-    if (i == 15) {
+  for (int i = 0; i < 120; i++) {
+    if (i == 70) {
       if (binding != null) {
         takeScreenshot(binding, "2_inhale.png");
         await tester.pumpAndSettle();

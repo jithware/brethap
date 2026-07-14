@@ -91,9 +91,9 @@ class _SessionsWidgetState extends State<SessionsWidget> {
         ]);
         added++;
       }
-      String csv = const ListToCsvConverter().convert(rows);
+      String csvString = csv.encode(rows);
       final file = await _getExportFile();
-      file.writeAsString(csv);
+      file.writeAsString(csvString);
     } catch (e) {
       debugPrint(e.toString());
       return 0;
@@ -106,7 +106,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
     try {
       final file = await _getExportFile();
       final contents = await file.readAsString();
-      List<List<dynamic>> rows = const CsvToListConverter().convert(contents);
+      List<List<dynamic>> rows = csv.decode(contents);
 
       // skip header at 0
       for (int i = 1; i < rows.length; i++) {
@@ -125,8 +125,8 @@ class _SessionsWidgetState extends State<SessionsWidget> {
         if (!exists) {
           Session session = Session(start: start);
           session.end = DateTime.parse(row[1]);
-          session.breaths = row[2];
-          session.heartrates = [row[3]];
+          session.breaths = int.parse(row[2]);
+          session.heartrates = [double.parse(row[3])];
           session.description = row[4];
           _list.add(session);
           await widget.sessions.add(session);
