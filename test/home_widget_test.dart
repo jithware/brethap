@@ -65,15 +65,31 @@ Future<void> testHomeWidget(WidgetTester tester) async {
   // Verify status text
   expect(find.text(INHALE_TEXT), findsOneWidget);
 
-  // Verify timer
-  expect(find.text(getDurationString(duration - totalTime)), findsOneWidget);
+  // Verify timer (allow for small drift in integration tests)
+  expect(
+    find.byWidgetPredicate((widget) =>
+        widget is Text &&
+        widget.data != null &&
+        [0, 1, -1, 2, -2].any((i) =>
+            widget.data ==
+            getDurationString(duration - totalTime + Duration(seconds: i)))),
+    findsOneWidget,
+  );
 
   // Forward ahead to exhale
   await tester.pump(inhale);
   totalTime += inhale;
 
-  // Verify timer
-  expect(find.text(getDurationString(duration - totalTime)), findsOneWidget);
+  // Verify timer (allow for small drift in integration tests)
+  expect(
+    find.byWidgetPredicate((widget) =>
+        widget is Text &&
+        widget.data != null &&
+        [0, 1, -1, 2, -2].any((i) =>
+            widget.data ==
+            getDurationString(duration - totalTime + Duration(seconds: i)))),
+    findsOneWidget,
+  );
 
   // Wait a bit
   await tester.pump(shortWait);

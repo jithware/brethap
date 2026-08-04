@@ -562,98 +562,106 @@ class _HomeWidgetState extends State<HomeWidget> {
             ],
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _ringVisible = !_ringVisible;
-                });
-              },
-              child: Text(
-                key: Key(HomeWidget.keyStatusText),
-                _status,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w300,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            ),
-            const SizedBox(height: 40),
-            const SizedBox(height: 40),
-            Center(
-              child: SizedBox(
-                width: circleWidth + (circlePadding * 2),
-                height: circleHeight + (circlePadding * 2),
-                child: Stack(
-                  alignment: Alignment.center,
-                  clipBehavior: Clip.none,
-                  children: <Widget>[
-                    // Breathing animation outer ring (Feature Request #134)
-                    Visibility(
-                      visible: _ringVisible,
-                      child: Container(
-                        width: circleWidth,
-                        height: circleHeight,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withValues(alpha: 0.15),
-                            width: ringWidth,
-                          ),
-                        ),
-                      ),
+        child: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _ringVisible = !_ringVisible;
+                      });
+                    },
+                    child: Text(
+                      key: Key(HomeWidget.keyStatusText),
+                      _status,
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.w300,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                     ),
+                  ),
+                  const SizedBox(height: 40),
+                  const SizedBox(height: 40),
+                  Center(
+                    child: SizedBox(
+                      width: circleWidth + (circlePadding * 2),
+                      height: circleHeight + (circlePadding * 2),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        clipBehavior: Clip.none,
+                        children: <Widget>[
+                          // Breathing animation outer ring (Feature Request #134)
+                          Visibility(
+                            visible: _ringVisible,
+                            child: Container(
+                              width: circleWidth,
+                              height: circleHeight,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primary
+                                      .withValues(alpha: 0.15),
+                                  width: ringWidth,
+                                ),
+                              ),
+                            ),
+                          ),
 
-                    // Breathing animation circle
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 100),
-                      width: circleWidth * _scale,
-                      height: circleHeight * _scale,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withValues(alpha: 0.3),
-                            blurRadius: 20,
-                            spreadRadius: 5 * _scale,
+                          // Breathing animation circle
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 100),
+                            width: circleWidth * _scale,
+                            height: circleHeight * _scale,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primary
+                                      .withValues(alpha: 0.3),
+                                  blurRadius: 20,
+                                  spreadRadius: 5 * _scale,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 40),
+                  const SizedBox(height: 40),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildInfoCard(
+                        context,
+                        Icons.timer_outlined,
+                        getDurationString(_duration),
+                        AppLocalizations.of(context).duration,
+                      ),
+                      const SizedBox(width: 40),
+                      _buildInfoCard(
+                        context,
+                        Icons.air_outlined,
+                        _breaths.toString(),
+                        AppLocalizations.of(context).breaths,
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 40),
-            const SizedBox(height: 40),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildInfoCard(
-                  context,
-                  Icons.timer_outlined,
-                  getDurationString(_duration),
-                  AppLocalizations.of(context).duration,
-                ),
-                const SizedBox(width: 40),
-                _buildInfoCard(
-                  context,
-                  Icons.air_outlined,
-                  _breaths.toString(),
-                  AppLocalizations.of(context).breaths,
-                ),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
       drawer: NavigationDrawer(

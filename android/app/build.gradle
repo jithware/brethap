@@ -2,7 +2,7 @@
 
 plugins {
     id "com.android.application"
-    id "kotlin-android"
+    id "org.jetbrains.kotlin.android"
     id "dev.flutter.flutter-gradle-plugin"
 }
 
@@ -50,10 +50,6 @@ android {
     namespace 'com.jithware.brethap'
 
     compileSdk flutterCompileSdkVersion.toInteger()
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
 
     // https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration
     defaultConfig {
