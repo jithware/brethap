@@ -48,7 +48,7 @@ const String DATE_FORMAT = "yyyy-MM-dd h:mm a",
     AUDIO_TONE3 = "Tone 3",
     AUDIO_TONE4 = "Tone 4";
 
-const int SAVED_PREFERENCES = 5;
+const int SAVED_PREFERENCES = 8;
 
 // Default values
 const int DURATION = 120, //seconds

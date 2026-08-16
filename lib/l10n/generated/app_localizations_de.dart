@@ -128,6 +128,24 @@ class AppLocalizationsDe extends AppLocalizations {
   String get enterAName => 'Gib einen Namen ein';
 
   @override
+  String get general => 'Allgemein';
+
+  @override
+  String get feedback => 'Rückmeldung';
+
+  @override
+  String get appearance => 'Aussehen';
+
+  @override
+  String get customTones => 'Benutzerdefinierte Töne';
+
+  @override
+  String get addCustomSound => 'Ton hinzufügen';
+
+  @override
+  String get name => 'Name';
+
+  @override
   String get sessions => 'Sitzungen';
 
   @override

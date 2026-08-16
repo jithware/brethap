@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:intl/intl.dart';
 
 import 'package:brethap/utils.dart';
 import 'package:brethap/hive_storage.dart';
@@ -99,87 +100,152 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context).calendar)),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).calendar),
+        centerTitle: true,
+      ),
       body: Column(
         children: [
-          TableCalendar<Session>(
-            firstDay: _firstDay,
-            lastDay: _lastDay,
-            focusedDay: _focusedDay,
-            calendarFormat: _calendarFormat,
-            eventLoader: _getSessionsForDay,
-            availableCalendarFormats: {
-              CalendarFormat.month: AppLocalizations.of(context).month,
-              CalendarFormat.week: AppLocalizations.of(context).week,
-            },
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            onDaySelected: (selectedDay, focusedDay) {
-              if (!isSameDay(_selectedDay, selectedDay)) {
+          Card(
+            margin: const EdgeInsets.all(16),
+            elevation: 0,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+            child: TableCalendar<Session>(
+              rowHeight: 64,
+              daysOfWeekHeight: 30,
+              firstDay: _firstDay,
+              lastDay: _lastDay,
+              focusedDay: _focusedDay,
+              calendarFormat: _calendarFormat,
+              eventLoader: _getSessionsForDay,
+              availableCalendarFormats: {
+                CalendarFormat.month: AppLocalizations.of(context).month,
+                CalendarFormat.week: AppLocalizations.of(context).week,
+              },
+              headerStyle: HeaderStyle(
+                formatButtonVisible: true,
+                titleCentered: true,
+                formatButtonDecoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                formatButtonTextStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+              ),
+              calendarStyle: CalendarStyle(
+                markersAlignment: Alignment.bottomCenter,
+                markerMargin: const EdgeInsets.only(bottom: 6),
+                todayDecoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+                  shape: BoxShape.circle,
+                ),
+                selectedDecoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  shape: BoxShape.circle,
+                ),
+                markerDecoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondary,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDay, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                if (!isSameDay(_selectedDay, selectedDay)) {
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                    _selectedSessions.value = _getSessionsForDay(selectedDay);
+                  });
+                }
+              },
+              onFormatChanged: (format) {
+                if (_calendarFormat != format) {
+                  setState(() {
+                    _calendarFormat = format;
+                    _selectedDay = null;
+                    _selectedSessions.value = [];
+                    _updateStats();
+                  });
+                }
+              },
+              onPageChanged: (focusedDay) {
+                _focusedDay = focusedDay;
+                _selectedDay = null;
                 setState(() {
-                  _selectedDay = selectedDay;
-                  _focusedDay = focusedDay;
-                  _selectedSessions.value = _getSessionsForDay(selectedDay);
-                });
-              }
-            },
-            onFormatChanged: (format) {
-              if (_calendarFormat != format) {
-                setState(() {
-                  _calendarFormat = format;
-                  _selectedDay = null;
                   _selectedSessions.value = [];
                   _updateStats();
                 });
-              }
-            },
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-              _selectedDay = null;
-              setState(() {
-                _selectedSessions.value = [];
-                _updateStats();
-              });
-            },
-            calendarBuilders: CalendarBuilders(
-              markerBuilder: (context, date, events) {
-                if (events.isNotEmpty) {
-                  DateTime dt = DateTime(date.year, date.month, date.day);
-                  Color color = Theme.of(context).primaryColor;
-                  if (dt.compareTo(_statFirstDay) < 0 ||
-                      dt.compareTo(_statLastDay) >= 0) {
-                    color = Theme.of(context).disabledColor;
-                  }
+              },
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (context, date, events) {
+                  if (events.isNotEmpty) {
+                    DateTime dt = DateTime(date.year, date.month, date.day);
+                    Color color = Theme.of(context).colorScheme.secondary;
+                    if (dt.compareTo(_statFirstDay) < 0 ||
+                        dt.compareTo(_statLastDay) >= 0) {
+                      color = Theme.of(context).disabledColor;
+                    }
 
-                  return Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: color,
-                    ),
-                    width: 16.0,
-                    height: 16.0,
-                    child: Center(
-                      child: Text(
-                        '${events.length}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10.0,
+                    return Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: color,
+                      ),
+                      width: 16.0,
+                      height: 16.0,
+                      child: Center(
+                        child: Text(
+                          '${events.length}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                }
-                return null;
-              },
+                    );
+                  }
+                  return null;
+                },
+              ),
             ),
           ),
-          const SizedBox(height: 8.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            child: Row(
+              children: [
+                Text(
+                  _selectedDay != null
+                      ? DateFormat.yMMMMd().format(_selectedDay!)
+                      : AppLocalizations.of(context).sessions,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
           Expanded(
             child: ValueListenableBuilder<List<Session>>(
               valueListenable: _selectedSessions,
               builder: (context, value, _) {
+                if (value.isEmpty) {
+                  return Center(
+                    child: Text(
+                      "No sessions",
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  );
+                }
                 return ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 80),
                   itemCount: value.length,
                   itemBuilder: (context, index) {
                     Session session = value[index];
@@ -191,7 +257,7 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           String stats = getStats(context, _list, _statFirstDay, _statLastDay);
@@ -209,11 +275,14 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
             );
           });
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("$stats $streak", key: const Key("stats"))),
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text("$stats $streak", key: const Key("stats")),
+            ),
           );
         },
-        tooltip: AppLocalizations.of(context).statistics,
-        child: const Icon(Icons.query_stats),
+        label: Text(AppLocalizations.of(context).statistics),
+        icon: const Icon(Icons.query_stats),
       ),
     );
   }

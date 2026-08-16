@@ -38,7 +38,7 @@ Future<void> testRunning(
     if (i == 70) {
       if (binding != null) {
         takeScreenshot(binding, "2_inhale.png");
-        await tester.pumpAndSettle();
+        await tester.pump(const Duration(milliseconds: 100));
       }
     }
     await tester.pump(const Duration(milliseconds: 100));

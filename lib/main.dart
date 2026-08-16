@@ -57,57 +57,104 @@ Future<void> main() async {
     sessions = await Hive.openBox(SESSIONS_BOX);
   }
 
+  Box customSounds;
+  try {
+    customSounds = await Hive.openBox("custom_sounds");
+  } catch (e) {
+    debugPrint(e.toString());
+    await Hive.deleteBoxFromDisk("custom_sounds");
+    customSounds = await Hive.openBox("custom_sounds");
+  }
+
   runApp(
     MainWidget(
       appName: appName,
       version: version,
       preferences: preferences,
       sessions: sessions,
+      customSounds: customSounds,
     ),
   );
 }
 
-class MainWidget extends StatelessWidget {
+class MainWidget extends StatefulWidget {
   const MainWidget({
     super.key,
     required this.appName,
     required this.version,
     required this.preferences,
     required this.sessions,
+    required this.customSounds,
   });
 
   final String appName, version;
-  final Box preferences, sessions;
+  final Box preferences, sessions, customSounds;
+
+  @override
+  State<MainWidget> createState() => _MainWidgetState();
+}
+
+class _MainWidgetState extends State<MainWidget> {
+  int _colorIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _colorIndex = _getColorIndex();
+    widget.preferences.listenable(keys: [0]).addListener(_onPreferenceChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.preferences.listenable(keys: [0]).removeListener(_onPreferenceChanged);
+    super.dispose();
+  }
+
+  int _getColorIndex() {
+    if (widget.preferences.isNotEmpty) {
+      Preference preference = widget.preferences.getAt(0);
+      return preference.colors[0];
+    }
+    return 0;
+  }
+
+  void _onPreferenceChanged() {
+    int newIndex = _getColorIndex();
+    if (newIndex != _colorIndex) {
+      setState(() {
+        _colorIndex = newIndex;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    MaterialColor primaryColor = COLORS_PRIMARY[0] as MaterialColor;
-    Color backgroundColor = const Color(COLOR_BACKGROUND);
-    if (preferences.isNotEmpty) {
-      Preference preference = preferences.getAt(0);
-      primaryColor = COLORS_PRIMARY[preference.colors[0]] as MaterialColor;
-      backgroundColor = Color(preference.colors[1]);
-    }
+    MaterialColor primaryColor = COLORS_PRIMARY[_colorIndex] as MaterialColor;
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: primaryColor,
-        canvasColor: backgroundColor,
-        useMaterial3: false,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: primaryColor,
+          brightness: Brightness.light,
+        ),
+        useMaterial3: true,
       ),
-      darkTheme: ThemeData.dark().copyWith(
-        primaryColor: Colors.blue,
-        // ignore: deprecated_member_use
-        useMaterial3: false,
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: primaryColor,
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: HomeWidget(
-        appName: appName,
-        version: version,
-        preferences: preferences,
-        sessions: sessions,
+        appName: widget.appName,
+        version: widget.version,
+        preferences: widget.preferences,
+        sessions: widget.sessions,
+        customSounds: widget.customSounds,
       ),
     );
   }

@@ -25,68 +25,100 @@ Card getSessionCard(
   Duration diff = roundDuration(session.end.difference(session.start));
   List<double>? heartrates = session.heartrates;
   int average = 0, reduced = 0;
-  if (heartrates != null) {
+  if (heartrates != null && heartrates.isNotEmpty) {
     average = heartrates.average.toInt();
     reduced = (heartrates.last - heartrates.first).toInt();
   }
   return Card(
+    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    elevation: 0,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(16),
+      side: BorderSide(
+        color: Theme.of(context).colorScheme.outlineVariant,
+        width: 1,
+      ),
+    ),
     child: ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       onTap: () {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
       },
       onLongPress: () {
         debugPrint("session: ${session.toString()}");
       },
-
-      title: Text(DateFormat(dateFormat).format(session.start)),
+      title: Text(
+        DateFormat(dateFormat).format(session.start),
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Visibility(
-            visible:
-                session.description != null && session.description!.isNotEmpty,
-            child: Text(session.description ?? ""),
-          ),
-          Row(
+          if (session.description != null && session.description!.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 4, bottom: 8),
+              child: Text(
+                session.description!,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 16,
+            runSpacing: 8,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: Icon(Icons.timer, color: Theme.of(context).primaryColor),
+              _buildSessionStat(
+                context,
+                Icons.timer_outlined,
+                getDurationString(diff),
               ),
-              Text(getDurationString(diff)),
-              const SizedBox(width: 10.0),
-              Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: Icon(Icons.air, color: Theme.of(context).primaryColor),
+              _buildSessionStat(
+                context,
+                Icons.air_outlined,
+                "${session.breaths}",
               ),
-              Text("${session.breaths}"),
-              const SizedBox(width: 10.0),
-              average > 0
-                  ? Padding(
-                      padding: const EdgeInsets.all(1.0),
-                      child: Icon(
-                        Icons.favorite,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-              average > 0 ? Text("$average") : const SizedBox.shrink(),
-              const SizedBox(width: 10.0),
-              reduced != 0
-                  ? Padding(
-                      padding: const EdgeInsets.all(1.0),
-                      child: Icon(
-                        Icons.monitor_heart,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-              reduced != 0 ? Text("$reduced") : const SizedBox.shrink(),
+              if (average > 0)
+                _buildSessionStat(
+                  context,
+                  Icons.favorite_outline,
+                  "$average",
+                ),
+              if (reduced != 0)
+                _buildSessionStat(
+                  context,
+                  Icons.monitor_heart_outlined,
+                  "$reduced",
+                ),
             ],
           ),
         ],
       ),
     ),
+  );
+}
+
+Widget _buildSessionStat(BuildContext context, IconData icon, String value) {
+  return Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(
+        icon,
+        size: 16,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+      const SizedBox(width: 4),
+      Text(
+        value,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
+      ),
+    ],
   );
 }
 
@@ -322,6 +354,8 @@ Future<Directory?> getStorageDir() async {
 }
 
 Future<void> play(AudioPlayer player, String audio) async {
+  if (audio == AUDIO_NONE) return;
+  
   if (audio == AUDIO_TONE1) {
     await player.play(AssetSource('tone1.oga'));
   } else if (audio == AUDIO_TONE2) {
@@ -330,6 +364,9 @@ Future<void> play(AudioPlayer player, String audio) async {
     await player.play(AssetSource('tone3.oga'));
   } else if (audio == AUDIO_TONE4) {
     await player.play(AssetSource('tone4.oga'));
+  } else if (audio.contains('/')) {
+    // It's a custom file path
+    await player.play(DeviceFileSource(audio));
   }
 }
 

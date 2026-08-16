@@ -128,6 +128,24 @@ class AppLocalizationsNl extends AppLocalizations {
   String get enterAName => 'Voer een naam in';
 
   @override
+  String get general => 'Algemeen';
+
+  @override
+  String get feedback => 'Feedback';
+
+  @override
+  String get appearance => 'Uiterlijk';
+
+  @override
+  String get customTones => 'Aangepaste tonen';
+
+  @override
+  String get addCustomSound => 'Geluid toevoegen';
+
+  @override
+  String get name => 'Naam';
+
+  @override
   String get sessions => 'Sessies';
 
   @override
