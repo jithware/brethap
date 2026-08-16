@@ -240,14 +240,14 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
         ),
         const SizedBox(height: 4),
         SizedBox(
-          height: 16,
+          height: 20,
           child: Text(
             exists ? (widget.preferences.getAt(position) as Preference).name.isEmpty ? "Slot $position" : (widget.preferences.getAt(position) as Preference).name : "Empty",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              fontSize: 10,
+              fontSize: 11,
               color: exists ? null : Theme.of(context).disabledColor,
             ),
           ),
@@ -768,7 +768,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   crossAxisCount: 4, // Reduced to 4 for better fit
                   mainAxisSpacing: 12,
                   crossAxisSpacing: 12,
-                  childAspectRatio: 0.75, // Adjusted for label space
+                  childAspectRatio: 0.65, // Adjusted for label space
                 ),
                 itemCount: SAVED_PREFERENCES,
                 itemBuilder: (context, index) {

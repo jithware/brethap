@@ -112,6 +112,8 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
             color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             child: TableCalendar<Session>(
+              rowHeight: 64,
+              daysOfWeekHeight: 30,
               firstDay: _firstDay,
               lastDay: _lastDay,
               focusedDay: _focusedDay,
@@ -133,6 +135,8 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
                 ),
               ),
               calendarStyle: CalendarStyle(
+                markersAlignment: Alignment.bottomCenter,
+                markerMargin: const EdgeInsets.only(bottom: 6),
                 todayDecoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
                   shape: BoxShape.circle,
