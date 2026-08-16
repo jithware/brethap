@@ -109,7 +109,7 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
           Card(
             margin: const EdgeInsets.all(16),
             elevation: 0,
-            color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+            color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             child: TableCalendar<Session>(
               firstDay: _firstDay,
@@ -134,7 +134,7 @@ class _SessionsCalendarWidgetState extends State<SessionsCalendarWidget> {
               ),
               calendarStyle: CalendarStyle(
                 todayDecoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
                   shape: BoxShape.circle,
                 ),
                 selectedDecoration: BoxDecoration(

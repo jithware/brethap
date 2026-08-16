@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:vibration/vibration.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -802,6 +801,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             leading: const Icon(Icons.library_music_outlined),
             title: Text(AppLocalizations.of(context).addCustomSound),
             onTap: () async {
+              final messenger = ScaffoldMessenger.of(context);
               FilePickerResult? result = await FilePicker.platform.pickFiles(
                 type: FileType.audio,
               );
@@ -818,11 +818,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                 // Add to Hive if not exists
                 if (!widget.customSounds.values.contains(newPath)) {
                   await widget.customSounds.add(newPath);
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Added $fileName to sounds")),
-                    );
-                  }
+                  messenger.showSnackBar(
+                    SnackBar(content: Text("Added $fileName to sounds")),
+                  );
                 }
               }
             },

@@ -207,7 +207,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   padding: EdgeInsets.zero,
                   backgroundColor: exists
-                      ? COLORS_PRIMARY[(widget.preferences.getAt(position) as Preference).colors[0]].withOpacity(isActive ? 0.3 : 0.1)
+                      ? COLORS_PRIMARY[(widget.preferences.getAt(position) as Preference).colors[0]].withValues(alpha: isActive ? 0.3 : 0.1)
                       : null,
                   side: BorderSide(
                     color: exists
@@ -363,7 +363,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       elevation: 0,
-      color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+      color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
