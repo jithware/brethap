@@ -62,24 +62,31 @@ class FakePathProviderPlatform extends Fake
 }
 
 class HiveData {
-  Box preferences, sessions;
+  Box preferences, sessions, customSounds;
   HiveData({
     required this.preferences,
     required this.sessions,
+    required this.customSounds,
   });
 }
 
 Future<HiveData> setupHive() async {
-  Box preferences, sessions;
+  Box preferences, sessions, customSounds;
   WidgetsFlutterBinding.ensureInitialized();
 
   PathProviderPlatform.instance = FakePathProviderPlatform();
   await Hive.initFlutter(Directory.systemTemp.createTempSync().path);
 
-  Hive.registerAdapter(PreferenceAdapter());
-  Hive.registerAdapter(SessionAdapter());
+  if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(SessionAdapter());
+  if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(PreferenceAdapter());
+  
   preferences = await Hive.openBox('preferences');
   sessions = await Hive.openBox('sessions');
+  customSounds = await Hive.openBox('custom_sounds');
 
-  return HiveData(preferences: preferences, sessions: sessions);
+  return HiveData(
+    preferences: preferences,
+    sessions: sessions,
+    customSounds: customSounds,
+  );
 }

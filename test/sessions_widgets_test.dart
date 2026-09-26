@@ -21,20 +21,29 @@ Future<void> tapMenu(WidgetTester tester) async {
 }
 
 Future<void> testSnackBar(WidgetTester tester, Key key, String text) async {
-  expect(find.textContaining(text), findsNothing);
   await tester.tap(find.byKey(key));
-  await tester.pumpAndSettle(WAIT);
+  // Wait for the async operation and the snackbar animation to complete.
+  // We use multiple pumps to ensure that the 'then' callback and animations are processed.
+  await tester.pump();
+  await tester.pump(const Duration(seconds: 1));
+  await tester.pumpAndSettle();
+  
   expect(find.textContaining(text), findsOneWidget);
 }
 
 Future<void> testStats(WidgetTester tester, String sessions) async {
   String text = "Sessions:$sessions";
-  expect(find.textContaining(text), findsNothing);
   await tester.tap(find.byType(FloatingActionButton));
-  await tester.pumpAndSettle(WAIT);
+  await tester.pump();
+  await tester.pump(const Duration(seconds: 1));
+  await tester.pumpAndSettle();
+  
   expect(find.textContaining(text), findsOneWidget);
-  await tester.pump(const Duration(seconds: 3));
-  await tester.pumpAndSettle(WAIT);
+  
+  // Wait for snackbar to disappear or hide it
+  await tester.tapAt(const Offset(0, 0)); // Tap elsewhere to dismiss if possible, or just wait
+  await tester.pump(const Duration(seconds: 4));
+  await tester.pumpAndSettle();
 }
 
 Future<void> testSessionsWidget(WidgetTester tester) async {

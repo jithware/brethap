@@ -80,7 +80,7 @@ Future<void> testPreferences(
   await tester.dragUntilVisible(
     find.byKey(Key(PreferencesWidget.keyPreferenceName)),
     find.byKey(Key(PreferencesWidget.keyDrag)),
-    const Offset(0, 1250),
+    const Offset(0, 500),
   );
   await tester.pump(demoWait);
 
@@ -90,6 +90,14 @@ Future<void> testPreferences(
   expect(finder, findsOneWidget);
   await tester.enterText(finder, preference1);
   await tester.pump(demoWait * 2);
+
+  // Scroll down to find the preference slot
+  await tester.dragUntilVisible(
+    find.byKey(Key(preference1)),
+    find.byKey(Key(PreferencesWidget.keyDrag)),
+    const Offset(0, -500),
+  );
+  await tester.pump(demoWait);
 
   // save preference
   finder = find.byKey(Key(preference1));
@@ -115,12 +123,28 @@ Future<void> testPreferences(
   await tester.tap(finder);
   await tester.pump(demoWait);
 
+  // Scroll up to find the name field
+  await tester.dragUntilVisible(
+    find.byKey(Key(PreferencesWidget.keyPreferenceName)),
+    find.byKey(Key(PreferencesWidget.keyDrag)),
+    const Offset(0, 500),
+  );
+  await tester.pump(demoWait);
+
   // enter preference name
   String preference2 = "${PreferencesWidget.keyPreference} 2";
   finder = find.byKey(Key(PreferencesWidget.keyPreferenceName));
   expect(finder, findsOneWidget);
   await tester.enterText(finder, preference2);
   await tester.pump(demoWait * 2);
+
+  // Scroll down to find the preference slot
+  await tester.dragUntilVisible(
+    find.byKey(Key(preference2)),
+    find.byKey(Key(PreferencesWidget.keyDrag)),
+    const Offset(0, -500),
+  );
+  await tester.pump(demoWait);
 
   // save preference
   finder = find.byKey(Key(preference2));

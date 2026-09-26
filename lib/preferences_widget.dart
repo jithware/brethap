@@ -13,10 +13,12 @@ class PreferencesWidget extends StatefulWidget {
   const PreferencesWidget({
     super.key,
     required this.preferences,
+    required this.customSounds,
     required this.callback,
   });
 
   final Box preferences;
+  final Box customSounds;
   final dynamic callback;
 
   // These static variables are used with flutter tests
@@ -66,6 +68,11 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
   @override
   void dispose() {
     debugPrint("$widget.dispose");
+    widget.preferences.getAt(0).save();
+    // Use a post-frame callback to avoid setState during disposal (locked tree)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.callback();
+    });
     _player.dispose();
     _textEditingController.dispose();
     super.dispose();
@@ -149,46 +156,103 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     }
   }
 
-  ElevatedButton _getPreferenceButton(dynamic context, int position) {
+  Widget _getPreferenceButton(BuildContext context, int position) {
     String name = "${PreferencesWidget.keyPreference} $position";
+    bool exists = widget.preferences.length > position;
+    
+    // Check if this is the currently active preference
+    // Slot 0 is always the active one, so we compare its content with the saved slots
+    Preference active = widget.preferences.getAt(0);
+    bool isActive = false;
+    if (exists) {
+      Preference saved = widget.preferences.getAt(position);
+      // Simple check to see if it's "active" by name or duration
+      isActive = saved.name == active.name && saved.duration == active.duration;
+    }
 
-    return ElevatedButton(
-      key: Key(name),
-      onLongPress: () {
-        debugPrint("onLongPress $name");
-        _savePreference(position);
-      },
-      onPressed: () {
-        debugPrint("onPressed $name");
-        if (widget.preferences.length <= position) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                AppLocalizations.of(context).longPressSavePreference,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              OutlinedButton(
+                key: Key(name),
+                onLongPress: () {
+                  _savePreference(position);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      content: Text("Saved to Slot $position"),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                },
+                onPressed: () {
+                  if (!exists) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        content: Text("Long press to save current settings."),
+                      ),
+                    );
+                  } else {
+                    _setPreference(position);
+                    _init();
+                  }
+                },
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: EdgeInsets.zero,
+                  backgroundColor: exists
+                      ? COLORS_PRIMARY[(widget.preferences.getAt(position) as Preference).colors[0]].withValues(alpha: isActive ? 0.3 : 0.1)
+                      : null,
+                  side: BorderSide(
+                    color: exists
+                        ? COLORS_PRIMARY[(widget.preferences.getAt(position) as Preference).colors[0]]
+                        : Theme.of(context).dividerColor,
+                    width: isActive ? 2.5 : 1,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    "$position",
+                    style: TextStyle(
+                      fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          );
-        } else {
-          _setPreference(position);
-          _init();
-        }
-      },
-      style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.resolveWith<Color>((
-          Set<WidgetState> states,
-        ) {
-          if (widget.preferences.length <= position) {
-            return Theme.of(context).disabledColor;
-          }
-
-          Preference preference = widget.preferences.getAt(position);
-          return COLORS_PRIMARY[preference.colors[0]];
-        }),
-        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              if (exists)
+                const Padding(
+                  padding: EdgeInsets.all(2.0),
+                  child: Icon(
+                    Icons.check_circle,
+                    size: 14,
+                    color: Colors.green,
+                  ),
+                ),
+            ],
+          ),
         ),
-      ),
-      child: Text("$position", semanticsLabel: name),
+        const SizedBox(height: 4),
+        SizedBox(
+          height: 20,
+          child: Text(
+            exists ? (widget.preferences.getAt(position) as Preference).name.isEmpty ? "Slot $position" : (widget.preferences.getAt(position) as Preference).name : "Empty",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              fontSize: 11,
+              color: exists ? null : Theme.of(context).disabledColor,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -282,12 +346,39 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     );
   }
 
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          color: Theme.of(context).colorScheme.primary,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPreferenceCard({required List<Widget> children}) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      elevation: 0,
+      color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(children: children),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Preference preference = widget.preferences.getAt(0);
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).preferences),
+        centerTitle: true,
         actions: <Widget>[
           PopupMenuButton<String>(
             key: Key(PreferencesWidget.keyMenu),
@@ -334,708 +425,452 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
           ),
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.all(15),
-        child: ListView(
-          children: [
-            // Preference Name
-            Padding(
-              padding: const EdgeInsets.all(5),
-              child: TextFormField(
+      body: ListView(
+        key: Key(PreferencesWidget.keyDrag),
+        children: [
+          _buildSectionHeader(AppLocalizations.of(context).general),
+          _buildPreferenceCard(
+            children: [
+              TextFormField(
                 key: Key(PreferencesWidget.keyPreferenceName),
                 controller: _textEditingController,
                 maxLength: 32,
                 decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
+                  labelText: AppLocalizations.of(context).name,
                   hintText: AppLocalizations.of(context).enterAName,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  prefixIcon: const Icon(Icons.edit_outlined),
                 ),
                 onChanged: (value) {
                   setState(() {
                     preference.name = value;
+                  });
+                },
+                onEditingComplete: () {
+                  preference.save();
+                  widget.callback();
+                },
+              ),
+            ],
+          ),
+
+          _buildSectionHeader(AppLocalizations.of(context).duration),
+          _buildPreferenceCard(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Time"),
+                  Text(
+                    getDurationString(Duration(seconds: preference.duration)),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Slider(
+                key: const Key(DURATION_MINUTES_TEXT),
+                value: _durationMinutes,
+                min: 0,
+                max: PreferencesWidget.maxDurationMinutes.toDouble(),
+                divisions: PreferencesWidget.maxDurationMinutes + 1,
+                label: "${_durationMinutes.toInt()}m",
+                onChanged: (double value) {
+                  setState(() {
+                    _durationMinutes = value;
+                    preference.duration = Duration(
+                      minutes: _durationMinutes.toInt(),
+                      seconds: _durationSeconds.toInt(),
+                    ).inSeconds.toInt();
+                  });
+                },
+                onChangeEnd: (double value) {
+                  setState(() {
                     preference.save();
                     widget.callback();
                   });
-                  debugPrint("$NAME_TEXT: ${preference.name}");
                 },
               ),
-            ),
-
-            // Duration
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).duration),
-                Text(
-                  getDurationString(Duration(seconds: preference.duration)),
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 30,
-                  child: Slider(
-                    key: const Key(DURATION_MINUTES_TEXT),
-                    value: _durationMinutes,
-                    min: 0,
-                    max: PreferencesWidget.maxDurationMinutes.toDouble(),
-                    divisions: PreferencesWidget.maxDurationMinutes + 1,
-                    onChanged: (double value) {
-                      setState(() {
-                        _durationMinutes = value;
-                        preference.duration = Duration(
-                          minutes: _durationMinutes.toInt(),
-                          seconds: _durationSeconds.toInt(),
-                        ).inSeconds.toInt();
-                      });
-                    },
-                    onChangeEnd: (double value) {
-                      setState(() {
-                        preference.duration = Duration(
-                          minutes: _durationMinutes.toInt(),
-                          seconds: _durationSeconds.toInt(),
-                        ).inSeconds.toInt();
-                        preference.save();
-                        widget.callback();
-                      });
-                      debugPrint(
-                        "$DURATION_SECONDS_TEXT: ${preference.duration}",
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-            // Duration seconds
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 30,
-                  child: Slider(
-                    key: const Key(DURATION_SECONDS_TEXT),
-                    value: _durationSeconds,
-                    min: 0,
-                    max: PreferencesWidget.maxDurationSeconds.toDouble(),
-                    divisions: PreferencesWidget.maxDurationSeconds + 1,
-                    onChanged: (double value) {
-                      setState(() {
-                        _durationSeconds = value;
-                        preference.duration = Duration(
-                          minutes: _durationMinutes.toInt(),
-                          seconds: _durationSeconds.toInt(),
-                        ).inSeconds.toInt();
-                      });
-                    },
-                    onChangeEnd: (double value) {
-                      setState(() {
-                        preference.duration = Duration(
-                          minutes: _durationMinutes.toInt(),
-                          seconds: _durationSeconds.toInt(),
-                        ).inSeconds.toInt();
-                        preference.save();
-                        widget.callback();
-                      });
-                      debugPrint(
-                        "$DURATION_SECONDS_TEXT: ${preference.duration}",
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-            // Duration vibrate
-            Visibility(
-              visible: !isWeb(),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(AppLocalizations.of(context).durationVibrate),
-                  Text(
-                    "${preference.vibrateDuration} ms",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
+              Slider(
+                key: const Key(DURATION_SECONDS_TEXT),
+                value: _durationSeconds,
+                min: 0,
+                max: PreferencesWidget.maxDurationSeconds.toDouble(),
+                divisions: PreferencesWidget.maxDurationSeconds + 1,
+                label: "${_durationSeconds.toInt()}s",
+                onChanged: (double value) {
+                  setState(() {
+                    _durationSeconds = value;
+                    preference.duration = Duration(
+                      minutes: _durationMinutes.toInt(),
+                      seconds: _durationSeconds.toInt(),
+                    ).inSeconds.toInt();
+                  });
+                },
+                onChangeEnd: (double value) {
+                  setState(() {
+                    preference.save();
+                    widget.callback();
+                  });
+                },
               ),
-            ),
-            Visibility(
-              visible: !isWeb(),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width - 30,
-                    child: Slider(
-                      key: const Key(DURATION_VIBRATE_TEXT),
-                      value: _vibrateDurationD,
-                      min: 0,
-                      max: PreferencesWidget.maxVibration.toDouble(),
-                      divisions: PreferencesWidget.maxVibration + 1,
-                      onChanged: (double value) {
-                        setState(() {
-                          _vibrateDurationD = value;
-                          preference.vibrateDuration =
-                              (value.round()).toInt() * 10;
-                        });
-                      },
-                      onChangeEnd: (double value) {
-                        setState(() {
-                          preference.vibrateDuration =
-                              (value.round()).toInt() * 10;
-                          preference.save();
-                          debugPrint(
-                            "$DURATION_VIBRATE_TEXT: ${preference.vibrateDuration}",
-                          );
-                        });
-                      },
-                    ),
-                  ),
-                ],
+              const Divider(),
+              SwitchListTile(
+                key: const Key(DURATION_TTS_TEXT),
+                contentPadding: EdgeInsets.zero,
+                title: Text(AppLocalizations.of(context).durationTts),
+                value: _durationTts,
+                onChanged: (value) {
+                  setState(() {
+                    _durationTts = value;
+                    preference.durationTts = value;
+                    preference.save();
+                  });
+                },
               ),
-            ),
-
-            // Duration TTS
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).durationTts),
-                Switch(
-                  key: const Key(DURATION_TTS_TEXT),
-                  value: _durationTts,
-                  onChanged: (value) {
+              if (!isWeb()) ...[
+                const Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(AppLocalizations.of(context).durationVibrate),
+                    Text("${preference.vibrateDuration} ms"),
+                  ],
+                ),
+                Slider(
+                  key: const Key(DURATION_VIBRATE_TEXT),
+                  value: _vibrateDurationD,
+                  min: 0,
+                  max: PreferencesWidget.maxVibration.toDouble(),
+                  divisions: PreferencesWidget.maxVibration + 1,
+                  onChanged: (double value) {
                     setState(() {
-                      _durationTts = value;
-                      preference.durationTts = value;
+                      _vibrateDurationD = value;
+                      preference.vibrateDuration = (value.round()).toInt() * 10;
+                    });
+                  },
+                  onChangeEnd: (double value) {
+                    setState(() {
                       preference.save();
-                      debugPrint(
-                        "$DURATION_TTS_TEXT: ${preference.durationTts}",
-                      );
                     });
                   },
                 ),
               ],
-            ),
+            ],
+          ),
 
-            const Divider(thickness: 3),
-            const SizedBox(height: 50),
-
-            // Inhale
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).inhale),
-                Text(
-                  "${preference.inhale[0].toDouble() / Duration.millisecondsPerSecond.toDouble()} s",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 30,
-                  child: Slider(
-                    key: const Key(INHALE_TEXT),
-                    value: _inhale0,
-                    min: PreferencesWidget.minBreath.toDouble(),
-                    max: PreferencesWidget.maxInhale.toDouble(),
-                    divisions:
-                        PreferencesWidget.maxInhale -
-                        PreferencesWidget.minBreath +
-                        1,
-                    onChanged: (double value) {
-                      setState(() {
-                        _inhale0 = value;
-                        double tenthSeconds = (value.round().toInt()) / 10;
-                        preference.inhale[0] =
-                            (tenthSeconds * Duration.millisecondsPerSecond)
-                                .toInt();
-                      });
-                    },
-                    onChangeEnd: (double value) {
-                      setState(() {
-                        double tenthSeconds = (value.round().toInt()) / 10;
-                        preference.inhale[0] =
-                            (tenthSeconds * Duration.millisecondsPerSecond)
-                                .toInt();
-                        preference.save();
-                      });
-                      debugPrint("$INHALE_TEXT: ${preference.inhale[0]}");
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-            // Inhale hold
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).inhaleHold),
-                Text(
-                  "${preference.inhale[1].toDouble() / Duration.millisecondsPerSecond.toDouble()} s",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 30,
-                  child: Slider(
-                    key: const Key(INHALE_HOLD_TEXT),
-                    value: _inhale1,
-                    min: 0,
-                    max: PreferencesWidget.maxHold.toDouble(),
-                    divisions: PreferencesWidget.maxHold + 1,
-                    onChanged: (double value) {
-                      setState(() {
-                        _inhale1 = value;
-                        double tenthSeconds = (value.round().toInt()) / 10;
-                        preference.inhale[1] =
-                            (tenthSeconds * Duration.millisecondsPerSecond)
-                                .toInt();
-                      });
-                    },
-                    onChangeEnd: (double value) {
-                      setState(() {
-                        double tenthSeconds = (value.round().toInt()) / 10;
-                        preference.inhale[1] =
-                            (tenthSeconds * Duration.millisecondsPerSecond)
-                                .toInt();
-                        preference.save();
-                      });
-                      debugPrint("$INHALE_HOLD_TEXT: ${preference.inhale[1]}");
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-            // Inhale last
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).inhaleLast),
-                Text(
-                  "${preference.inhale[2].toDouble() / Duration.millisecondsPerSecond.toDouble()} s",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 30,
-                  child: Slider(
-                    key: const Key(INHALE_LAST_TEXT),
-                    value: _inhale2,
-                    min: 0,
-                    max: PreferencesWidget.maxHold.toDouble(),
-                    divisions: PreferencesWidget.maxHold + 1,
-                    onChanged: (double value) {
-                      setState(() {
-                        _inhale2 = value;
-                        double tenthSeconds = (value.round().toInt()) / 10;
-                        preference.inhale[2] =
-                            (tenthSeconds * Duration.millisecondsPerSecond)
-                                .toInt();
-                      });
-                    },
-                    onChangeEnd: (double value) {
-                      setState(() {
-                        double tenthSeconds = (value.round().toInt()) / 10;
-                        preference.inhale[2] =
-                            (tenthSeconds * Duration.millisecondsPerSecond)
-                                .toInt();
-                        preference.save();
-                      });
-                      debugPrint("$INHALE_LAST_TEXT: ${preference.inhale[2]}");
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-            // Inhale audio
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).inhaleAudio),
-                DropdownButton<String>(
-                  key: const Key(INHALE_AUDIO_TEXT),
-                  value: _audio0,
-                  icon: const Icon(Icons.arrow_downward),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _audio0 = value!;
-                      preference.audio[0] = _audio0;
-                      preference.save();
-                    });
-                    play(_player, _audio0);
-                  },
-                  items:
-                      <String>[
-                        AUDIO_NONE,
-                        AUDIO_TONE1,
-                        AUDIO_TONE2,
-                        AUDIO_TONE3,
-                        AUDIO_TONE4,
-                      ].map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                ),
-              ],
-            ),
-
-            // Inhale hold audio
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).inhaleHoldAudio),
-                DropdownButton<String>(
-                  key: const Key(INHALE_HOLD_AUDIO_TEXT),
-                  value: _audio2,
-                  icon: const Icon(Icons.arrow_downward),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _audio2 = value!;
-                      preference.audio[2] = _audio2;
-                      preference.save();
-                    });
-                    play(_player, _audio2);
-                  },
-                  items:
-                      <String>[
-                        AUDIO_NONE,
-                        AUDIO_TONE1,
-                        AUDIO_TONE2,
-                        AUDIO_TONE3,
-                        AUDIO_TONE4,
-                      ].map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                ),
-              ],
-            ),
-
-            const Divider(thickness: 3),
-            const SizedBox(height: 50),
-
-            // Exhale
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).exhale),
-                Text(
-                  "${preference.exhale[0].toDouble() / Duration.millisecondsPerSecond.toDouble()} s",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 30,
-                  child: Slider(
-                    key: const Key(EXHALE_TEXT),
-                    value: _exhale0,
-                    min: PreferencesWidget.minBreath.toDouble(),
-                    max: PreferencesWidget.maxExhale.toDouble(),
-                    divisions:
-                        PreferencesWidget.maxExhale.toInt() -
-                        PreferencesWidget.minBreath.toInt() +
-                        1,
-                    onChanged: (double value) {
-                      setState(() {
-                        _exhale0 = value;
-                        double tenthSeconds = (value.round().toInt()) / 10;
-                        preference.exhale[0] =
-                            (tenthSeconds * Duration.millisecondsPerSecond)
-                                .toInt();
-                      });
-                    },
-                    onChangeEnd: (double value) {
-                      setState(() {
-                        double tenthSeconds = (value.round().toInt()) / 10;
-                        preference.exhale[0] =
-                            (tenthSeconds * Duration.millisecondsPerSecond)
-                                .toInt();
-                        preference.save();
-                      });
-                      debugPrint("$EXHALE_TEXT: ${preference.exhale[0]}");
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-            // Exhale hold
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).exhaleHold),
-                Text(
-                  "${preference.exhale[1].toDouble() / Duration.millisecondsPerSecond.toDouble()} s",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 30,
-                  child: Slider(
-                    key: const Key(EXHALE_HOLD_TEXT),
-                    value: _exhale1,
-                    min: 0,
-                    max: PreferencesWidget.maxHold.toDouble(),
-                    divisions: PreferencesWidget.maxHold + 1,
-                    onChanged: (double value) {
-                      setState(() {
-                        _exhale1 = value;
-                        double tenthSeconds = (value.round().toInt()) / 10;
-                        preference.exhale[1] =
-                            (tenthSeconds * Duration.millisecondsPerSecond)
-                                .toInt();
-                      });
-                    },
-                    onChangeEnd: (double value) {
-                      setState(() {
-                        double tenthSeconds = (value.round().toInt()) / 10;
-                        preference.exhale[1] =
-                            (tenthSeconds * Duration.millisecondsPerSecond)
-                                .toInt();
-                        preference.save();
-                      });
-                      debugPrint("$EXHALE_HOLD_TEXT: ${preference.exhale[1]}");
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-            // Exhale last
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).exhaleLast),
-                Text(
-                  "${preference.exhale[2].toDouble() / Duration.millisecondsPerSecond.toDouble()} s",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 30,
-                  child: Slider(
-                    key: const Key(EXHALE_LAST_TEXT),
-                    value: _exhale2,
-                    min: 0,
-                    max: PreferencesWidget.maxHold.toDouble(),
-                    divisions: PreferencesWidget.maxHold + 1,
-                    onChanged: (double value) {
-                      setState(() {
-                        _exhale2 = value;
-                        double tenthSeconds = (value.round().toInt()) / 10;
-                        preference.exhale[2] =
-                            (tenthSeconds * Duration.millisecondsPerSecond)
-                                .toInt();
-                      });
-                    },
-                    onChangeEnd: (double value) {
-                      setState(() {
-                        double tenthSeconds = (value.round().toInt()) / 10;
-                        preference.exhale[2] =
-                            (tenthSeconds * Duration.millisecondsPerSecond)
-                                .toInt();
-                        preference.save();
-                      });
-                      debugPrint("$EXHALE_LAST_TEXT: ${preference.exhale[2]}");
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-            // Exhale audio
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).exhaleAudio),
-                DropdownButton<String>(
-                  key: const Key(EXHALE_AUDIO_TEXT),
-                  value: _audio1,
-                  icon: const Icon(Icons.arrow_downward),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _audio1 = value!;
-                      preference.audio[1] = _audio1;
-                      preference.save();
-                    });
-                    play(_player, _audio1);
-                  },
-                  items:
-                      <String>[
-                        AUDIO_NONE,
-                        AUDIO_TONE1,
-                        AUDIO_TONE2,
-                        AUDIO_TONE3,
-                        AUDIO_TONE4,
-                      ].map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                ),
-              ],
-            ),
-
-            // Exhale hold audio
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).exhaleHoldAudio),
-                DropdownButton<String>(
-                  key: const Key(EXHALE_HOLD_AUDIO_TEXT),
-                  value: _audio3,
-                  icon: const Icon(Icons.arrow_downward),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _audio3 = value!;
-                      preference.audio[3] = _audio3;
-                      preference.save();
-                    });
-                    play(_player, _audio3);
-                  },
-                  items:
-                      <String>[
-                        AUDIO_NONE,
-                        AUDIO_TONE1,
-                        AUDIO_TONE2,
-                        AUDIO_TONE3,
-                        AUDIO_TONE4,
-                      ].map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                ),
-              ],
-            ),
-
-            Divider(key: Key(PreferencesWidget.keyDrag), thickness: 3),
-            const SizedBox(height: 50),
-
-            // Breath vibrate
-            Visibility(
-              visible: !isWeb(),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(AppLocalizations.of(context).breathVibrate),
-                  Text(
-                    "${preference.vibrateBreath} ms",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
+          _buildSectionHeader(AppLocalizations.of(context).inhale),
+          _buildPreferenceCard(
+            children: [
+              _buildBreathSlider(
+                key: const Key(INHALE_TEXT),
+                label: AppLocalizations.of(context).inhale,
+                value: _inhale0,
+                min: PreferencesWidget.minBreath.toDouble(),
+                max: PreferencesWidget.maxInhale.toDouble(),
+                onChanged: (val) => setState(() {
+                  _inhale0 = val;
+                  preference.inhale[0] = ((val.round() / 10) * 1000).toInt();
+                }),
+                onEnd: () => preference.save(),
+                displayValue:
+                    "${(preference.inhale[0] / 1000).toStringAsFixed(1)} s",
               ),
-            ),
-
-            Visibility(
-              visible: !isWeb(),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width - 30,
-                    child: Slider(
-                      key: const Key(BREATH_VIBRATE_TEXT),
-                      value: _vibrateBreathD,
-                      min: 0,
-                      max: PreferencesWidget.maxVibration.toDouble(),
-                      divisions: PreferencesWidget.maxVibration + 1,
-                      onChanged: (double value) {
-                        setState(() {
-                          _vibrateBreathD = value;
-                          preference.vibrateBreath =
-                              (value.round()).toInt() * 10;
-                        });
-                      },
-                      onChangeEnd: (double value) {
-                        setState(() {
-                          preference.vibrateBreath =
-                              (value.round()).toInt() * 10;
-                          preference.save();
-                          debugPrint(
-                            "$BREATH_VIBRATE_TEXT: ${preference.vibrateBreath}",
-                          );
-                        });
-                      },
-                    ),
-                  ),
-                ],
+              _buildBreathSlider(
+                key: const Key(INHALE_HOLD_TEXT),
+                label: AppLocalizations.of(context).inhaleHold,
+                value: _inhale1,
+                min: 0,
+                max: PreferencesWidget.maxHold.toDouble(),
+                onChanged: (val) => setState(() {
+                  _inhale1 = val;
+                  preference.inhale[1] = ((val.round() / 10) * 1000).toInt();
+                }),
+                onEnd: () => preference.save(),
+                displayValue:
+                    "${(preference.inhale[1] / 1000).toStringAsFixed(1)} s",
               ),
-            ),
+              _buildBreathSlider(
+                key: const Key(INHALE_LAST_TEXT),
+                label: AppLocalizations.of(context).inhaleLast,
+                value: _inhale2,
+                min: 0,
+                max: PreferencesWidget.maxHold.toDouble(),
+                onChanged: (val) => setState(() {
+                  _inhale2 = val;
+                  preference.inhale[2] = ((val.round() / 10) * 1000).toInt();
+                }),
+                onEnd: () => preference.save(),
+                displayValue:
+                    "${(preference.inhale[2] / 1000).toStringAsFixed(1)} s",
+              ),
+              const Divider(),
+              _buildAudioDropdown(
+                key: const Key(INHALE_AUDIO_TEXT),
+                label: AppLocalizations.of(context).inhaleAudio,
+                value: _audio0,
+                onChanged: (val) {
+                  setState(() {
+                    _audio0 = val!;
+                    preference.audio[0] = _audio0;
+                    preference.save();
+                  });
+                  play(_player, _audio0);
+                },
+              ),
+              _buildAudioDropdown(
+                key: const Key(INHALE_HOLD_AUDIO_TEXT),
+                label: AppLocalizations.of(context).inhaleHoldAudio,
+                value: _audio2,
+                onChanged: (val) {
+                  setState(() {
+                    _audio2 = val!;
+                    preference.audio[2] = _audio2;
+                    preference.save();
+                  });
+                  play(_player, _audio2);
+                },
+              ),
+            ],
+          ),
 
-            // Breath TTS
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context).breathTts),
-                Switch(
-                  key: const Key(BREATH_TTS_TEXT),
-                  value: _breathTts,
-                  onChanged: (value) {
+          _buildSectionHeader(AppLocalizations.of(context).exhale),
+          _buildPreferenceCard(
+            children: [
+              _buildBreathSlider(
+                key: const Key(EXHALE_TEXT),
+                label: AppLocalizations.of(context).exhale,
+                value: _exhale0,
+                min: PreferencesWidget.minBreath.toDouble(),
+                max: PreferencesWidget.maxExhale.toDouble(),
+                onChanged: (val) => setState(() {
+                  _exhale0 = val;
+                  preference.exhale[0] = ((val.round() / 10) * 1000).toInt();
+                }),
+                onEnd: () => preference.save(),
+                displayValue:
+                    "${(preference.exhale[0] / 1000).toStringAsFixed(1)} s",
+              ),
+              _buildBreathSlider(
+                key: const Key(EXHALE_HOLD_TEXT),
+                label: AppLocalizations.of(context).exhaleHold,
+                value: _exhale1,
+                min: 0,
+                max: PreferencesWidget.maxHold.toDouble(),
+                onChanged: (val) => setState(() {
+                  _exhale1 = val;
+                  preference.exhale[1] = ((val.round() / 10) * 1000).toInt();
+                }),
+                onEnd: () => preference.save(),
+                displayValue:
+                    "${(preference.exhale[1] / 1000).toStringAsFixed(1)} s",
+              ),
+              _buildBreathSlider(
+                key: const Key(EXHALE_LAST_TEXT),
+                label: AppLocalizations.of(context).exhaleLast,
+                value: _exhale2,
+                min: 0,
+                max: PreferencesWidget.maxHold.toDouble(),
+                onChanged: (val) => setState(() {
+                  _exhale2 = val;
+                  preference.exhale[2] = ((val.round() / 10) * 1000).toInt();
+                }),
+                onEnd: () => preference.save(),
+                displayValue:
+                    "${(preference.exhale[2] / 1000).toStringAsFixed(1)} s",
+              ),
+              const Divider(),
+              _buildAudioDropdown(
+                key: const Key(EXHALE_AUDIO_TEXT),
+                label: AppLocalizations.of(context).exhaleAudio,
+                value: _audio1,
+                onChanged: (val) {
+                  setState(() {
+                    _audio1 = val!;
+                    preference.audio[1] = _audio1;
+                    preference.save();
+                  });
+                  play(_player, _audio1);
+                },
+              ),
+              _buildAudioDropdown(
+                key: const Key(EXHALE_HOLD_AUDIO_TEXT),
+                label: AppLocalizations.of(context).exhaleHoldAudio,
+                value: _audio3,
+                onChanged: (val) {
+                  setState(() {
+                    _audio3 = val!;
+                    preference.audio[3] = _audio3;
+                    preference.save();
+                  });
+                  play(_player, _audio3);
+                },
+              ),
+            ],
+          ),
+
+          _buildSectionHeader(AppLocalizations.of(context).feedback),
+          _buildPreferenceCard(
+            children: [
+              if (!isWeb()) ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(AppLocalizations.of(context).breathVibrate),
+                    Text("${preference.vibrateBreath} ms"),
+                  ],
+                ),
+                Slider(
+                  key: const Key(BREATH_VIBRATE_TEXT),
+                  value: _vibrateBreathD,
+                  min: 0,
+                  max: PreferencesWidget.maxVibration.toDouble(),
+                  divisions: PreferencesWidget.maxVibration + 1,
+                  onChanged: (double value) {
                     setState(() {
-                      _breathTts = value;
-                      preference.breathTts = value;
+                      _vibrateBreathD = value;
+                      preference.vibrateBreath = (value.round()).toInt() * 10;
+                    });
+                  },
+                  onChangeEnd: (double value) {
+                    setState(() {
                       preference.save();
-                      debugPrint("$BREATH_TTS_TEXT: ${preference.breathTts}");
                     });
                   },
                 ),
+                const Divider(),
               ],
-            ),
+              SwitchListTile(
+                key: const Key(BREATH_TTS_TEXT),
+                contentPadding: EdgeInsets.zero,
+                title: Text(AppLocalizations.of(context).breathTts),
+                value: _breathTts,
+                onChanged: (value) {
+                  setState(() {
+                    _breathTts = value;
+                    preference.breathTts = value;
+                    preference.save();
+                  });
+                },
+              ),
+            ],
+          ),
 
-            Divider(thickness: 3),
-
-            // Pad to above buttons
-            const SizedBox(height: 50),
-          ],
-        ),
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          const Padding(padding: EdgeInsets.only(left: 20.0)),
-          _getPreferenceButton(context, 1),
-          _getPreferenceButton(context, 2),
-          _getPreferenceButton(context, 3),
-          _getPreferenceButton(context, 4),
-          _getPreferenceButton(context, 5),
+          _buildSectionHeader(AppLocalizations.of(context).preference),
+          _buildPreferenceCard(
+            children: [
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4, // Reduced to 4 for better fit
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  childAspectRatio: 0.65, // Adjusted for label space
+                ),
+                itemCount: SAVED_PREFERENCES,
+                itemBuilder: (context, index) {
+                  return _getPreferenceButton(context, index + 1);
+                },
+              ),
+              const SizedBox(height: 12),
+              Text(
+                "Tip: Long press a slot to save. Tap to load.",
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          const Divider(height: 1),
+          const SizedBox(height: 100),
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _showPresetDialog,
+        label: Text(AppLocalizations.of(context).presets),
+        icon: const Icon(Icons.auto_awesome),
+      ),
+    );
+  }
+
+  Widget _buildBreathSlider({
+    Key? key,
+    required String label,
+    required double value,
+    required double min,
+    required double max,
+    required Function(double) onChanged,
+    required VoidCallback onEnd,
+    required String displayValue,
+  }) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label),
+            Text(displayValue, style: const TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
+        Slider(
+          key: key,
+          value: value,
+          min: min,
+          max: max,
+          divisions: (max - min).toInt() + 1,
+          onChanged: onChanged,
+          onChangeEnd: (_) => onEnd(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAudioDropdown({
+    Key? key,
+    required String label,
+    required String value,
+    required Function(String?) onChanged,
+  }) {
+    List<String> items = [
+      AUDIO_NONE,
+      AUDIO_TONE1,
+      AUDIO_TONE2,
+      AUDIO_TONE3,
+      AUDIO_TONE4,
+    ];
+    
+    // Add custom sounds
+    for (var path in widget.customSounds.values) {
+      items.add(path as String);
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(child: Text(label)),
+        DropdownButton<String>(
+          key: key,
+          value: items.contains(value) ? value : AUDIO_NONE,
+          icon: const Icon(Icons.keyboard_arrow_down),
+          onChanged: onChanged,
+          items: items.map<DropdownMenuItem<String>>((String val) {
+            String displayName = val;
+            if (val.contains('/')) {
+              displayName = val.split('/').last;
+            }
+            return DropdownMenuItem<String>(
+              value: val,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 150),
+                child: Text(displayName, overflow: TextOverflow.ellipsis),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 }

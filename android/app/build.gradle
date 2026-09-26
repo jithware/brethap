@@ -2,7 +2,7 @@
 
 plugins {
     id "com.android.application"
-    id "kotlin-android"
+    id "org.jetbrains.kotlin.android"
     id "dev.flutter.flutter-gradle-plugin"
 }
 
@@ -36,7 +36,7 @@ if (flutterMinSdkVersion == null) {
 
 def flutterTargetSdkVersion = localProperties.getProperty('flutter.targetSdkVersion')
 if (flutterTargetSdkVersion == null) {
-    flutterTargetSdkVersion = 35
+    flutterTargetSdkVersion = 36
 }
 
 def keystoreProperties = new Properties()
@@ -50,10 +50,6 @@ android {
     namespace 'com.jithware.brethap'
 
     compileSdk flutterCompileSdkVersion.toInteger()
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
 
     // https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration
     defaultConfig {

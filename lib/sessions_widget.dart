@@ -63,13 +63,10 @@ class _SessionsWidgetState extends State<SessionsWidget> {
   Future<File> _getExportFile() async {
     Directory? directory = await getStorageDir();
     File file = File("${directory?.path}/brethap.sessions.csv");
-    file.exists().then((value) async {
-      if (!value) {
-        file
-            .create(recursive: true)
-            .then((value) => debugPrint("created: ${file.path}"));
-      }
-    });
+    if (!await file.exists()) {
+      await file.create(recursive: true);
+      debugPrint("created: ${file.path}");
+    }
     return file;
   }
 
@@ -93,7 +90,7 @@ class _SessionsWidgetState extends State<SessionsWidget> {
       }
       String csvString = csv.encode(rows);
       final file = await _getExportFile();
-      file.writeAsString(csvString);
+      await file.writeAsString(csvString);
     } catch (e) {
       debugPrint(e.toString());
       return 0;
